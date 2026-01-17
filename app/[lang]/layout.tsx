@@ -1,7 +1,13 @@
+import ThemeProvider from "@/components/providers/ThemeProvider";
+
 export default function LangLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <ThemeProvider>
+      {children}
+    </ThemeProvider>
+  );
 }

@@ -1,26 +1,724 @@
 @import "tailwindcss";
 
+/* =====================================================
+   DESIGN TOKENS — COLORIMETRÍA
+   Light / Dark / Custom
+   ===================================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ===== Backgrounds ===== */
+  --bg-body: linear-gradient(to left,
+      #f9faff, #fafaff, #fbfbff, #fbfbff,
+      #fcfcff, #fdfcff, #fefdff, #fffdff,
+      #fffdfe, #fffdfb, #fffef9, #fffff8);
+
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7f8fa;
+  --bg-tertiary: #eef1f5;
+  --bg-stack: var(--bg-secondary);
+  --bg-fullwidth: #f1f7fd; /* slate-50 aprox */
+
+  /* sombras logos home */
+  --spectrum-red: #ED1C24;
+  --spectrum-blue: #0000FF;
+  --spectrum-magenta: #FF00FF;
+  --spectrum-green: #8CC63F;
+  --spectrum-gradient: linear-gradient(90deg,
+      var(--spectrum-red) 0%,
+      var(--spectrum-blue) 25%,
+      var(--spectrum-magenta) 50%,
+      var(--spectrum-green) 75%,
+      var(--spectrum-red) 100%);
+
+  /* ===== Text ===== */
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-white: #e4d3af;
+  --text-muted: #64748b;
+
+  /* ===== Brand ===== */
+  --brand-primary: #c9a34e;
+  --brand-secondary: #1c374a;
+  --brand-primary-hover: #c9a24e2c;
+
+  /* ===== Borders & Shadows ===== */
+  --border-subtle: #e5e7eb;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  /* ===== Focus ===== */
+  --focus-ring: 0 0 0 3px rgba(201, 163, 78, 0.35);
+
+  /* ===== Typography ===== */
+  --text-base: 1rem;
+
+  --h6: 1.125rem;
+  --h5: 1.25rem;
+  --h4: 1.5rem;
+  --h3: 1.875rem;
+  --h2: 2.25rem;
+  --h1: 2.75rem;
+
+  --leading-tight: 1.2;
+  --leading-normal: 1.6;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --bg-body: linear-gradient(to right bottom,
+      #030a53, #010b4e, #000c48, #000c43,
+      #010b3d, #1a0736, #26042e, #2d0327,
+      #370319, #390d0a, #361800, #2e2200);
+
+  --bg-primary: #0b0f19;
+  --bg-secondary: #111827;
+  --bg-tertiary: #1f2933;
+  --bg-stack: var(--bg-tertiary);
+  --bg-fullwidth: #0f172a; /* slate-900 aprox */
+
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+
+  --brand-primary: #f5d27a;
+  --brand-primary-hover: rgba(245, 210, 122, 0.45);
+
+  --border-subtle: #1f2937;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+
+
+/* =====================================================
+   BASE
+   ===================================================== */
+
+@layer base {
+  body {
+    background: var(--bg-body);
+    color: var(--text-secondary);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    min-height: 100vh;
+    overflow-x: hidden;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* =====================================================
+   TYPOGRAPHY
+   ===================================================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "DM Serif Display", serif;
+  color: var(--text-primary);
+  line-height: var(--leading-tight);
+}
+
+h1 {
+  font-size: var(--h1);
+}
+
+h2 {
+  font-size: var(--h2);
+}
+
+h3 {
+  font-size: var(--h3);
+}
+
+h4 {
+  font-size: var(--h4);
+}
+
+h5 {
+  font-size: var(--h5);
+}
+
+h6 {
+  font-size: var(--h6);
+}
+
+p {
+  max-width: 68ch;
+}
+
+/* =====================================================
+   LAYOUT
+   ===================================================== */
+
+section {
+  margin-bottom: 4rem;
+  scroll-margin-top: 6rem;
+}
+
+/* =====================================================
+   BUTTONS — GLOBAL DEPTH
+   ===================================================== */
+
+button {
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition:
+    background-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+button:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* =====================================================
+   BUTTON RESET — NAVIGATION
+   Usado en: Desktop menu triggers
+   ===================================================== */
+
+.nav-button-reset {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+
+/* =====================================================
+   MICROINTERACTIONS — BASE
+   ===================================================== */
+
+.micro-lift {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.micro-lift:hover {
+  transform: translateY(-2px);
+}
+
+.micro-focus:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* =====================================================
+   MICROINTERACTION — OUTLINE DRAW (FINAL)
+   ===================================================== */
+
+.hover-outline {
+  position: relative;
+}
+
+.hover-outline .outline-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hover-outline .outline-bg {
+  stroke: var(--border-subtle);
+  stroke-width: 1;
+}
+
+.hover-outline .outline-hover {
+  stroke: var(--brand-primary);
+  stroke-width: 2;
+  stroke-dasharray: 150 480;
+  stroke-dashoffset: 150;
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+.hover-outline:hover .outline-hover {
+  stroke-dashoffset: -480;
+}
+
+.hover-outline>*:not(svg) {
+  position: relative;
+  z-index: 1;
+}
+
+/* =====================================================
+   TOPBAR — PROMO MARQUEE
+   ===================================================== */
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+}
+
+/* =====================================================
+   Contenedor estándar de contenido
+   ===================================================== */
+.container-page {
+  max-width: 72rem; /* max-w-6xl */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;  /* px-5 */
+  padding-right: 1.25rem;
+}
+
+
+/* =====================================================
+   Contenedor FULLWIDTH global
+   ===================================================== */
+.--fullwidth {
+  width: 100%;
+  background: var(--bg-fullwidth);
+
+  /* Espaciado vertical (mobile first) */
+  padding-top: 4rem;   /* py-16 */
+  padding-bottom: 4rem;
+}
+
+/* Tablet */
+@media (min-width: 640px) {
+  .--fullwidth {
+    padding-top: 6rem; /* py-24 */
+    padding-bottom: 6rem;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .--fullwidth {
+    padding-top: 8rem; /* py-32 */
+    padding-bottom: 8rem;
+  }
+}
+
+
+/* =====================================================
+   STACK LOGOS
+   ===================================================== */
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 70s linear infinite;
+}
+
+/* =====================================================
+   UTILITIES — SCROLLBAR
+   ===================================================== */
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* =====================================================
+   SVG BORDER DRAW — FINAL FIX
+   ===================================================== */
+
+.svg-border-btn {
+  position: relative;
+  transition: background-color 0.35s ease-out;
+}
+
+/* Background en hover */
+.svg-border-btn:hover {
+  background: var(--brand-primary-hover);
+}
+
+
+/* SVG siempre del tamaño del botón */
+.svg-border-btn svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+
+  pointer-events: none;
+  z-index: 0;
+
+  fill: none;
+}
+
+/* Línea base */
+.svg-border-btn .bg-line {
+  stroke: var(--border-subtle);
+  stroke-width: 1;
+}
+
+/* Línea animada */
+.svg-border-btn .hl-line {
+  stroke: var(--brand-primary);
+  stroke-width: 2;
+
+  stroke-dasharray: 220 480;
+  stroke-dashoffset: 220;
+
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.svg-border-btn:hover .hl-line {
+  stroke-dashoffset: -480;
+}
+
+/* =====================================================
+   ICON WRAPPER — SCALE CONTROL
+   Reduce el tamaño de iconos del topbar
+   ===================================================== */
+
+.icon-wrapper {
+  position: relative;
+  z-index: 1;
+
+  width: 50%;
+  height: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =====================================================
+   NAV ITEM — SVG BORDER DRAW
+   Usado SOLO en items padres del menú
+   ===================================================== */
+
+.nav-item {
+  position: relative;
+  padding: 0.8rem 0.75rem;
+  border: none !important;
+  background: transparent;
+
+  transition:
+    background-color 0.35s ease-out,
+    transform 0.25s ease-out;
+}
+
+/* Hover background */
+.nav-item:hover {
+  background: var(--brand-primary-hover);
+}
+
+/* =========================
+   SVG decorativo del borde (NO iconos)
+   ========================= */
+.nav-item>svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  pointer-events: none;
+  z-index: 0;
+}
+
+
+/* Línea base */
+.nav-item .bg-line {
+  stroke: var(--border-subtle);
+  stroke-width: 1;
+  opacity: 0;
+}
+
+/* Línea animada */
+.nav-item .hl-line {
+  stroke: var(--brand-primary);
+  stroke-width: 1;
+  stroke-dasharray: 300 480;
+  stroke-dashoffset: 300;
+  transition: stroke-dashoffset 1s ease;
+}
+
+/* Hover → dibuja la línea */
+.nav-item:hover .hl-line {
+  stroke-dashoffset: -480;
+}
+
+/* =========================
+   Estado activo (ruta actual)
+   ========================= */
+.nav-item-active {
+  background: var(--brand-primary-hover);
+}
+
+.nav-item-active .hl-line {
+  stroke-dashoffset: -480;
+}
+
+/* =========================
+   Estado activo por interacción
+   ========================= */
+.nav-item:active {
+  background: var(--brand-primary-hover);
+}
+
+
+/* =====================================================
+   CTA Auditoría — borde animado continuo
+   ===================================================== */
+
+.cta-line {
+  filter: drop-shadow(0 0 6px rgba(255, 182, 25, 0.712));
+  position: absolute;
+  background: linear-gradient(to right,
+      transparent,
+      var(--brand-primary),
+      #ffbf00,
+      var(--brand-primary),
+      transparent);
+}
+
+/* Top */
+.cta-line.top {
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  animation: cta-top 1.2s linear infinite;
+}
+
+/* Right */
+.cta-line.right {
+  top: 0;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  animation: cta-right 1.2s linear infinite;
+}
+
+/* Bottom */
+.cta-line.bottom {
+  bottom: 0;
+  left: 100%;
+  width: 100%;
+  height: 2px;
+  animation: cta-bottom 1.2s linear infinite;
+}
+
+/* Left */
+.cta-line.left {
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  animation: cta-left 1.2s linear infinite;
+}
+
+
+
+
+/* =====================================================
+   ESTILOS PARA LAS CARDS DE TODO EL SITIO WEB
+   ===================================================== */
+
+.card {
+  @apply relative rounded-xl border border-neutral-200 bg-white p-5 transition-all duration-300 ease-out;
+}
+
+/* Hover sutil (desktop) */
+.card:hover {
+  @apply border-neutral-300 shadow-lg -translate-y-1;
+}
+
+/* Dark mode */
+.dark .card {
+  @apply bg-neutral-900 border-neutral-800;
+}
+
+
+/* =====================================================
+   SPECTRUM FRAME — infinite animated lines
+   ===================================================== */
+
+.spectrum-frame {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Líneas superior e inferior */
+.spectrum-frame::before,
+.spectrum-frame::after {
+  content: "";
+  position: absolute;
+  top: 0;
+
+  width: 300%;
+  height: 4px;
+
+  background: var(--spectrum-gradient);
+  opacity: 0.9;
+
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Línea superior → izquierda a derecha */
+.spectrum-frame::before {
+  top: 0;
+  left: -100%;
+  animation: spectrum-move-right 6s linear infinite;
+}
+
+/* Línea inferior → derecha a izquierda */
+.spectrum-frame::after {
+  top: auto;
+  bottom: 0;
+  left: -100%;
+  animation: spectrum-move-left 6s linear infinite;
+}
+
+/* Contenido siempre encima */
+.spectrum-frame>* {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================
+   Animaciones
+   ========================= */
+
+@keyframes spectrum-move-right {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(33.333%);
+  }
+}
+
+@keyframes spectrum-move-left {
+  0% {
+    transform: translateX(33.333%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spectrum-frame::before,
+  .spectrum-frame::after {
+    animation: none;
+  }
+}
+/* =====================================================
+   FIN ESTILOS SPECTRUM FRAME — infinite animated lines
+   ===================================================== */
+
+
+
+/* =====================================================
+   Comportamiento formulario WordPress Muestra en pagian de Soporte y Mantenimiento
+   ===================================================== */
+
+   /* Ojo animado en formulario WordPress */
+@keyframes eye-blink {
+  0% { transform: scaleY(1); }
+  45% { transform: scaleY(1); }
+  50% { transform: scaleY(0.1); }
+  55% { transform: scaleY(1); }
+  100% { transform: scaleY(1); }
+}
+
+.eye-blink {
+  animation: eye-blink 0.35s ease-in-out;
+}
+
+/* Alert — entrada y salida del formulario de WordPress */
+
+.alert-transition {
+  transition:
+    opacity 0.25s ease-out,
+    transform 0.25s ease-out,
+    max-height 0.25s ease-out,
+    margin-bottom 0.25s ease-out;
+  overflow: hidden;
+}
+
+.alert-hidden {
+  opacity: 0;
+  transform: translateY(-6px);
+  max-height: 0;
+  margin-bottom: 0;
+  pointer-events: none;
+}
+
+.alert-visible {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 200px; /* suficiente para el texto */
+  margin-bottom: 0.5rem;
+}
+
+/* =====================================================
+   FIN Comportamiento formulario WordPress Muestra en pagian de Soporte y Mantenimiento
+   ===================================================== */
+
+
+   
+/* =========================
+   Keyframes
+   ========================= */
+
+@keyframes cta-top {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+@keyframes cta-right {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(200%);
+  }
+}
+
+@keyframes cta-bottom {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-200%);
+  }
+}
+
+@keyframes cta-left {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-200%);
+  }
 }

@@ -1,0 +1,86 @@
+---
+title: "Inyección de texto japonés en WordPress: el Japanese Keyword Hack"
+description: "Por qué tu WordPress empieza a mostrar texto japonés, enlaces extraños y cómo eliminar este tipo de malware sin romper el sitio."
+category: "virus"
+author: "Adrián Loaiza"
+image: "/blog/japanese-keyword-hack.jpg"
+featured: true
+---
+
+## Cuando WordPress empieza a hablar japonés
+
+Uno de los ataques más confusos y peligrosos en WordPress es el **Japanese Keyword Hack (JKH)**.  
+El sitio parece normal para el administrador, pero Google empieza a indexar:
+
+- Texto japonés
+- Enlaces a sitios de spam
+- Resultados irrelevantes en el buscador
+
+Muchas veces el dueño del sitio **no ve nada raro**.
+
+---
+
+## Qué es el Japanese Keyword Hack
+
+Este ataque modifica:
+- Contenido servido solo a bots
+- Resultados indexados por Google
+- URLs dinámicas inexistentes
+
+El objetivo no es romper tu sitio, sino **usar tu autoridad para posicionar spam**.
+
+Fuentes:
+- https://developers.google.com/search/docs/monitor-debug/security/japanese-keyword-hack
+- https://www.sucuri.net/guides/japanese-keyword-hack/
+
+---
+
+## Cómo actúa realmente
+
+El malware suele:
+- Inyectar código en archivos PHP legítimos
+- Alterar `.htaccess`
+- Manipular la base de datos
+- Detectar user-agents (Googlebot)
+
+Por eso:
+- Tú ves el sitio normal
+- Google ve contenido japonés
+
+---
+
+## Por qué no se soluciona con un plugin
+
+Los plugins de seguridad:
+- Detectan archivos conocidos
+- No siempre detectan código ofuscado
+- No revisan lógica condicional avanzada
+
+Eliminar solo los síntomas **no elimina la raíz del problema**.
+
+---
+
+## Cómo se elimina correctamente
+
+La limpieza real incluye:
+- Auditoría de archivos núcleo
+- Revisión manual de temas y plugins
+- Inspección de `.htaccess`
+- Análisis de redirecciones condicionales
+- Revisión de indexación en Search Console
+
+Fuente:
+- https://support.google.com/webmasters/answer/9044101
+
+---
+
+## Qué hacer si tu sitio fue afectado
+
+Si Google muestra texto japonés aunque tú no lo veas, **el sitio está comprometido**.
+
+Solicitar una auditoría de seguridad permite detectar:
+- Punto de entrada
+- Persistencia del malware
+- Riesgo de reinfección
+
+[Solicitar auditoría WordPress](/auditoria)

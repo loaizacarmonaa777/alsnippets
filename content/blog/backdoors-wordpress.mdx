@@ -1,0 +1,70 @@
+---
+title: "Backdoors en WordPress: el acceso oculto que vuelve el malware"
+description: "Por qué tu WordPress se reinfecta una y otra vez aunque lo limpies."
+category: "virus"
+author: "Adrián Loaiza"
+image: "/blog/backdoors-wordpress.jpg"
+featured: false
+---
+
+## Qué es un backdoor en WordPress
+
+Un backdoor es una puerta trasera que permite:
+- Acceso remoto
+- Ejecución de código
+- Reinstalación de malware
+
+Sin credenciales válidas.
+
+---
+
+## Dónde se esconden los backdoors
+
+Normalmente en:
+- Archivos con nombres legítimos
+- Plugins aparentemente inofensivos
+- Carpetas poco revisadas
+
+Ejemplos comunes:
+- `wp-config.old.php`
+- `class.api.php`
+- Archivos en `/uploads/`
+
+Fuente:
+- https://www.wordfence.com/learn/what-is-a-backdoor/
+
+---
+
+## Por qué el malware regresa
+
+Porque:
+- Se elimina el archivo visible
+- El backdoor sigue activo
+- El atacante vuelve a ejecutar el código
+
+Limpiar sin eliminar backdoors **es perder tiempo**.
+
+---
+
+## Cómo identificarlos
+
+Se requiere:
+- Revisión manual de archivos
+- Búsqueda de funciones peligrosas
+- Comparación con hashes oficiales
+
+No es automático.
+
+---
+
+## Qué hacer correctamente
+
+Una limpieza profesional incluye:
+- Eliminación de backdoors
+- Cambio de credenciales
+- Refuerzo de permisos
+- Endurecimiento del entorno
+
+Si tu sitio se reinfecta, **el problema no es WordPress, es la limpieza incompleta**.
+
+[Solicitar auditoría de seguridad](/auditoria)
