@@ -7,10 +7,11 @@ type PostHeroProps = {
   title: string;
   description?: string;
   category: string;
-  author: string;
-  date: string;
-  image: string;
+  author?: string;
+  date?: string;
+  image?: string | null;
 };
+
 
 export default function PostHero({
   title,
@@ -24,10 +25,12 @@ export default function PostHero({
     <header className="space-y-6">
 
       {/* Imagen destacada */}
-      <div
-        className="w-full h-[360px] rounded-2xl bg-cover bg-center"
-        style={{ backgroundImage: `url(${image})` }}
-      />
+      {image && (
+        <div
+          className="w-full h-[360px] rounded-2xl bg-cover bg-center"
+          style={{ backgroundImage: `url(${image})` }}
+        />
+      )}
 
       {/* Meta */}
       <div className="space-y-2">

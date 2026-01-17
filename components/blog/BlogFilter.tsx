@@ -41,8 +41,8 @@ export default function BlogFilter({
     activeCategory === "todos"
       ? categories
       : categories.filter(
-          (cat) => cat.slug === activeCategory
-        );
+        (cat) => cat.slug === activeCategory
+      );
 
   /* =====================================================
      Conteo por categoría
@@ -85,11 +85,10 @@ export default function BlogFilter({
             <button
               key={cat.slug}
               onClick={() => setActiveCategory(cat.slug)}
-              className={`px-5 py-2 rounded-full border text-sm transition flex items-center gap-2 ${
-                activeCategory === cat.slug
+              className={`px-5 py-2 rounded-full border text-sm transition flex items-center gap-2 ${activeCategory === cat.slug
                   ? "bg-black text-white"
                   : "hover:bg-black/5"
-              }`}
+                }`}
             >
               <span>{cat.name}</span>
               <span className="text-xs opacity-70">
@@ -151,15 +150,13 @@ export default function BlogFilter({
 
               {/* FILA HORIZONTAL */}
               <div
-                ref={(el) =>
-                  (scrollRefs.current[category.slug] =
-                    el)
-                }
-                className={`flex gap-6 ${
-                  activarScroll
+                ref={(el) => {
+                  scrollRefs.current[category.slug] = el;
+                }}
+                className={`flex gap-6 ${activarScroll
                     ? "overflow-x-auto scroll-smooth"
                     : "flex-wrap"
-                } no-scrollbar`}
+                  } no-scrollbar`}
               >
                 {postsByCategory.map((post) => (
                   <Link

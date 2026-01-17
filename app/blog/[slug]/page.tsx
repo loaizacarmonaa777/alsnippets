@@ -1,10 +1,8 @@
-import { notFound } from "next/navigation"; // Función para manejar rutas no encontradas
-import { getPostBySlug } from "@/lib/blog/getPostBySlug"; // Función para obtener post por slug
-import { MDXContent } from "@/lib/blog/mdxRenderer"; // Componente para renderizar contenido MDX
-import PostCTA from "@/components/blog/PostCTA"; // Componente de llamada a la acción del post
-import PostHero from "@/components/blog/PostHero"; // Componente imagen del hero de cada post
-
-
+import { notFound } from "next/navigation";
+import { getPostBySlug } from "@/lib/blog/getPosts";
+import { MDXContent } from "@/lib/blog/mdxRenderer";
+import PostCTA from "@/components/blog/PostCTA";
+import PostHero from "@/components/blog/PostHero";
 
 /* =====================================================
    Página Post Individual
@@ -14,11 +12,9 @@ export default function BlogPostPage({
 }: {
   params: { slug: string };
 }) {
-  let post;
+  const post = getPostBySlug(params.slug);
 
-  try {
-    post = getPostBySlug(params.slug);
-  } catch {
+  if (!post) {
     notFound();
   }
 
@@ -39,6 +35,7 @@ export default function BlogPostPage({
       <article className="prose max-w-none">
         <MDXContent source={post.content} />
       </article>
+
     </main>
   );
 }
