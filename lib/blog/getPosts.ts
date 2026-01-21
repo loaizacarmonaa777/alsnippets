@@ -17,7 +17,7 @@ export type BlogPost = {
   category: string;        // slug normalizado (seo, virus, etc.)
   categoryName: string;    // nombre visual (SEO, Virus, etc.)
   author?: string;
-  date?: string;
+  date: string;            // OBLIGATORIO
   image?: string | null;
   featured?: boolean;
   content: string;
@@ -47,6 +47,12 @@ export function getAllPosts(): BlogPost[] {
 
     const { data, content } = matter(fileContent);
 
+    if (!data.date) {
+      throw new Error(
+        `El post "${slug}" no tiene la propiedad 'date' en el frontmatter`
+      );
+    }
+
     return {
       slug,
       title: data.title ?? "Sin título",
@@ -54,7 +60,7 @@ export function getAllPosts(): BlogPost[] {
       category: (data.category ?? "general").toLowerCase(), // slug
       categoryName: data.category ?? "General",             // visual
       author: data.author ?? "",
-      date: data.date ?? "",
+      date: data.date,
       image: data.image ?? null,
       featured: data.featured === true,
       content,
@@ -62,15 +68,13 @@ export function getAllPosts(): BlogPost[] {
   });
 
   /* =====================================================
-     Ordenar por fecha (si existe)
+     Ordenar por fecha
      ===================================================== */
-  return posts.sort((a, b) => {
-    if (!a.date || !b.date) return 0;
-    return (
+  return posts.sort(
+    (a, b) =>
       new Date(b.date).getTime() -
       new Date(a.date).getTime()
-    );
-  });
+  );
 }
 
 /* =====================================================
@@ -84,6 +88,12 @@ export function getPostBySlug(slug: string): BlogPost | null {
   const fileContent = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(fileContent);
 
+  if (!data.date) {
+    throw new Error(
+      `El post "${slug}" no tiene la propiedad 'date' en el frontmatter`
+    );
+  }
+
   return {
     slug,
     title: data.title ?? "Sin título",
@@ -91,9 +101,10 @@ export function getPostBySlug(slug: string): BlogPost | null {
     category: (data.category ?? "general").toLowerCase(),
     categoryName: data.category ?? "General",
     author: data.author ?? "",
-    date: data.date ?? "",
+    date: data.date,
     image: data.image ?? null,
     featured: data.featured === true,
     content,
   };
+
 }

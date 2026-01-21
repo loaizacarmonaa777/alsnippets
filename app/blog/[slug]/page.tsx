@@ -27,7 +27,7 @@ export default function BlogPostPage({
         description={post.description}
         category={post.category}
         author={post.author}
-        date={post.date}
+        date={post.date}  
         image={post.image}
       />
 

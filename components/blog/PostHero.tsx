@@ -8,7 +8,7 @@ type PostHeroProps = {
   description?: string;
   category: string;
   author?: string;
-  date?: string;
+  date: string;  //Obligatorio
   image?: string | null;
 };
 

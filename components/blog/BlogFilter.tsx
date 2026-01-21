@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useRef } from "react";
 import Link from "next/link";
+import { useState, useRef } from "react";
+import type { BlogPost } from "@/lib/blog/getPosts";
+
 
 /* =====================================================
    BlogFilter
@@ -13,7 +15,7 @@ export default function BlogFilter({
   posts,
   categories,
 }: {
-  posts: any[];
+  posts: BlogPost[];
   categories: { slug: string; name: string }[];
 }) {
   /* =====================================================
