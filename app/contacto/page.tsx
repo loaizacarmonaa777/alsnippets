@@ -243,7 +243,7 @@ export default function ContactoPage() {
               FAQs — Preguntas frecuentes (FULLWIDTH)
             ===================================================== */}
         <section
-          id="fac"
+          id="faq"
           className="--fullwidth"
         >
           <div className="max-w-4xl mx-auto px-5 space-y-10 text-center">

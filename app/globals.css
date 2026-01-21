@@ -16,7 +16,14 @@
   --bg-secondary: #f7f8fa;
   --bg-tertiary: #eef1f5;
   --bg-stack: var(--bg-secondary);
-  --bg-fullwidth: #f1f7fd; /* slate-50 aprox */
+  --bg-fullwidth: #f1f7fd;
+  /* slate-50 aprox */
+  --bg-footer: linear-gradient(to right bottom,
+      #1c374a, #1d394d, #1e3c50,
+      #1f3e54, #204157, #214055,
+      #214054, #223f52, #233b4b,
+      #243844, #25343e, #253037);
+
 
   /* sombras logos home */
   --spectrum-red: #ED1C24;
@@ -34,6 +41,7 @@
   --text-primary: #0f172a;
   --text-secondary: #334155;
   --text-white: #e4d3af;
+  --text-yellow1: #6e4f04;
   --text-muted: #64748b;
 
   /* ===== Brand ===== */
@@ -50,7 +58,12 @@
   --focus-ring: 0 0 0 3px rgba(201, 163, 78, 0.35);
 
   /* ===== Typography ===== */
+  --text-footer1: 0.6rem;
+  --text-footer2: 0.8rem;
+  --text-footer3: 0.9rem;
   --text-base: 1rem;
+  --leading-tight: 1.2;
+  --leading-normal: 1.6;
 
   --h6: 1.125rem;
   --h5: 1.25rem;
@@ -59,8 +72,6 @@
   --h2: 2.25rem;
   --h1: 2.75rem;
 
-  --leading-tight: 1.2;
-  --leading-normal: 1.6;
 }
 
 .dark {
@@ -73,7 +84,13 @@
   --bg-secondary: #111827;
   --bg-tertiary: #1f2933;
   --bg-stack: var(--bg-tertiary);
-  --bg-fullwidth: #0f172a; /* slate-900 aprox */
+  --bg-fullwidth: #0f172a;
+  /* slate-900 aprox */
+  --bg-footer: linear-gradient(to right bottom,
+      #9d7413, #a37916, #aa7f18,
+      #b0841b, #b78a1d, #b1851b,
+      #ac8119, #a67c17, #936d10,
+      #805e09, #6e4f04, #5c4100);
 
   --text-primary: #f8fafc;
   --text-secondary: #cbd5e1;
@@ -155,33 +172,266 @@ section {
 }
 
 /* =====================================================
-   BUTTONS — GLOBAL DEPTH
+  BOTONES GLOBALES
    ===================================================== */
-
+/* Reset button styles */
 button {
-  border: 1px solid var(--border-subtle);
-  background: transparent;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
   cursor: pointer;
-  box-shadow: var(--shadow-sm);
-  transition:
-    background-color 0.25s ease,
-    box-shadow 0.25s ease,
-    transform 0.25s ease;
 }
 
-button:hover {
+/* 1. Button TopBar */
+/* =========================
+   Button TopBar — Global
+   Comportamiento reutilizable
+   ========================= */
+.button-topbar {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Sin tamaños fijos */
+  padding: 0.5rem;
+
+  /* Hereda color según contexto */
+  color: currentColor;
+
+  transition:
+    background-color 0.3s ease-out,
+    transform 0.3s ease-out;
+}
+
+.button-topbar:hover {
+  background: var(--brand-primary-hover);
+  transform: translateY(-2px);
+}
+
+/* Asegura que SVG decorativos no interfieran */
+.button-topbar svg {
+  pointer-events: none;
+}
+
+
+/* 2. Button Menu (CTA) */
+.button-menu {
+  position: relative;
+
+  padding: 0.75rem 1.25rem;
+
+  background: var(--brand-primary);
+  color: #000;
+
+  font-weight: 600;
+
+  transition:
+    transform 0.25s ease-out,
+    box-shadow 0.25s ease-out;
+}
+
+.button-menu:hover {
+  transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
 
+
 /* =====================================================
-   BUTTON RESET — NAVIGATION
-   Usado en: Desktop menu triggers
+   3. BUTTON GENERAL — DARK
+   (fondos oscuros)
    ===================================================== */
 
-.nav-button-reset {
-  border: none !important;
-  box-shadow: none !important;
+.button-general-dark-wrapper {
+  position: relative;
+  display: inline-block;
+  padding: 2px; /* grosor del borde */
+  overflow: hidden;
+  transition: transform 0.3s ease;
 }
+
+.button-general-dark-wrapper:hover {
+  transform: scale(1.05);
+}
+
+.button-general-dark-wrapper:active {
+  transform: scale(1);
+}
+
+/* Capa animada */
+.button-general-dark-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: conic-gradient(
+    from 0deg,
+    var(--brand-primary),
+    color-mix(in srgb, var(--brand-primary) 30%, transparent),
+    var(--brand-primary)
+  );
+
+  animation: spin-gradient 4s linear infinite;
+}
+
+/* Botón real */
+.button-general-dark {
+  position: relative;
+  z-index: 1;
+
+  background: var(--bg-footer);
+  color: var(--brand-primary);
+
+  padding: 0.75rem 2rem;
+
+  font-size: 0.875rem;
+  font-weight: 500;
+
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.button-general-dark:hover {
+  background: var(--bg-tertiary);
+}
+
+/* Animación */
+@keyframes spin-gradient {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =====================================================
+   4. BUTTON GENERAL — LIGHT
+   (fondos claros)
+   ===================================================== */
+
+.button-general-light {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0.75rem 2rem;
+
+  background: transparent;
+  border: 1px solid var(--brand-primary);
+
+  color: var(--text-yellow1);
+  font-size: 0.875rem;
+  font-weight: 500;
+
+  transition:
+    color 0.3s ease-out,
+    background-color 0.3s ease-out,
+    transform 0.3s ease-out,
+    box-shadow 0.3s ease-out;
+}
+
+.button-general-light:hover {
+  background: var(--brand-primary-hover);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.button-general-light:active {
+  transform: translateY(0);
+}
+
+
+/* =====================================================
+   5. BUTTON SEND
+   ===================================================== */
+.button-send {
+  font-family: inherit;
+  font-size: 1rem;
+
+  background: var(--brand-primary);
+  color: #fff;
+
+  padding: 0.7em 1em;
+  padding-left: 0.9em;
+
+  display: inline-flex;
+  align-items: center;
+
+  border: none;
+  overflow: hidden;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease-out;
+}
+
+/* Texto */
+.button-send span {
+  display: block;
+  margin-left: 0.3em;
+  white-space: nowrap;
+
+  transition: all 0.3s ease-in-out;
+}
+
+/* SVG base */
+.button-send svg {
+  display: block;
+  transform-origin: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Hover — animación avión */
+.button-send:hover .svg-wrapper {
+  animation: button-send-fly 0.6s ease-in-out infinite alternate;
+}
+
+.button-send:hover svg {
+  transform: translateX(1.2em) rotate(45deg) scale(1.1);
+}
+
+.button-send:hover span {
+  transform: translateX(5em);
+}
+
+/* Active */
+.button-send:active {
+  transform: scale(0.95);
+}
+
+/* Keyframes */
+@keyframes button-send-fly {
+  from {
+    transform: translateY(0.1em);
+  }
+  to {
+    transform: translateY(-0.1em);
+  }
+}
+
+
+/* =====================================================
+   6. BUTTON SEND
+   ===================================================== */
+
+
+   /* =====================================================
+   7. BUTTON SEND
+   ===================================================== */
+
+
+   /* =====================================================
+   8. BUTTON SEND
+   =====================]]]]]]]]]================================ */
+
+
 
 
 /* =====================================================
@@ -265,10 +515,12 @@ button:hover {
    Contenedor estándar de contenido
    ===================================================== */
 .container-page {
-  max-width: 72rem; /* max-w-6xl */
+  max-width: 72rem;
+  /* max-w-6xl */
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1.25rem;  /* px-5 */
+  padding-left: 1.25rem;
+  /* px-5 */
   padding-right: 1.25rem;
 }
 
@@ -281,14 +533,16 @@ button:hover {
   background: var(--bg-fullwidth);
 
   /* Espaciado vertical (mobile first) */
-  padding-top: 4rem;   /* py-16 */
+  padding-top: 4rem;
+  /* py-16 */
   padding-bottom: 4rem;
 }
 
 /* Tablet */
 @media (min-width: 640px) {
   .--fullwidth {
-    padding-top: 6rem; /* py-24 */
+    padding-top: 6rem;
+    /* py-24 */
     padding-bottom: 6rem;
   }
 }
@@ -296,7 +550,8 @@ button:hover {
 /* Desktop */
 @media (min-width: 1024px) {
   .--fullwidth {
-    padding-top: 8rem; /* py-32 */
+    padding-top: 8rem;
+    /* py-32 */
     padding-bottom: 8rem;
   }
 }
@@ -619,11 +874,13 @@ button:hover {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .spectrum-frame::before,
   .spectrum-frame::after {
     animation: none;
   }
 }
+
 /* =====================================================
    FIN ESTILOS SPECTRUM FRAME — infinite animated lines
    ===================================================== */
@@ -634,13 +891,27 @@ button:hover {
    Comportamiento formulario WordPress Muestra en pagian de Soporte y Mantenimiento
    ===================================================== */
 
-   /* Ojo animado en formulario WordPress */
+/* Ojo animado en formulario WordPress */
 @keyframes eye-blink {
-  0% { transform: scaleY(1); }
-  45% { transform: scaleY(1); }
-  50% { transform: scaleY(0.1); }
-  55% { transform: scaleY(1); }
-  100% { transform: scaleY(1); }
+  0% {
+    transform: scaleY(1);
+  }
+
+  45% {
+    transform: scaleY(1);
+  }
+
+  50% {
+    transform: scaleY(0.1);
+  }
+
+  55% {
+    transform: scaleY(1);
+  }
+
+  100% {
+    transform: scaleY(1);
+  }
 }
 
 .eye-blink {
@@ -669,7 +940,8 @@ button:hover {
 .alert-visible {
   opacity: 1;
   transform: translateY(0);
-  max-height: 200px; /* suficiente para el texto */
+  max-height: 200px;
+  /* suficiente para el texto */
   margin-bottom: 0.5rem;
 }
 
@@ -678,7 +950,21 @@ button:hover {
    ===================================================== */
 
 
-   
+/* =====================================================
+   Footer
+   ===================================================== */
+
+
+
+
+
+
+/* =====================================================
+   FIN ESTILOS Footer
+   ===================================================== */
+
+
+
 /* =========================
    Keyframes
    ========================= */
