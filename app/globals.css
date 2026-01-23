@@ -38,6 +38,8 @@
       var(--spectrum-red) 100%);
 
   /* ===== Text ===== */
+  --text-white1: #ffffff;
+  --text-white2: #f7f8fa;
   --text-primary: #0f172a;
   --text-secondary: #334155;
   --text-white: #e4d3af;
@@ -418,8 +420,106 @@ button {
 
 
 /* =====================================================
-   6. BUTTON SEND
+   Buttons — Home Hero
+   Uso exclusivo Home
+   Animación borde heredada (svg-border-btn)
    ===================================================== */
+
+/* ===== Base compartida ===== */
+.button-home-dark,
+.button-home-light {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1.1rem 2.8rem;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+
+  box-shadow: 0 0 24px rgba(156, 118, 35, 0.25);
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+/* Hover general */
+.button-home-dark:hover,
+.button-home-light:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0 38px rgba(156, 118, 35, 0.45);
+}
+
+/* ===== Dark ===== */
+.button-home-dark {
+  background: var(--brand-primary);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.button-home-dark:hover {
+  background: var(--text-white);
+  color: #000;
+}
+
+/* ===== Light ===== */
+.button-home-light {
+  background: var(--brand-primary);
+  color: #000;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.button-home-light:hover {
+  background: var(--text-primary);
+  color: var(--text-white);
+}
+
+/* =====================================================
+   Borde animado (reuse del menú)
+   ===================================================== */
+
+.button-home-dark svg,
+.button-home-light svg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.button-home-dark .bg-line,
+.button-home-light .bg-line {
+  stroke: transparent;
+}
+
+
+/* Botón sobre fondo oscuro → línea blanca */
+.button-home-dark .hl-line {
+  stroke: var(--text-white);
+  stroke-width: 1.5;
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+/* Botón sobre fondo claro → línea azul */
+.button-home-light .hl-line {
+  stroke: var(--text-primary);
+  stroke-width: 1.5;
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+
+.button-home-dark:hover .hl-line,
+.button-home-light:hover .hl-line {
+  stroke-dashoffset: 0;
+}
+
 
 
    /* =====================================================
@@ -432,6 +532,138 @@ button {
    =====================]]]]]]]]]================================ */
 
 
+
+/* =====================================================
+   Hero — Flechas navegación (glass + contraste)
+   ===================================================== */
+
+.hero-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 50px;
+  height: 50px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 2rem;
+  font-weight: 400;
+
+  /* Glass / blur */
+  background: rgba(245, 210, 122, 0.18); /* amarillo claro con transparencia */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  border: 1px solid var(--brand-primary);
+  color: var(--brand-primary);
+
+  cursor: pointer;
+  z-index: 30;
+
+  /* Glow suave */
+  box-shadow:
+    0 0 18px rgba(201, 163, 78, 0.35),
+    0 0 32px rgba(201, 163, 78, 0.25);
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    background-color 0.35s ease;
+}
+
+.hero-arrow:hover {
+  transform: translateY(-50%) scale(1.08);
+  background: rgba(245, 210, 122, 0.28);
+
+  box-shadow:
+    0 0 28px rgba(201, 163, 78, 0.55),
+    0 0 48px rgba(201, 163, 78, 0.35);
+}
+
+/* Posiciones */
+.hero-arrow-left {
+  left: 2.5rem;
+}
+
+.hero-arrow-right {
+  right: 2.5rem;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .hero-arrow {
+    width: 56px;
+    height: 56px;
+    font-size: 2.4rem;
+  }
+
+  .hero-arrow-left {
+    left: 1.25rem;
+  }
+
+  .hero-arrow-right {
+    right: 1.25rem;
+  }
+}
+
+/* =====================================================
+   Hero — Ocultar flechas en mobile
+   ===================================================== */
+
+@media (max-width: 768px) {
+  .hero-arrow {
+    display: none;
+  }
+}
+
+
+/* =====================================================
+   Hero — Dots navegación
+   ===================================================== */
+
+.hero-dots {
+  display: flex;
+  gap: 14px;
+}
+
+.hero-dot {
+  width: 10px;
+  height: 10px;
+
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 100%;
+
+  cursor: pointer;
+
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
+
+  transition:
+    transform 0.3s ease,
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* Hover */
+.hero-dot:hover {
+  transform: scale(1.15);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+/* Activo */
+.hero-dot-active {
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+
+  transform: scale(1.25);
+
+  box-shadow:
+    0 0 12px rgba(201, 163, 78, 0.7),
+    0 0 24px rgba(201, 163, 78, 0.45);
+}
 
 
 /* =====================================================
