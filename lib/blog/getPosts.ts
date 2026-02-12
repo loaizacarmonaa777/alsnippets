@@ -18,7 +18,7 @@ export type BlogPost = {
   categoryName: string;    // nombre visual (SEO, Virus, etc.)
   author?: string;
   date: string;            // OBLIGATORIO
-  image?: string | null;
+  coverImage?: string | null;
   featured?: boolean;
   content: string;
 };
@@ -61,7 +61,7 @@ export function getAllPosts(): BlogPost[] {
       categoryName: data.category ?? "General",             // visual
       author: data.author ?? "",
       date: data.date,
-      image: data.image ?? null,
+      coverImage: data.coverImage ?? null,
       featured: data.featured === true,
       content,
     };
@@ -102,7 +102,7 @@ export function getPostBySlug(slug: string): BlogPost | null {
     categoryName: data.category ?? "General",
     author: data.author ?? "",
     date: data.date,
-    image: data.image ?? null,
+    coverImage: data.coverImage ?? null,
     featured: data.featured === true,
     content,
   };
