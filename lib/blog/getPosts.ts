@@ -18,7 +18,10 @@ export type BlogPost = {
   categoryName: string;    // nombre visual (SEO, Virus, etc.)
   author?: string;
   date: string;            // OBLIGATORIO
-  coverImage?: string | null;
+  
+  coverImage?: string | null; // Tu propiedad original
+  image?: string | null;      // <--- AÑADIDO: Para solucionar el error de TypeScript
+  
   featured?: boolean;
   content: string;
 };
@@ -61,7 +64,11 @@ export function getAllPosts(): BlogPost[] {
       categoryName: data.category ?? "General",             // visual
       author: data.author ?? "",
       date: data.date,
+      
       coverImage: data.coverImage ?? null,
+      // AÑADIDO: Mapeamos 'image'. Si no existe, usamos 'coverImage' por seguridad.
+      image: data.image ?? data.coverImage ?? null, 
+      
       featured: data.featured === true,
       content,
     };
@@ -102,9 +109,12 @@ export function getPostBySlug(slug: string): BlogPost | null {
     categoryName: data.category ?? "General",
     author: data.author ?? "",
     date: data.date,
+    
     coverImage: data.coverImage ?? null,
+    // AÑADIDO: Mismo fallback aquí para consistencia
+    image: data.image ?? data.coverImage ?? null,
+    
     featured: data.featured === true,
     content,
   };
-
 }
