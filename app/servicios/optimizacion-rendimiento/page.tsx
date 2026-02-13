@@ -1,6 +1,14 @@
 import Link from "next/link";
 import PageHero from "@/components/hero/PageHero";
 import FakeWordPressLogin from "@/components/forms/FakeWordPressLogin"; // Importa el formulario de login muestra
+import { Metadata } from "next";
+
+// Metadata específico para la página de Optimización y Rendimiento WordPress
+export const metadata: Metadata = {
+  title: "Optimización y Rendimiento WordPress",
+  description:
+    "Optimiza tu sitio WordPress para que cargue rápido, sea estable y ofrezca una mejor experiencia al usuario. Soluciones técnicas reales para mejorar el rendimiento de tu web.",
+};
 
 /* =====================================================
    Página — Optimización y Rendimiento WordPress

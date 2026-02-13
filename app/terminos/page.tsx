@@ -1,4 +1,12 @@
 import PageHero from "@/components/hero/PageHero";
+import { Metadata } from "next";
+
+// Metadata específico para la página de Términos y condiciones
+export const metadata: Metadata = {
+  title: "Términos y condiciones",
+  description:
+    "El uso de este sitio web implica la aceptación de los siguientes términos y condiciones.",
+};
 
 /* =====================================================
    Página — Términos y condiciones

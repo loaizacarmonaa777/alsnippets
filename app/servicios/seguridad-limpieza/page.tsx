@@ -1,5 +1,13 @@
 import Link from "next/link";
 import PageHero from "@/components/hero/PageHero";
+import { Metadata } from "next";
+
+// Metadata específico para la página de Seguridad y Limpieza WordPress
+export const metadata: Metadata = {
+  title: "Seguridad y Limpieza WordPress",
+  description:
+    "Un sitio WordPress inseguro no solo es un riesgo técnico, también afecta la confianza de tus usuarios y tu posicionamiento. Me encargo de detectar, limpiar y proteger tu web.",
+};
 
 /* =====================================================
    Página — Seguridad y Limpieza

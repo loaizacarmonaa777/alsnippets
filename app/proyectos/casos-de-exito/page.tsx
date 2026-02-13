@@ -1,4 +1,12 @@
 import PageHero from "@/components/hero/PageHero";
+import { Metadata } from "next";
+
+// Metadata específico para la página de Casos de Éxito
+export const metadata: Metadata = {
+  title: "Casos de éxito",
+  description:
+    "Sitios web y proyectos reales en los que he trabajado, optimizado o acompañado técnicamente.",
+};
 
 /* =====================================================
    Página — Casos de éxito

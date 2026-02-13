@@ -2,6 +2,14 @@ import { getAllPosts } from "@/lib/blog/getPosts";
 import { getCategories } from "@/lib/blog/getCategories";
 import BlogFilter from "@/components/blog/BlogFilter";
 import PageHero from "@/components/hero/PageHero";
+import { Metadata } from "next";
+
+// Metadata específico para esta página
+export const metadata: Metadata = {
+  title: "Blog | Alsnippets",
+  description:
+    "Artículos sobre WordPress, SEO, seguridad, rendimiento y tecnología aplicada.",
+};
 
 /* =====================================================
    Página — Blog

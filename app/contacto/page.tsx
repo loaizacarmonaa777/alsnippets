@@ -8,6 +8,14 @@ import {
   Linkedin,
   Github,
 } from "lucide-react";
+import { Metadata } from "next";
+
+// Metadata específico para la página de contacto
+export const metadata: Metadata = {
+  title: "Contacto",
+  description:
+    "Escríbeme para hablar sobre tu proyecto, resolver tus dudas y dar el siguiente paso con confianza. Estoy aquí para ayudarte.",
+};
 
 
 /* =====================================================

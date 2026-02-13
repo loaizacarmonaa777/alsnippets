@@ -1,4 +1,12 @@
 import PageHero from "@/components/hero/PageHero";
+import { Metadata } from "next";
+
+// Metadata específico para la página de devoluciones
+export const metadata: Metadata = {
+  title: "Política de devoluciones",
+  description:
+    "Conoce mis condiciones de reembolso y el alcance de los servicios que ofrezco. Transparencia y claridad en cada paso.",
+};
 
 /* =====================================================
    Página — Política de devoluciones

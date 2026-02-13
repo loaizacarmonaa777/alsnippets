@@ -2,6 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Metadata } from "next";
+
+// Metadata específico para esta página
+export const metadata: Metadata = {
+  title: "Auditoría y Consultoría WordPress | Alsnippets",
+  description:
+    "Ponte en contacto conmigo y solicita una auditoría o consultoría profesional. Revisión técnica, análisis de seguridad y orientación personalizada para tu proyecto.",
+};
 
 // Página: Auditoría y Consultoría WordPress
 export default function AuditoriaPage() {

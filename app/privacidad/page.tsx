@@ -1,4 +1,12 @@
 import PageHero from "@/components/hero/PageHero";
+import { Metadata } from "next";
+
+// Metadata específico para la página de privacidad
+export const metadata: Metadata = {
+  title: "Política de privacidad",
+  description:
+    "En Alsnippets respeto tu privacidad y me comprometo a proteger los datos personales que compartes a través de este sitio web.",
+};
 
 /* =====================================================
    Página — Privacidad

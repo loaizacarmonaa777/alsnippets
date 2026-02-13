@@ -1,4 +1,12 @@
 import PageHero from "@/components/hero/PageHero";
+import { Metadata } from "next";
+
+// Metadata específico para la página de Barber Short
+export const metadata: Metadata = {
+  title: "Barber Short",
+  description:
+    "Plataforma web para barberías, enfocada en reservas, gestión de servicios y pagos en línea.",
+};
 
 /* =====================================================
    Página — Barber-Short

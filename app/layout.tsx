@@ -21,7 +21,10 @@ const dmSerif = DM_Serif_Display({
 
 // Metadata base (SEO global)
 export const metadata: Metadata = {
-  title: "Soporte y Mantenimiento WordPress | Alsnippets",
+  title: {
+    template: "%s | Alsnippets",
+    default: "Alsnippets | Soporte y Mantenimiento WordPress",
+  },
   description:
     "Soporte técnico WordPress, seguridad, rendimiento y mantenimiento. Soluciones claras y auditoría profesional.",
 };
