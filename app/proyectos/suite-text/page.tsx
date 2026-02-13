@@ -13,6 +13,7 @@ export default function SuiteTextPage() {
       <PageHero
         title="Suite Text"
         subtitle="Un producto en desarrollo enfocado en optimizar, analizar y trabajar textos con una visión técnica, estratégica y orientada a resultados."
+        image="/images/hero/hero-suite-text.webp"
       />
 
       {/* =====================================================

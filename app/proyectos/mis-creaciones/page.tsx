@@ -13,6 +13,7 @@ export default function MisCreacionesPage() {
       <PageHero
         title="Mis creaciones"
         subtitle="Proyectos desarrollados desde cero, plugins, themes y soluciones propias."
+        image="/images/hero/hero-mis-creaciones.webp"
       />
 
       {/* =====================================================

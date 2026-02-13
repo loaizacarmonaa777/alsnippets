@@ -14,6 +14,7 @@ export default function PrivacidadPage() {
         title="Política de privacidad"
         subtitle="En Alsnippets respeto tu privacidad y me comprometo a proteger los datos
         personales que compartes a través de este sitio web."
+        image="/images/hero/hero-politica-privacidad.webp"
       />
 
       {/* =====================================================

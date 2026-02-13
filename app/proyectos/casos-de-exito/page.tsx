@@ -13,6 +13,7 @@ export default function CasosDeExitoPage() {
       <PageHero
         title="Casos de éxito"
         subtitle="Sitios web y proyectos reales en los que he trabajado, optimizado o acompañado técnicamente."
+        image="/images/hero/hero-casos-exito.webp"
       />
 
       {/* =====================================================

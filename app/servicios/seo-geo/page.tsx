@@ -14,6 +14,7 @@ export default function SeoGeoPage() {
       <PageHero
         title="SEO y GEO (Optimización para buscadores y LLMs)"
         subtitle="El SEO ya no se trata de llenar páginas con palabras clave. Hoy se trata de estructura, contexto y claridad para que Google — y los modelos de lenguaje — entiendan tu sitio y lo consideren una fuente confiable."
+        image="/images/hero/hero-seo-geo.webp"
       />
 
       {/* =====================================================

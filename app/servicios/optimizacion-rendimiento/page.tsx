@@ -15,6 +15,7 @@ export default function OptimizacionRendimientoPage() {
       <PageHero
         title="Optimización y Rendimiento WordPress"
         subtitle="Un sitio lento pierde visitas, conversiones y posicionamiento. Optimizo tu WordPress para que cargue rápido, sea estable y ofrezca una mejor experiencia al usuario."
+        image="/images/hero/hero-optimizacion-rendimiento.webp"
       />
 
       {/* =====================================================

@@ -14,6 +14,7 @@ export default function PreciosPage() {
       <PageHero
         title="Precios y forma de trabajo"
         subtitle="Cada proyecto es distinto. Por eso no trabajo con precios genéricos ni paquetes cerrados sin entender primero el contexto real."
+        image="/images/hero/hero-precios.webp"
       />
 
       {/* =====================================================

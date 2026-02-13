@@ -13,6 +13,7 @@ export default function DevolucionesPage() {
       <PageHero
         title="Política de devoluciones"
         subtitle="Condiciones de reembolso y alcance de los servicios ofrecidos por Alsnippets."
+        image="/images/hero/hero-devoluciones.webp"
       />
 
       {/* =====================================================

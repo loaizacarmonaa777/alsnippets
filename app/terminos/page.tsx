@@ -13,6 +13,7 @@ export default function TerminosPage() {
       <PageHero
         title="Términos y condiciones"
         subtitle="El uso de este sitio web implica la aceptación de los siguientes términos y condiciones."
+        image="/images/hero/hero-terminos-condiciones.webp"
       />
 
       {/* =====================================================

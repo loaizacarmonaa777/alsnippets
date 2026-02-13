@@ -15,6 +15,7 @@ export default function SeguridadLimpiezaPage() {
       <PageHero
         title="Seguridad y Limpieza WordPress"
         subtitle="Un sitio WordPress inseguro no solo es un riesgo técnico, también afecta la confianza de tus usuarios y tu posicionamiento. Me encargo de detectar, limpiar y proteger tu web."
+        image="/images/hero/hero-seguridad-limpieza.webp"
       />
 
       {/* =====================================================

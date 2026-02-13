@@ -13,6 +13,7 @@ export default function BarberShortPage() {
       <PageHero
         title="Barber Short"
         subtitle="Plataforma web para barberías, enfocada en reservas, gestión de servicios y pagos en línea."
+        image="/images/hero/hero-barber-short.webp"
       />
 
       {/* =====================================================

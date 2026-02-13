@@ -3,7 +3,7 @@ import Link from "next/link";
 import IconSuiteText from "@/components/icons/IconSuiteText";
 import IconBarber from "@/components/icons/IconBarber";
 import IconCasosExito from "@/components/icons/IconCasosExito";
-import IconMisCreaciones from "../icons/IconMisCreaciones";
+import IconMisCreaciones from "@/components/icons/IconMisCreaciones";
 
 /* =====================================================
    ProjectsPreview
@@ -27,8 +27,7 @@ export default function ProjectsPreview() {
 
           <p className="opacity-80 text-sm md:text-base text-neutral-600 dark:text-neutral-400">
             Algunos de los proyectos, sistemas y desarrollos que he creado,
-            tanto para clientes reales como iniciativas propias, enfocados en
-            rendimiento, estructura y soluciones prácticas.
+            tanto para clientes reales como iniciativas propias.
           </p>
         </div>
 
@@ -36,101 +35,83 @@ export default function ProjectsPreview() {
             Grid de proyectos
             ========================= */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Card — Suite Text */}
-          <Link
-            href="/proyectos/suite-text"
-            className="group card flex flex-col items-center text-center space-y-4 p-8 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-          >
-            {/* Icono: Documento / Texto */}
-            <div className="w-18 h-18 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-              <IconSuiteText />
-            </div>
+          
+          {/* Helper para generar las cards limpias */}
+          {[
+            {
+              href: "/proyectos/suite-text",
+              title: "Suite Text",
+              desc: "Herramienta enfocada en texto, SEO y estructura de contenidos.",
+              Icon: IconSuiteText,
+            },
+            {
+              href: "/proyectos/barber-short",
+              title: "Barber Short",
+              desc: "Sistema de reservas diseñado para barberías y negocios locales.",
+              Icon: IconBarber,
+            },
+            {
+              href: "/proyectos/casos-de-exito",
+              title: "Casos de éxito",
+              desc: "Proyectos WordPress reales con resultados medibles.",
+              Icon: IconCasosExito,
+            },
+            {
+              href: "/proyectos/mis-creaciones",
+              title: "Mis creaciones",
+              desc: "Plugins, experimentos y desarrollos propios.",
+              Icon: IconMisCreaciones,
+            },
+          ].map((item, idx) => (
+            <Link
+              key={idx}
+              href={item.href}
+              className="
+                group relative 
+                bg-white 
+                rounded-xl /* Petición explícita: rounded-xl */
+                p-8 
+                flex flex-col items-center text-center space-y-4 
+                min-h-[280px]
+                border border-neutral-100
+                shadow-sm
 
-            <div className="space-y-2">
-              <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
-                Suite Text
-              </h3>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                Herramienta enfocada en texto, SEO y estructura de contenidos.
-              </p>
-            </div>
-          </Link>
+                /* ANIMACIÓN SUAVE Y SOMBRA (Mismo estilo que Soporte) */
+                transition-all duration-500 ease-in-out
+                hover:-translate-y-2 
+                hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)]
+                hover:border-neutral-200
+              "
+            >
+              {/* CÍRCULO DEL ICONO
+                  - Normal: Fondo Oscuro / Icono Dorado
+                  - Hover: Fondo Dorado / Icono Oscuro
+              */}
+              <div className="
+                w-24 h-24 
+                rounded-full 
+                flex items-center justify-center
+                transition-colors duration-500 ease-in-out
+                
+                bg-[var(--bg-secondary)] 
+                text-[var(--text-yellow1)]
+                
+                group-hover:bg-[var(--text-yellow1)] 
+                group-hover:text-[var(--bg-secondary)]
+              ">
+                <item.Icon className="w-12 h-12 transition-all duration-500 ease-in-out" />
+              </div>
 
-          {/* Card — Barber Short */}
-          <Link
-            href="/proyectos/barber-short"
-            className="group card flex flex-col items-center text-center space-y-4 p-8 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-          >
-            {/* Círculo contenedor */}
-            {/* Colores:
-                - bg-orange-50 text-orange-600: Estado normal (Naranja Barbería)
-                - group-hover:bg-orange-600 group-hover:text-white: Estado Hover
-                Si prefieres usar tu variable CSS global, cambia 'text-orange-600' por 'text-[var(--brand-primary)]'
-            */}
-            <div className="w-16 h-16 flex items-center justify-center rounded-full bg-orange-50 text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-colors duration-300">
-
-              {/* Nuevo Icono Animado */}
-              <IconBarber />
-
-            </div>
-
-            <div className="space-y-2">
-              <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
-                Barber Short
-              </h3>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                Sistema de reservas diseñado para barberías y negocios locales.
-              </p>
-            </div>
-          </Link>
-
-          {/* Card — Casos de éxito */}
-          <Link
-            href="/proyectos/casos-de-exito"
-            className="group card flex flex-col items-center text-center space-y-4 p-8 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-          >
-            {/* Círculo contenedor:
-               - bg-green-50 / text-green-600 (Estado normal)
-               - hover:bg-green-600 / hover:text-white (Estado hover)
-            */}
-            <div className="w-16 h-16 flex items-center justify-center rounded-full bg-green-50 text-green-600 group-hover:bg-green-600 group-hover:text-white transition-colors duration-300">
-
-              {/* COMPONENTE ANIMADO */}
-              <IconCasosExito />
-
-            </div>
-
-            <div className="space-y-2">
-              <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
-                Casos de éxito
-              </h3>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                Proyectos WordPress reales con resultados medibles.
-              </p>
-            </div>
-          </Link>
-
-          {/* Card — Mis creaciones */}
-          <Link
-            href="/proyectos/mis-creaciones"
-            className="group card flex flex-col items-center text-center space-y-4 p-8 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-          >
-            {/* Círculo contenedor (Morado) */}
-            <div className="w-16 h-16 flex items-center justify-center rounded-full bg-purple-50 text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
-
-              <IconMisCreaciones />
-
-            </div>
-
-            <div className="space-y-2">
-              <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
-                Mis creaciones
-              </h3>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                Plugins, experimentos y desarrollos propios.
-              </p>
-            </div>
-          </Link>
+              <div className="space-y-2">
+                <h3 className="text-lg font-bold text-neutral-900">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-neutral-600 leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </section>

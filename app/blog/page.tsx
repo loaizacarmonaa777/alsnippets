@@ -19,6 +19,7 @@ export default function BlogPage() {
       <PageHero
         title="Blog"
         subtitle="WordPress, SEO, seguridad, rendimiento y tecnología aplicada."
+        image="/images/hero/hero-blog.webp"
       />
 
       {/* =====================================================
