@@ -1,217 +1,216 @@
-import Link from "next/link";
-import PageHero from "@/components/hero/PageHero";
-import { Metadata } from "next";
+'use client'
 
-// Metadata específico para la página de Seguridad y Limpieza WordPress
-export const metadata: Metadata = {
-  title: "Seguridad y Limpieza WordPress",
-  description:
-    "Un sitio WordPress inseguro no solo es un riesgo técnico, también afecta la confianza de tus usuarios y tu posicionamiento. Me encargo de detectar, limpiar y proteger tu web.",
-};
+import React from 'react'
+import PageHero from '@/components/hero/PageHero'
+import VerticalCard from '@/components/ui/VerticalCard' // Componente reutilizable cards verticales
+import HorizontalCard from '@/components/ui/HorizontalCard' // Componente reutilizable cards Horizontales
+import FakeWordPressLogin from '@/components/forms/FakeWordPressLogin' // Importa el formulario de login muestra
+import GlassCTA from '@/components/ui/GlassCTA' // Componente reutilizable CTA con fondo de vidrio
 
 /* =====================================================
    Página — Seguridad y Limpieza
 ===================================================== */
 
-// Página: Seguridad y Limppieza WordPress
 export default function SeguridadLimpiezaPage() {
+
+
   return (
     <>
       {/* =====================================================
-      HERO — Página Seguridad y Limpieza
-      ===================================================== */}
+       HERO — Página Seguridad y Limpieza
+       ===================================================== */}
       <PageHero
-        title="Seguridad y Limpieza WordPress"
-        subtitle="Un sitio WordPress inseguro no solo es un riesgo técnico, también afecta la confianza de tus usuarios y tu posicionamiento. Me encargo de detectar, limpiar y proteger tu web."
-        image="/images/hero/hero-seguridad-limpieza.webp"
+        title='Seguridad y Limpieza WordPress'
+        subtitle='Un sitio WordPress inseguro no solo es un riesgo técnico, también afecta la confianza de tus usuarios y tu posicionamiento. Me encargo de detectar, limpiar y proteger tu web.'
+        image='/images/hero/hero-seguridad-limpieza.webp'
       />
 
-      {/* =====================================================
-        Contenido de la página BLOQUE DE CARDS — Amenazas y problemas comunes
-        ===================================================== */}
-      <main className="max-w-6xl mx-auto px-5 py-12 space-y-24">
-        <section className="space-y-8 text-center">
-          <h2 className="text-2xl font-semibold">
+      <main className="w-full">
+        
+        {/* =====================================================
+           BLOQUE 1: AMENAZAS (Imágenes Verticales)
+           ===================================================== */}
+        <section className='w-full max-w-[1200px] mx-auto px-5 py-16 md:py-24 space-y-12'>
+          <h2>
             Problemas de seguridad más comunes
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Card */}
-            <div className="border rounded-xl p-6 space-y-3 card">
-              <h3 className="font-semibold">Malware y código malicioso</h3>
-              <p className="text-sm opacity-80">
-                Archivos infectados, scripts ocultos o código inyectado que
-                comprometen el funcionamiento del sitio.
-              </p>
-            </div>
-
-            {/* Card */}
-            <div className="border rounded-xl p-6 space-y-3 card">
-              <h3 className="font-semibold">Sitio en blacklist</h3>
-              <p className="text-sm opacity-80">
-                Penalizaciones por parte de Google o navegadores que bloquean el
-                acceso y dañan tu reputación.
-              </p>
-            </div>
-
-            {/* Card */}
-            <div className="border rounded-xl p-6 space-y-3 card">
-              <h3 className="font-semibold">Accesos no autorizados</h3>
-              <p className="text-sm opacity-80">
-                Usuarios sospechosos, intentos de fuerza bruta o credenciales
-                comprometidas.
-              </p>
-            </div>
-
-            {/* Card */}
-            <div className="border rounded-xl p-6 space-y-3 card">
-              <h3 className="font-semibold">Plugins vulnerables</h3>
-              <p className="text-sm opacity-80">
-                Extensiones obsoletas o mal configuradas que abren puertas a
-                ataques.
-              </p>
-            </div>
-
-            {/* Card */}
-            <div className="border rounded-xl p-6 space-y-3 card">
-              <h3 className="font-semibold">Configuraciones inseguras</h3>
-              <p className="text-sm opacity-80">
-                Permisos incorrectos, rutas expuestas o ajustes peligrosos en el
-                servidor.
-              </p>
-            </div>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
+            {/* SE HAN MODIFICADO LAS RUTAS DE LAS IMÁGENES EN ESTE BLOQUE */}
+            <VerticalCard
+              title='Malware y código malicioso'
+              description='Archivos infectados, scripts ocultos o código inyectado que alteran el funcionamiento del sitio, redirigen a páginas externas o roban información. Muchas veces pasan desapercibidos hasta que el daño ya es visible.'
+              image="/images/seguridad/vertical.webp"
+              href="/contacto"
+            />
+            <VerticalCard
+              title='Sitio en blacklist'
+              description='Cuando Google, navegadores o servicios de hosting detectan actividad maliciosa y bloquean el acceso a tu web, mostrando advertencias de “sitio peligroso”. Esto afecta gravemente la reputación y el posicionamiento SEO.'
+              image="/images/seguridad/vertical.webp"
+              href="/contacto"
+            />
+            <VerticalCard
+              title='Accesos no autorizados'
+              description='Intentos de fuerza bruta, credenciales filtradas o usuarios administradores sospechosos que permiten a terceros tomar el control parcial o total del sitio.'
+              image="/images/seguridad/vertical.webp"
+              href="/contacto"
+            />
+            <VerticalCard
+              title='Plugins vulnerables'
+              description='Extensiones desactualizadas, nulled o mal desarrolladas que contienen brechas de seguridad conocidas, convirtiéndose en la principal puerta de entrada para ataques.'
+              image="/images/seguridad/vertical.webp"
+              href="/contacto"
+            />
+            <VerticalCard
+              title='Configuraciones inseguras'
+              description='Permisos incorrectos (CHMOD mal configurado), archivos sensibles expuestos (wp-config, backups, logs), XML-RPC abierto o bases de datos sin protección adecuada.'
+              image="/images/seguridad/vertical.webp"
+              href="/contacto"
+            />
+            <VerticalCard
+              title='Base de datos comprometida'
+              description='Inyección de código (SQL injection), creación de usuarios ocultos, spam masivo o contenido malicioso insertado directamente en la base de datos que puede reinfectar el sitio incluso después de una limpieza superficial.'
+              image="/images/seguridad/vertical.webp"
+              href="/contacto"
+            />
           </div>
         </section>
 
         {/* =====================================================
-          LIMPIEZA — Qué hago exactamente
-          ===================================================== */}
-        <section className="space-y-6 max-w-6xl mx-auto text-center">
-          <h2 className="text-2xl font-semibold">
-            Limpieza y recuperación del sitio
-          </h2>
+           BLOQUE 2: LIMPIEZA (Imágenes Horizontales)
+           ===================================================== */}
+        <section className='w-full max-w-[1200px] mx-auto px-5 py-16 space-y-12 border-t border-[var(--border-subtle)]'>
+          <div className="text-center space-y-4 max-w-3xl mx-auto">
+            <h2>
+                Limpieza y recuperación del sitio
+            </h2>
+            <p className='text-lg text-[var(--text-secondary)] opacity-90'>
+                Cuando un sitio ha sido comprometido, no basta con “pasar un plugin”. La limpieza debe ser manual, cuidadosa y con criterio técnico.
+            </p>
+          </div>
 
-          <p className="opacity-80 max-w-3xl mx-auto">
-            Cuando un sitio ha sido comprometido, no basta con “pasar un
-            plugin”. La limpieza debe ser manual, cuidadosa y con criterio
-            técnico.
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Card */}
-            <div className="border rounded-xl p-6 space-y-3 card">
-              <p className="text-sm opacity-80">
-                Eliminación de malware y archivos infectados
-              </p>
-            </div>
-
-            {/* Card */}
-            <div className="border rounded-xl p-6 space-y-3 card">
-              <p className="text-sm opacity-80">
-                Revisión completa de código y base de datos
-              </p>
-            </div>
-
-            {/* Card */}
-            <div className="border rounded-xl p-6 space-y-3 card">
-              <p className="text-sm opacity-80">
-                Restauración segura si es necesario
-              </p>
-            </div>
-
-            {/* Card */}
-            <div className="border rounded-xl p-6 space-y-3 card">
-              <p className="text-sm opacity-80">
-                Refuerzo de accesos y permisos
-              </p>
-            </div>
+          {/* Grid de 4 columnas: Usamos VerticalCard con la imagen horizontal */}
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6'>
+            <HorizontalCard
+              title='Eliminación de malware y archivos infectados'
+              description='Detección y eliminación manual de scripts maliciosos, puertas traseras (backdoors) y código inyectado en archivos y carpetas del sitio.'
+              image="/images/seguridad/horizontal.webp"
+              href="/contacto"
+            />
+            <HorizontalCard
+              title='Revisión completa de código y BD'
+              description='Auditoría técnica de temas, plugins y tablas de la base de datos para localizar usuarios ocultos e inyecciones SQL.'
+              image="/images/seguridad/horizontal.webp"
+              href="/contacto"
+            />
+            <HorizontalCard
+              title='Restauración segura si es necesario'
+              description='Recuperación del sitio desde copias de seguridad limpias y verificadas, asegurando que la restauración no arrastre vulnerabilidades.'
+              image="/images/seguridad/horizontal.webp"
+              href="/contacto"
+            />
+            <HorizontalCard
+              title='Refuerzo de accesos y permisos'
+              description='Endurecimiento de credenciales, configuración de permisos seguros (CHMOD) y cierre de accesos vulnerables.'
+              image="/images/seguridad/horizontal.webp"
+              href="/contacto"
+            />
           </div>
         </section>
 
         {/* =====================================================
-          PREVENCIÓN — Seguridad a futuro
-          ===================================================== */}
-        <section className="space-y-6 max-w-6xl mx-auto text-center">
-          <h2 className="text-2xl font-semibold">Protección y prevención</h2>
+           BLOQUE 3: PREVENCIÓN (Imágenes Horizontales)
+           ===================================================== */}
+        <section className='w-full max-w-[1200px] mx-auto px-5 py-16 space-y-12 border-t border-[var(--border-subtle)]'>
+          <div className="text-center space-y-4 max-w-3xl mx-auto">
+            <h2>
+                Protección y prevención
+            </h2>
+            <p className='text-lg text-[var(--text-secondary)] opacity-90'>
+                Después de la limpieza, implemento medidas para reducir riesgos futuros y mantener el sitio protegido.
+            </p>
+          </div>
 
-          <p className="opacity-80 max-w-3xl mx-auto">
-            Después de la limpieza, implemento medidas para reducir riesgos
-            futuros y mantener el sitio protegido.
-          </p>
-
-          {/* Card */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="border rounded-xl p-6 space-y-3 card">
-              <p className="text-sm opacity-80">
-                Endurecimiento de WordPress
-              </p>
-            </div>
-
-            <div className="border rounded-xl p-6 space-y-3 card">
-              <p className="text-sm opacity-80">
-                Configuración de plugins de seguridad
-              </p>
-            </div>
-
-            <div className="border rounded-xl p-6 space-y-3 card">
-              <p className="text-sm opacity-80">
-                Monitoreo básico de actividad
-              </p>
-            </div>
-
-            <div className="border rounded-xl p-6 space-y-3 card">
-              <p className="text-sm opacity-80">
-                Buenas prácticas de actualización
-              </p>
-            </div>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6'>
+            <HorizontalCard
+              title='Endurecimiento de WordPress'
+              description='Desactivación de rutas vulnerables, protección de archivos críticos y ajustes estratégicos para reducir superficies de ataque.'
+              image="/images/seguridad/horizontal.webp"
+              href="/contacto"
+            />
+            <HorizontalCard
+              title='Configuración de plugins'
+              description='Instalación y configuración profesional de herramientas de seguridad bien optimizadas, evitando conflictos.'
+              image="/images/seguridad/horizontal.webp"
+              href="/contacto"
+            />
+            <HorizontalCard
+              title='Monitoreo básico de actividad'
+              description='Supervisión de accesos, intentos de inicio de sesión y cambios relevantes en el sistema para detectar sospechas.'
+              image="/images/seguridad/horizontal.webp"
+              href="/contacto"
+            />
+            <HorizontalCard
+              title='Buenas prácticas de actualización'
+              description='Gestión controlada de actualizaciones de WordPress, temas y plugins, asegurando compatibilidad y estabilidad.'
+              image="/images/seguridad/horizontal.webp"
+              href="/contacto"
+            />
           </div>
         </section>
 
         {/* =====================================================
-          REQUISITOS — Acceso al entorno de trabajo
-          ===================================================== */}
-        <section className="space-y-4 max-w-3xl text-center mx-auto">
-          <h2 className="text-2xl font-semibold">Acceso al sitio web</h2>
+            ACCESO AL SITIO WEB + LOGIN FAKE
+            ===================================================== */}
+        <section className='w-full py-16 sm:py-24 my-0 bg-[var(--bg-tertiary)] border-y border-[var(--border-subtle)]' style={{ background: 'var(--bg-hero-gradient)' }}>
+          <div className='max-w-[1200px] mx-auto px-5 grid gap-12 md:grid-cols-2 items-center'>
+            
+            {/* COLUMNA IZQUIERDA */}
+            <div className='space-y-6'>
+              <h2 className='text-center lg:text-left'>
+                Acceso al sitio web
+              </h2>
+              <div className="text-center lg:text-left space-y-4 text-lg text-[var(--text-secondary)]">
+                <p>
+                  Para realizar una optimización real y responsable, es necesario
+                  acceder al entorno del sitio web.
+                </p>
+                <p>
+                  Esto puede incluir acceso al panel de WordPress y, según el
+                  caso, al servidor o sistema de hosting.
+                </p>
+                <p className="font-medium italic text-[var(--brand-primary)]">
+                  Toda la información se maneja de forma confidencial y se utiliza
+                  únicamente para fines técnicos relacionados con tu proyecto.
+                </p>
+              </div>
+            </div>
 
-          <p className="opacity-80 max-w-3xl mx-auto">
-            Para poder realizar cualquier intervención técnica, es necesario
-            contar con acceso al entorno de trabajo.
-          </p>
+            {/* COLUMNA DERECHA — Login Fake */}
+            <div className='w-full max-w-md mx-auto rounded-2xl'>
+              <div className='bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-6 md:p-8 shadow-xl'>
+                 <FakeWordPressLogin />
+              </div>
+            </div>
 
-          <p className="opacity-80 max-w-3xl mx-auto">
-            Esto puede incluir acceso al panel de administración de WordPress y,
-            cuando sea necesario, al servidor (hosting, cPanel, Plesk u otro
-            sistema).
-          </p>
-
-          <p className="opacity-80 max-w-3xl mx-auto">
-            Toda la información se maneja de forma confidencial y únicamente con
-            fines técnicos relacionados con el servicio solicitado.
-          </p>
+          </div>
         </section>
 
         {/* =====================================================
-          CTA — Auditoría de seguridad
-          ===================================================== */}
-        <section className="border rounded-2xl p-8 space-y-6 max-w-3xl text-center mx-auto">
-          <h2 className="text-2xl font-semibold">
-            Auditoría de seguridad WordPress
-          </h2>
-
-          <p className="opacity-80 max-w-3xl mx-auto">
-            Antes de intervenir, realizo una auditoría de seguridad para
-            identificar vulnerabilidades y definir la mejor estrategia de
-            limpieza y protección.
-          </p>
-
-          <Link
-            href="/auditoria"
-            className="inline-block border px-6 py-4 rounded-lg"
-          >
-            Solicitar auditoría de seguridad
-          </Link>
-        </section>
+            CTA FINAL FULL WIDTH
+            ===================================================== */}
+        <div className="relative w-screen left-[50%] right-[50%] -ml-[50vw] -mr-[50vw] my-0">
+          <GlassCTA
+            title='Auditoría de seguridad para tu sitio web'
+            description='Antes de intervenir, realizo una auditoría de seguridad para identificar vulnerabilidades y definir la mejor estrategia de limpieza y protección. Esto garantiza una intervención precisa y efectiva.'
+            buttonText='Solicitar auditoría de seguridad'
+            buttonHref='/contacto'
+            disclaimer='Consultoría técnica disponible para España, USA y Latinoamérica.'
+            className="!my-0"
+          />
+        </div>
+        
       </main>
     </>
-  );
+  )
 }

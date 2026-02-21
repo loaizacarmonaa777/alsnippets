@@ -1,0 +1,397 @@
+/* app/styles/components.css */
+
+@layer components {
+  /* =====================================================
+     CONTENEDORES
+     ===================================================== */
+  .container-page {
+    @apply max-w-6xl mx-auto px-5;
+  }
+
+  .--fullwidth {
+    width: 100%;
+    background: var(--bg-fullwidth);
+    @apply py-16 sm:py-24 lg:py-32;
+  }
+
+  /* =====================================================
+     CARDS
+     ===================================================== */
+  .card {
+    @apply relative rounded-xl border border-neutral-200 bg-white p-5 transition-all duration-300 ease-out;
+  }
+
+  .card:hover {
+    @apply border-neutral-300 shadow-lg -translate-y-1;
+  }
+
+  .dark .card {
+    @apply bg-neutral-900 border-neutral-800;
+  }
+
+  /* =====================================================
+     BUTTONS - TOPBAR & MENU
+     ===================================================== */
+  .button-topbar {
+    @apply relative inline-flex items-center justify-center p-2 text-current transition-all duration-300 ease-out;
+  }
+
+  .button-topbar:hover {
+    background: var(--brand-primary-hover);
+    transform: translateY(-2px);
+  }
+
+  .button-topbar svg {
+    pointer-events: none;
+  }
+
+  .button-menu {
+    @apply relative px-5 py-3 font-semibold text-black transition-all duration-200 ease-out;
+    background: var(--brand-primary);
+  }
+
+  .button-menu:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* =====================================================
+     BUTTONS - GENERAL (Dark/Light variants)
+     ===================================================== */
+
+  /* Dark Wrapper (Gradient Border) */
+  .button-general-dark-wrapper {
+    @apply relative inline-block p-[2px] overflow-hidden transition-transform duration-300 ease-out;
+  }
+
+  .button-general-dark-wrapper:hover {
+    transform: scale(1.05);
+  }
+
+  .button-general-dark-wrapper:active {
+    transform: scale(1);
+  }
+
+  .button-general-dark-wrapper::before {
+    content: '';
+    @apply absolute inset-0;
+    background: conic-gradient(
+      from 0deg,
+      var(--brand-primary),
+      color-mix(in srgb, var(--brand-primary) 30%, transparent),
+      var(--brand-primary)
+    );
+    animation: spin-gradient 4s linear infinite;
+  }
+
+  /* Dark Button Inner */
+  .button-general-dark {
+    @apply relative z-10 px-8 py-3 text-sm font-medium transition-colors duration-300 ease-out;
+    background: var(--bg-footer);
+    color: var(--brand-primary);
+  }
+
+  .button-general-dark:hover {
+    background: var(--bg-tertiary);
+  }
+
+  /* Light Button */
+  .button-general-light {
+    @apply relative inline-flex items-center justify-center px-8 py-3 text-sm font-medium border border-[var(--brand-primary)] bg-transparent text-[var(--text-yellow1)] transition-all duration-300 ease-out;
+  }
+
+  .button-general-light:hover {
+    background: var(--brand-primary-hover);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .button-general-light:active {
+    transform: translateY(0);
+  }
+
+  /* =====================================================
+     BUTTONS - HOME HERO
+     ===================================================== */
+  .button-home-dark,
+  .button-home-light {
+    @apply relative inline-flex items-center justify-center px-11 py-4 text-base font-semibold tracking-wide no-underline cursor-pointer overflow-hidden shadow-[0_0_24px_rgba(156,118,35,0.25)] transition-all duration-300 ease-out;
+  }
+
+  .button-home-dark:hover,
+  .button-home-light:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 0 38px rgba(156, 118, 35, 0.45);
+  }
+
+  .button-home-dark {
+    background: var(--brand-primary);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .button-home-dark:hover {
+    background: var(--text-white);
+    color: #000;
+  }
+
+  .button-home-light {
+    background: var(--brand-primary);
+    color: #000;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  .button-home-light:hover {
+    background: var(--text-primary);
+    color: var(--text-white);
+  }
+
+  /* SVG Border Animation for Home Buttons */
+  .button-home-dark svg,
+  .button-home-light svg {
+    @apply absolute inset-0 pointer-events-none;
+  }
+
+  .button-home-dark .bg-line,
+  .button-home-light .bg-line {
+    stroke: transparent;
+  }
+
+  .button-home-dark .hl-line {
+    stroke: var(--text-white);
+    stroke-width: 1.5;
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+    transition: stroke-dashoffset 0.6s ease;
+  }
+
+  .button-home-light .hl-line {
+    stroke: var(--text-primary);
+    stroke-width: 1.5;
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+    transition: stroke-dashoffset 0.6s ease;
+  }
+
+  .button-home-dark:hover .hl-line,
+  .button-home-light:hover .hl-line {
+    stroke-dashoffset: 0;
+  }
+
+  /* =====================================================
+   BUTTON SEND (Avión de papel)
+   ===================================================== */
+  .button-send {
+    font-family: inherit;
+    font-size: 1rem;
+    background: var(--brand-primary);
+    color: #fff;
+    padding: 0.7em 1em;
+    padding-left: 0.9em;
+    display: inline-flex;
+    align-items: center;
+    border: none;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+  }
+
+  .button-send span {
+    display: block;
+    margin-left: 0.3em;
+    white-space: nowrap;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .button-send svg {
+    display: block;
+    transform-origin: center;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  /* Hover effect */
+  .button-send:hover .svg-wrapper {
+    animation: button-send-fly 0.6s ease-in-out infinite alternate;
+  }
+
+  .button-send:hover svg {
+    transform: translateX(1.2em) rotate(45deg) scale(1.1);
+  }
+
+  .button-send:hover span {
+    transform: translateX(5em);
+  }
+
+  .button-send:active {
+    transform: scale(0.95);
+  }
+
+  /* =====================================================
+     HERO ELEMENTS (Arrows & Dots)
+     ===================================================== */
+  .hero-arrow {
+    @apply absolute top-1/2 -translate-y-1/2 w-[50px] h-[50px] flex items-center justify-center text-2xl font-normal border border-[var(--brand-primary)] text-[var(--brand-primary)] cursor-pointer z-30 transition-all duration-300 ease-out hidden md:flex;
+    background: rgba(245, 210, 122, 0.18);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 0 18px rgba(201, 163, 78, 0.35),
+      0 0 32px rgba(201, 163, 78, 0.25);
+  }
+
+  .hero-arrow:hover {
+    transform: translateY(-50%) scale(1.08);
+    background: rgba(245, 210, 122, 0.28);
+    box-shadow: 0 0 28px rgba(201, 163, 78, 0.55),
+      0 0 48px rgba(201, 163, 78, 0.35);
+  }
+
+  .hero-arrow-left {
+    left: 2.5rem;
+  }
+  .hero-arrow-right {
+    right: 2.5rem;
+  }
+
+  .hero-dots {
+    @apply flex gap-[14px];
+  }
+
+  .hero-dot {
+    @apply w-[10px] h-[10px] rounded-full border border-white/45 cursor-pointer shadow-[0_0_6px_rgba(0,0,0,0.25)] transition-all duration-300 ease-out;
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  .hero-dot:hover {
+    transform: scale(1.15);
+    background: rgba(255, 255, 255, 0.55);
+  }
+
+  .hero-dot-active {
+    background: var(--brand-primary);
+    border-color: var(--brand-primary);
+    transform: scale(1.25);
+    box-shadow: 0 0 12px rgba(201, 163, 78, 0.7),
+      0 0 24px rgba(201, 163, 78, 0.45);
+  }
+
+  /* =====================================================
+     NAV ITEMS (SVG Border Draw)
+     ===================================================== */
+  .nav-item {
+    @apply relative px-3 py-3 border-none bg-transparent transition-all duration-300 ease-out;
+  }
+
+  .nav-item:hover,
+  .nav-item-active,
+  .nav-item:active {
+    background: var(--brand-primary-hover);
+  }
+
+  .nav-item > svg {
+    @apply absolute inset-0 w-full h-full fill-none pointer-events-none z-0;
+  }
+
+  .nav-item .bg-line {
+    stroke: var(--border-subtle);
+    stroke-width: 1;
+    opacity: 0;
+  }
+
+  .nav-item .hl-line {
+    stroke: var(--brand-primary);
+    stroke-width: 1;
+    stroke-dasharray: 300 480;
+    stroke-dashoffset: 300;
+    transition: stroke-dashoffset 1s ease;
+  }
+
+  .nav-item:hover .hl-line,
+  .nav-item-active .hl-line {
+    stroke-dashoffset: -480;
+  }
+
+
+  /* =====================================================
+   CONTENEDORES DE SECCIÓN
+   ===================================================== */
+
+  @layer components {
+
+    /* 1. SECCIÓN CONTENIDA (Estándar 1200px) 
+     Úsala para texto, grids de tarjetas, formularios, etc. */
+    .section-contained {
+      @apply w-full max-w-[1200px] mx-auto px-5 md:px-8;
+      /* Espaciado vertical estándar entre secciones */
+      @apply py-16 md:py-24;
+    }
+
+    /* 2. SECCIÓN FULL WIDTH (Ancho completo) 
+     Úsala para CTAs con fondo, Heros, Banners, Marquees */
+    .section-full {
+      @apply w-full max-w-none px-0 mx-0;
+      /* El padding interno dependerá del diseño, pero por defecto: */
+      @apply py-16 md:py-24;
+    }
+
+    /* ... resto de tus estilos ... */
+  }
+
+  /* =====================================================
+     UTILITIES / MICRO-INTERACTIONS
+     ===================================================== */
+  .micro-lift {
+    @apply transition-transform duration-200 ease-out;
+  }
+  .micro-lift:hover {
+    transform: translateY(-2px);
+  }
+
+  .micro-focus:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .animate-marquee {
+    animation: marquee 20s linear infinite;
+  }
+
+  .animate-scroll {
+    animation: scroll 70s linear infinite;
+  }
+
+  /* Spectrum Frame (Animated Border Lines) */
+  .spectrum-frame {
+    @apply relative overflow-hidden;
+  }
+
+  .spectrum-frame::before,
+  .spectrum-frame::after {
+    content: '';
+    @apply absolute top-0 w-[300%] h-[4px] pointer-events-none z-0 opacity-90;
+    background: var(--spectrum-gradient);
+  }
+
+  .spectrum-frame::before {
+    left: -100%;
+    animation: spectrum-move-right 6s linear infinite;
+  }
+
+  .spectrum-frame::after {
+    top: auto;
+    bottom: 0;
+    left: -100%;
+    animation: spectrum-move-left 6s linear infinite;
+  }
+
+  .spectrum-frame > * {
+    @apply relative z-10;
+  }
+}

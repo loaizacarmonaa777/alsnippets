@@ -1,17 +1,9 @@
 "use client";
 
-import Link from "next/link"; // componente de enlace de Next.js
-import { NAV_ITEMS } from "./menu.config"; // contiene la configuración del menú
-import ThemeSwitcher from "./ThemeSwitcher"; // sirve importar el componente de cambio de tema
-import { ChevronDown } from "lucide-react"; // importa ícono de flecha hacia abajo
-
-
-/* =====================================================
-   MobileMenu
-   - Panel deslizable derecha → izquierda
-   - Maneja submenús
-   - CTA destacado
-   ===================================================== */
+import Link from "next/link";
+import { NAV_ITEMS } from "./menu.config";
+import ThemeSwitcher from "./ThemeSwitcher"; 
+import { ChevronDown } from "lucide-react";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -27,205 +19,148 @@ export default function MobileMenu({
   onToggleSubmenu,
 }: MobileMenuProps) {
   return (
-    <aside
-      className={`
-        fixed top-0 right-0 z-50
-        h-screen w-[75vw] max-w-sm
-
-        bg-[var(--bg-body)]
-
-        shadow-xl
-        transform transition-transform duration-300 ease-out motion-reduce:transition-none
-        ${isOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-95"}
-      `}
-    >
-      {/* =========================
-          Contenedor interno
-         ========================= */}
+    <>
+      {/* Overlay */}
       <div 
-        style={{ background: "var(--bg-body)" }}
-        className="
-          h-full 
-          flex flex-col 
-          p-6 
-          
-          bg-[var(--bg-body)]
-        "
+        className={`
+          fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300
+          ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"}
+        `}
+        onClick={onClose}
+      />
+
+      <aside
+        className={`
+          fixed top-0 right-0 z-50
+          h-screen w-[85vw] max-w-sm
+          bg-[var(--bg-primary)] 
+          border-l border-[var(--border-subtle)]
+          shadow-2xl
+          transform transition-transform duration-300 ease-out
+          ${isOpen ? "translate-x-0" : "translate-x-full"}
+        `}
       >
+        <div className="h-full flex flex-col p-6 overflow-y-auto">
+          
+          {/* Cabecera / Botón Cerrar */}
+          <div className="flex justify-end mb-6">
+             <button 
+               onClick={onClose} 
+               className="p-2 text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] rounded-full transition-colors"
+             >
+               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+             </button>
+          </div>
 
-        {/* =========================
-            Navegación principal
-           ========================= */}
-        <nav className="flex-1 pt-6 space-y-4 text-sm verflow-y-auto">
-          {NAV_ITEMS.map((item, index) => {
-            const isSubmenu = Boolean(item.children && item.key);
-            const isActive = activeSubmenu === item.key;
+          {/* Navegación */}
+          <nav className="flex-1 space-y-3">
+            {NAV_ITEMS.map((item, index) => {
+              const isSubmenu = Boolean(item.children && item.key);
+              const isActive = activeSubmenu === item.key;
 
-            return (
-              <div
-                key={item.label}
-                className={`
-                  pb-4
-                  border-b border-black/10 dark:border-white/10
-                  
-                  transition-all duration-300 ease-out
-                  ${isOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"}
-                `}
-                style={{ transitionDelay: `${index * 40}ms` }}
-              >
-                {/* ===== Item con submenú ===== */}
-                {isSubmenu ? (
-                  <>
-                    <button
-                      onClick={() => onToggleSubmenu(item.key!)}
-                      className="
-                        nav-button-reset  
-                        w-full
-                        flex justify-between items-center
-                        font-medium
-                        transition-colors duration-200
-
-                        text-[var(--text-primary)]
-
-                        hover:bg-[var(--brand-primary-hover)]
-                        var(--brand-primary-hover)]
-                      "
-                      aria-expanded={isActive}
-                    >
-                      {item.label}
-
-                      <span
-                        className={`transition-transform duration-300 ease-out ${isActive ? "rotate-180" : "rotate-0"
-                          }`}
+              return (
+                <div
+                  key={item.label}
+                  className={`
+                    transition-all duration-500 ease-out
+                    ${isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}
+                  `}
+                  style={{ transitionDelay: `${index * 50}ms` }}
+                >
+                  {isSubmenu ? (
+                    <div className="overflow-hidden rounded-lg transition-all duration-300">
+                      {/* Botón Padre (Estilo Bloque con Fondo) */}
+                      <button
+                        onClick={() => onToggleSubmenu(item.key!)}
+                        className={`
+                          w-full flex justify-between items-center px-4 py-3 rounded-lg text-base font-medium
+                          transition-all duration-200
+                          ${isActive 
+                            ? "bg-[var(--brand-primary-hover)] text-[var(--text-primary)]" 
+                            : "text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)]"
+                          }
+                        `}
+                        aria-expanded={isActive}
                       >
-                        <ChevronDown size={18} />
-                      </span>
-                    </button>
+                        {item.label}
+                        <ChevronDown 
+                          size={18} 
+                          className={`transition-transform duration-300 ${isActive ? "rotate-180" : ""}`}
+                        />
+                      </button>
 
-
-                    {/* Submenú */}
-                    <div
-                      className={`
-                        overflow-hidden
-                        transition-[max-height,opacity,transform]
-                        duration-300 ease-in-out
-                        ${isActive
-                          ? "max-h-96 opacity-100 translate-y-0 mt-3"
-                          : "max-h-0 opacity-0 -translate-y-1"
-                        }
-                      `}
-                    >
-                      <div className="pl-4 pt-2 space-y-2">
-                        {item.children!.map((child) => (
-                          <Link
-                            key={child.href}
-                            href={child.href}
-                            onClick={onClose}
-                            className="
-                              block 
-                              px-3 py-2
-                              bg-[var(--brand-primary-hover)]
-                              border-l-4 border-[var(--brand-primary)]
-
-                              text-sm
-                              font-medium
-                              text-[var(--text-primary)]
-
-                              transition-transform duration-200 ease-out
-                              active:scale-[0.98]
-                            "
-                          >
-                            {child.label}
-                          </Link>
-                        ))}
+                      {/* Submenú */}
+                      <div
+                        className={`
+                          overflow-hidden transition-all duration-300 ease-in-out
+                          ${isActive ? "max-h-96 opacity-100 mt-1" : "max-h-0 opacity-0"}
+                        `}
+                      >
+                        <div className="flex flex-col space-y-1 pl-4 border-l-2 border-[var(--border-subtle)] ml-2">
+                          {item.children!.map((child) => (
+                            <Link
+                              key={child.href}
+                              href={child.href}
+                              onClick={onClose}
+                              className="
+                                block px-4 py-2 rounded-md text-sm font-medium
+                                text-[var(--text-secondary)]
+                                /* Hover: Fondo suave + Cambio de color */
+                                hover:bg-[var(--bg-tertiary)] 
+                                hover:text-[var(--brand-primary)]
+                                transition-all duration-200
+                              "
+                            >
+                              {child.label}
+                            </Link>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </>
-                ) : (
-                  /* ===== Item simple ===== */
-                  <Link
-                    href={item.href!}
-                    onClick={onClose}
-                    className="
-                      block 
-                      py-1
-                      font-medium
-                      text-[var(--text-primary)]
-                      transition-colors duration-200
-                      hover:bg-[var(--brand-primary-hover)]
-                      hover:text-[var(--text-primary)]
-                      active:bg-[var(--brand-primary-hover)]
-                    "
-                  >
-                    {item.label}
-                  </Link>
-                )}
-              </div>
-            );
-          })}
-        </nav>
+                  ) : (
+                    /* Enlace Simple (Estilo Bloque con Fondo) */
+                    <Link
+                      href={item.href!}
+                      onClick={onClose}
+                      className="
+                        block px-4 py-3 rounded-lg text-base font-medium
+                        text-[var(--text-primary)]
+                        hover:bg-[var(--bg-tertiary)]
+                        active:bg-[var(--brand-primary-hover)]
+                        transition-colors duration-200
+                      "
+                    >
+                      {item.label}
+                    </Link>
+                  )}
+                </div>
+              );
+            })}
+          </nav>
 
-        {/* =========================
-    CTA Auditoría (mismo estilo desktop)
-   ========================= */}
-        <Link
-          href="/auditoria"
-          onClick={onClose}
-          className="
-            relative
-            mt-8
-            block
-            text-center
+          {/* Footer del Menú */}
+          <div className="mt-8 pt-6 border-t border-[var(--border-subtle)] space-y-6">
+            <Link
+              href="/auditoria"
+              onClick={onClose}
+              className="
+                w-full flex items-center justify-center py-3 px-6 rounded-lg
+                font-bold text-white
+                bg-[var(--brand-primary)]
+                shadow-md hover:shadow-lg
+                active:scale-95 transition-all duration-200
+              "
+            >
+              Solicitar Auditoría
+            </Link>
 
-            px-6 py-3
-            font-semibold text-sm
+            <div className="flex justify-center">
+              <ThemeSwitcher />
+            </div>
+          </div>
 
-            bg-[var(--brand-primary)]
-            text-[var(--brand-secondary)]
-
-            overflow-hidden
-            group
-            shadow-[0_10px_20px_rgba(0,0,0,0.35)]
-            transition-all duration-300 ease-out
-          "
-        >
-          Auditoría
-
-          {/* =========================
-                Líneas animadas CTA
-              ========================= */}
-
-          {/* Top */}
-          <span className="cta-line top absolute top-0 left-0 w-full h-[2px] bg-[var(--brand-primary)]" />
-
-          {/* Right */}
-          <span className="cta-line right absolute top-0 right-0 w-[2px] h-full bg-[var(--brand-primary)]" />
-
-          {/* Bottom */}
-          <span className="cta-line bottom absolute bottom-0 left-0 w-full h-[2px] bg-[var(--brand-primary)]" />
-
-          {/* Left */}
-          <span className="cta-line left absolute top-0 left-0 w-[2px] h-full bg-[var(--brand-primary)]" />
-        </Link>
-
-
-        {/* =========================
-            Theme switcher
-            - Mismos estilos que desktop
-            - Botones SVG animados
-            ========================= */}
-        <div
-          className="
-            flex
-            justify-center
-            gap-4
-            pt-10
-          "
-        >
-          <ThemeSwitcher />
         </div>
-
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 }

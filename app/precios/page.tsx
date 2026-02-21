@@ -1,19 +1,30 @@
+"use client";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
 import PageHero from "@/components/hero/PageHero";
-import { Metadata } from "next";
 
-// Metadata específico para la página de precios
-export const metadata: Metadata = {
-  title: "Precios y forma de trabajo",
-  description:
-    "Cada proyecto es distinto. Por eso no trabajo con precios genéricos ni paquetes cerrados sin entender primero el contexto real.",
-}
 
 /* =====================================================
    Página — Precios
 ===================================================== */
 
 export default function PreciosPage() {
+  // --- LÓGICA SPOTLIGHT CTA---
+  const divRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [opacity, setOpacity] = useState(0);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!divRef.current) return;
+    const div = divRef.current;
+    const rect = div.getBoundingClientRect();
+    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
+  const handleMouseEnter = () => setOpacity(1);
+  const handleMouseLeave = () => setOpacity(0);
+
+  // ------------------------
+
   return (
     <>
       {/* =====================================================
@@ -28,7 +39,7 @@ export default function PreciosPage() {
       {/* =====================================================
           Contenido - FILOSOFÍA — Cómo se define un precio
           ===================================================== */}
-      <main className="w-full space-y-24">
+      <main className="w-full max-w-[1200px] mx-auto px-5 pt-12 md:pt-24 pb-0 space-y-32">
         <section className="max-w-6xl mx-auto px-5 space-y-6">
           <h2 className="text-2xl font-semibold text-center">
             ¿Cómo se define el precio de un proyecto?
@@ -74,7 +85,7 @@ export default function PreciosPage() {
               <p className="text-sm opacity-80">
                 Riesgos técnicos y responsabilidad
               </p>
-            </div>            
+            </div>
           </div>
         </section>
 
@@ -157,22 +168,43 @@ export default function PreciosPage() {
         </section>
 
         {/* =====================================================
-          CTA — Contacto directo
-          ===================================================== */}
-        <section className="border rounded-2xl p-8 space-y-6 max-w-3xl text-center mx-auto">
-          <h2 className="text-2xl font-semibold">Hablemos de tu proyecto</h2>
-
-          <p className="opacity-80">
-            Si tienes claro lo que necesitas o prefieres una conversación
-            directa, puedes escribirme y lo revisamos juntos.
-          </p>
-
-          <Link
-            href="/contacto"
-            className="inline-block border px-6 py-4 rounded-lg"
+            CTA PERSONALIZADO — Contacto
+            ===================================================== */}
+        <section className="w-full pb-12">
+          <div
+            ref={divRef}
+            onMouseMove={handleMouseMove}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            className="relative w-full mx-auto rounded-xl overflow-hidden shadow-2xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 transition-colors duration-300"
           >
-            Contactar
-          </Link>
+            {/* Luces */}
+            <div className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300" style={{ opacity, background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(255, 215, 0, 0.15), transparent 40%)` }} />
+            <div className="pointer-events-none absolute -inset-px opacity-0 dark:opacity-0 transition-opacity duration-300" style={{ opacity, background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(217, 119, 6, 0.1), transparent 40%)` }} />
+            <div className="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-[var(--brand-primary)] opacity-10 dark:opacity-20 blur-[100px] rounded-full pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-blue-600 opacity-10 dark:opacity-20 blur-[80px] rounded-full pointer-events-none"></div>
+
+            {/* CONTENIDO */}
+            <div className="relative z-10 flex flex-col items-center text-center px-6 py-16 md:py-24 space-y-8">
+              <h2 className="text-3xl md:text-5xl font-bold text-neutral-900 dark:text-white tracking-tight max-w-3xl">
+                Hablemos de tu proyecto
+              </h2>
+              <p className="text-lg md:text-xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto leading-relaxed">
+                Si tienes claro lo que necesitas o prefieres una conversación
+                directa, puedes escribirme y lo revisamos juntos.
+              </p>
+
+              <div className="pt-4 flex flex-col items-center space-y-4">
+                <Link href="/contacto" className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold rounded-full overflow-hidden transition-all duration-300 ease-in-out bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 hover:bg-[var(--text-yellow2)] hover:text-[var(--text-primary)] hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(0,0,0,0.2)] dark:hover:shadow-[0_0_30px_rgba(255,215,0,0.4)]">
+                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
+                  <span className="relative z-10">Contactar</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="relative z-10 w-5 h-5 ml-2 transition-transform duration-300 ease-in-out group-hover:translate-x-2">
+                    <path fillRule="evenodd" d="M16.72 7.72a.75.75 0 011.06 0l3.75 3.75a.75.75 0 010 1.06l-3.75 3.75a.75.75 0 11-1.06-1.06l2.47-2.47H3a.75.75 0 010-1.5h16.19l-2.47-2.47a.75.75 0 010-1.06z" clipRule="evenodd" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+          </div>
         </section>
       </main>
     </>

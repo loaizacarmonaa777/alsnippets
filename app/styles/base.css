@@ -1,0 +1,81 @@
+@layer base {
+  body {
+    min-height: 100vh;
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    background: var(--bg-body);
+    line-height: var(--leading-normal);
+    overflow-x: hidden;
+  }
+
+  /* Reseteado del main */
+  @layer base {
+  main {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+  /* Tipografía para los titulos*/
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    line-height: var(--leading-tight);
+  }
+
+  h1 {
+    @apply text-5xl md:text-6xl lg:text-7xl my-4 font-bold tracking-tighter;
+    color: var(--text-primary);
+  }
+  h2 {
+    @apply text-4xl md:text-5xl lg:text-6xl my-4 text-center tracking-tight;
+    color: var(--text-primary);
+  }
+  h3 {
+    @apply text-lg md:text-xl lg:text-2xl my-4 font-semibold tracking-tight;
+    color: var(--text-primary);
+  }
+  h4 {
+    font-size: var(--h4);
+  }
+  h5 {
+    font-size: var(--h5);
+  }
+  h6 {
+    font-size: var(--h6);
+  }
+
+ p {
+    @apply text-base md:text-lg leading-relaxed;
+  }
+
+  /* Layout por defecto */
+  section {
+    margin-bottom: 4rem;
+    scroll-margin-top: 6rem;
+  }
+
+  /* Estilos de botones reseteados */
+  button {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+}
+
+

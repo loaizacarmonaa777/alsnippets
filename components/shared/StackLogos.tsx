@@ -1,7 +1,9 @@
-/* Stack tecnológico animado
-   Logos en loop infinito
-   Escala de grises por defecto y color al hover */
+import React from "react";
+import Image from "next/image";
 
+/* =====================================================
+   DATA: Logos del Stack
+   ===================================================== */
 const logos = [
   "01-wordpress.svg",
   "02-woocommerce.svg",
@@ -35,29 +37,74 @@ const logos = [
 
 export default function StackLogos() {
   return (
-    /* Pista de animación */
-    <div className="flex gap-12 animate-scroll hover:[animation-play-state:paused] w-max min-w-full items-center">
+    /* CONTENEDOR WRAPPER (Relative para posicionar los glows) */
+    <section className="relative w-full z-10 my-0">
       
-      {/* Duplicamos logos para loop infinito */}
-      {[...logos, ...logos].map((logo, index) => (
-        <div
-          key={index}
-          className="
-            flex-shrink-0
-            flex items-center justify-center
-            grayscale opacity-70
-            hover:grayscale-0 hover:opacity-100
-            transition
-          "
-        >
-          <img
-            src={`/logos/stack/${logo}`}
-            alt={logo.replace(".svg", "").replace(/[-_]/g, " ")}
-            className="block h-14 w-auto object-contain"
-            loading="lazy"
-          />
+      {/* =========================
+          GLOW SUPERIOR (Top Light)
+          ========================= */}
+      <div className="
+        absolute -top-3 left-0 w-full h-6
+        bg-gradient-to-r from-cyan-400 via-purple-500 via-yellow-400 to-cyan-400 
+        blur-lg opacity-60
+        animate-glow-ltr
+        pointer-events-none
+        z-0
+      " />
+      
+      {/* Línea de corte fina superior */}
+      <div className="absolute top-0 left-0 w-full h-[1px] bg-white/20 z-20" />
+
+
+      {/* =========================
+          CONTENEDOR PRINCIPAL (Barra Blanca/Oscura)
+          - bg-white: Fondo sólido para tapar el centro de la luz
+          - z-10: Para estar sobre los glows desenfocados
+          ========================= */}
+      <div className="relative z-10 w-full bg-white dark:bg-[#0a0a0a] py-12 overflow-hidden">
+        
+        {/* Pista de animación (Carrusel) */}
+        <div className="flex gap-16 animate-scroll w-max min-w-full items-center">
+          
+          {/* Loop de logos duplicados */}
+          {[...logos, ...logos].map((logo, index) => (
+            <div
+              key={index}
+              className="
+                flex-shrink-0
+                flex items-center justify-center
+                grayscale opacity-60
+                hover:grayscale-0 hover:opacity-100
+                transition-all duration-300
+              "
+            >
+              <img
+                src={`/logos/stack/${logo}`}
+                alt={logo.replace(".svg", "").replace(/[-_]/g, " ")}
+                className="block h-12 md:h-16 w-auto object-contain"
+                loading="lazy"
+              />
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+      </div>
+
+
+      {/* =========================
+          GLOW INFERIOR (Bottom Light)
+          ========================= */}
+      <div className="
+        absolute -bottom-3 left-0 w-full h-6
+        bg-gradient-to-r from-green-400 via-pink-500 via-blue-500 to-green-400 
+        blur-lg opacity-60
+        animate-glow-rtl
+        pointer-events-none
+        z-0
+      " />
+      
+      {/* Línea de corte fina inferior */}
+      <div className="absolute bottom-0 left-0 w-full h-[1px] bg-white/20 z-20" />
+
+    </section>
   );
 }

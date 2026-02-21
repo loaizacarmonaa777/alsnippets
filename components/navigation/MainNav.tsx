@@ -3,53 +3,46 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+// Asegúrate de que las rutas sean correctas según tu estructura
 import TopBar from "./TopBar";
 import DesktopMenu from "./DesktopMenu";
 import MobileMenu from "./MobileMenu";
 import MenuOverlay from "./MenuOverlay";
-import useScrollHeader from "./useScrollHeader";
+import useScrollHeader from "./useScrollHeader"; // Ajusta el path si es necesario
 
-
-
-/* =====================================================
-   MainNav
-   - Orquestador del menú
-   - Controla estados globales
-   - Header sticky
-   ===================================================== */
 export default function MainNav() {
   /* =========================
      Estados globales
      ========================= */
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
+  
+  // Hook para detectar scroll (true si bajamos > 50px)
   const isCompact = useScrollHeader();
 
   /* =========================
-   Estado idioma (client-only)
-   ========================= */
+     Estado idioma (client-only)
+     ========================= */
   const [altLanguage, setAltLanguage] = useState<string>("EN");
 
-  /* =========================
-   Detectar idioma navegador
-   ========================= */
   useEffect(() => {
-    const lang = navigator.language || "";
-    setAltLanguage(lang.startsWith("es") ? "EN" : "ES");
+    // Solo ejecutamos esto en el cliente para evitar errores de hidratación
+    if (typeof window !== "undefined") {
+      const lang = navigator.language || "";
+      setAltLanguage(lang.startsWith("es") ? "EN" : "ES");
+    }
   }, []);
 
-
   /* =========================
-     Lock / unlock scroll
+     Bloquear scroll al abrir menú
      ========================= */
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
-      setActiveSubmenu(null); // cerramos submenús al cerrar
+      setActiveSubmenu(null);
     }
-
     return () => {
       document.body.style.overflow = "";
     };
@@ -58,68 +51,57 @@ export default function MainNav() {
   /* =========================
      Handlers
      ========================= */
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
-
+  const closeMenu = () => setIsMenuOpen(false);
+  
   const toggleSubmenu = (key: string) => {
     setActiveSubmenu((prev) => (prev === key ? null : key));
   };
 
-  /* =========================
-     Render
-     ========================= */
   return (
     <>
-      {/* =========================
-          TopBar → desktop
-          Header → mobile + desktop
-         ========================= */}
-
-      {/* Barra superior (desktop) */}
+      {/* TopBar (Desktop Only)
+         Nota: Si sigues viendo cuadros negros, asegúrate de haber actualizado
+         el archivo TopBar.tsx con el código que te di en la respuesta anterior.
+      */}
       <TopBar />
 
       <header
         className={`
           sticky top-0 z-50
           transition-all duration-300 ease-out
-          shadow-md
-          ${isCompact
-            ? "bg-white/95 dark:bg-neutral-500/95 backdrop-blur-lg"
-            : "bg-white/80 dark:bg-neutral-500/80 backdrop-blur-md"
-          }
+          border-b border-transparent
+          /* FONDO DINÁMICO CON VARIABLES */
+          bg-[var(--bg-primary)]/80 
+          backdrop-blur-md
+          supports-[backdrop-filter]:bg-[var(--bg-primary)]/60
+          
+          /* Sombra suave al hacer scroll */
+          ${isCompact ? "shadow-sm border-[var(--border-subtle)]" : "shadow-none"}
         `}
       >
         <div
           className={`
-            max-w-6xl mx-auto
-            px-6
+            max-w-6xl mx-auto px-6
             flex items-center justify-between
             transition-all duration-300 ease-out
-            ${isCompact ? "h-14" : "h-20"}
+            ${isCompact ? "h-16" : "h-20"}
           `}
         >
 
-          {/* =====================================================
-              Logo — Branding principal
-              - Light / Dark
-              - Preparado para sticky
-              ===================================================== */}
+          {/* =========================
+              LOGO
+             ========================= */}
           <Link
             href="/"
-            className="
-              flex items-center
-              transition-transform duration-300 ease-out
-            "
+            className="flex items-center transition-transform duration-300 ease-out hover:opacity-90"
+            onClick={closeMenu}
           >
             {/* Logo Light */}
             <img
               src="/brand/logo-light.svg"
-              alt="Alsnippets"
+              alt="Alsnippets Logo"
               className={`
-                block dark:hidden
-                w-auto
-                transition-all duration-300 ease-out
+                block dark:hidden w-auto transition-all duration-300
                 ${isCompact ? "h-8" : "h-10"}
               `}
             />
@@ -127,82 +109,79 @@ export default function MainNav() {
             {/* Logo Dark */}
             <img
               src="/brand/logo-dark.svg"
-              alt="Alsnippets"
+              alt="Alsnippets Logo"
               className={`
-                hidden dark:block
-                w-auto
-                transition-all duration-300 ease-out
+                hidden dark:block w-auto transition-all duration-300
                 ${isCompact ? "h-8" : "h-10"}
               `}
             />
           </Link>
 
-
           {/* =========================
-              Acciones derecha (mobile)
+              ACCIONES MOBILE (Derecha)
              ========================= */}
-          <div className="flex items-center gap-4 md:hidden">
-            {/* Idioma (placeholder) */}
+          <div className="flex items-center gap-3 md:hidden">
+            
+            {/* Botón Idioma Mobile */}
             <button
               type="button"
               aria-label="Cambiar idioma"
               className="
-                
-
-                w-9 h-9
-                flex items-center justify-center
-                rounded-full
-
-                text-sm font-medium
+                w-9 h-9 flex items-center justify-center rounded-full
+                text-sm font-bold
                 text-[var(--text-primary)]
-
-                transition-all duration-300 ease-out
-                hover:bg-[var(--brand-primary-hover)]
-                hover:scale-105
+                bg-[var(--bg-tertiary)]
+                hover:bg-[var(--brand-primary)]
+                hover:text-white
+                transition-all duration-300
               "
             >
               {altLanguage}
             </button>
 
-            {/* Hamburguesa */}
+            {/* Botón Hamburguesa */}
             <button
-              onClick={() => setIsMenuOpen((prev) => !prev)}
-              aria-label="Abrir menú"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
               className={`
-                nav-button-reset
-                ml-2
-                text-3xl
-                font-bold
-                text-[var(--brand-primary)]
-
-                transition-transform duration-300 ease-out
-                ${isMenuOpen ? "rotate-90 scale-110" : "rotate-0 scale-100"}
+                relative w-10 h-10 flex items-center justify-center rounded-md
+                text-[var(--text-primary)]
+                hover:bg-[var(--bg-secondary)]
+                transition-all duration-300
               `}
             >
-              ☰
+              {/* Icono Hamburguesa / X (SVG simple para evitar dependencias) */}
+              <svg 
+                className={`w-7 h-7 transition-transform duration-300 ${isMenuOpen ? "rotate-90" : ""}`} 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor" 
+                strokeWidth={2}
+              >
+                {isMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
             </button>
-
           </div>
 
           {/* =========================
-              Menú desktop
-              ========================= */}
-          <DesktopMenu />
+              MENÚ DESKTOP
+             ========================= */}
+          <div className="hidden md:block">
+            <DesktopMenu />
+          </div>
 
         </div>
       </header>
 
       {/* =========================
-          Overlay (mobile)
+          Overlay & Menú Mobile
          ========================= */}
-      <MenuOverlay
-        isOpen={isMenuOpen}
-        onClose={closeMenu}
-      />
-
-      {/* =========================
-          Mobile Menu (slide-in)
-         ========================= */}
+      <MenuOverlay isOpen={isMenuOpen} onClose={closeMenu} />
+      
       <MobileMenu
         isOpen={isMenuOpen}
         activeSubmenu={activeSubmenu}

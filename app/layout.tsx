@@ -1,25 +1,24 @@
 import type { Metadata } from "next";
-import { Inter, DM_Serif_Display } from "next/font/google";
+// 1. Importamos Outfit y mantenemos Inter
+import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
-import MainNav from "@/components/navigation/MainNav"; // Navegación global del sitio
-import Footer from "@/components/layout/Footer"; // Footer global del sitio
+import MainNav from "@/components/navigation/MainNav";
+import Footer from "@/components/layout/Footer";
 
-
-// Tipografías base
+// Configuración de INTER (Texto cuerpo)
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
 });
 
-const dmSerif = DM_Serif_Display({
-  variable: "--font-display",
+// Configuración de OUTFIT (Títulos)
+const outfit = Outfit({
+  variable: "--font-heading", // Le ponemos este nombre para usarlo fácil en CSS
   subsets: ["latin"],
-  weight: "400",
   display: "swap",
 });
 
-// Metadata base (SEO global)
 export const metadata: Metadata = {
   title: {
     template: "%s | Alsnippets",
@@ -29,7 +28,6 @@ export const metadata: Metadata = {
     "Soporte técnico WordPress, seguridad, rendimiento y mantenimiento. Soluciones claras y auditoría profesional.",
 };
 
-// Layout raíz (se aplica a TODO el sitio)
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -39,15 +37,17 @@ export default function RootLayout({
     <html lang="es">
       <body
         className={`
-         ${inter.className}
-         antialiased
-      `}
+          ${inter.variable} 
+          ${outfit.variable} 
+          antialiased
+          bg-[var(--bg-body)] 
+          text-[var(--text-secondary)]
+        `}
       >
-
         {/* Navegación global */}
         <MainNav />
+        
         {children}
-        {/* Contenido de cada página */}
 
         {/* Footer global */}
         <Footer />

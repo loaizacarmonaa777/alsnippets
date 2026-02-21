@@ -1,0 +1,202 @@
+/* app/styles/theme.css */
+
+@layer base {
+  :root {
+    /* =====================================================
+       DESIGN TOKENS — COLORIMETRÍA
+       Light / Dark / Custom
+       ===================================================== */
+
+    /* ===== Backgrounds ===== */
+    --bg-body: linear-gradient(
+      to left,
+      #f9faff,
+      #fafaff,
+      #fbfbff,
+      #fbfbff,
+      #fcfcff,
+      #fdfcff,
+      #fefdff,
+      #fffdff,
+      #fffdfe,
+      #fffdfb,
+      #fffef9,
+      #fffff8
+    );
+
+    --bg-primary: #ffffff;
+    --bg-secondary: #f7f8fa;
+    --bg-tertiary: #eef1f5;
+    --bg-stack: var(--bg-secondary);
+    --bg-fullwidth: #f1f7fd; /* slate-50 aprox */
+
+    --bg-footer: linear-gradient(
+      to right bottom,
+      #1c374a,
+      #1d394d,
+      #1e3c50,
+      #1f3e54,
+      #204157,
+      #214055,
+      #214054,
+      #223f52,
+      #233b4b,
+      #243844,
+      #25343e,
+      #253037
+    );
+
+    /* Gradiente Pastel para secciones CTA en modo Light */
+    --bg-hero-gradient: linear-gradient(
+      to left top,
+      #f0f3ff,
+      #faf2fc,
+      #fff3f7,
+      #fff5f4,
+      #fff8f3,
+      #fdf9f2,
+      #fafbf2,
+      #f6fcf4,
+      #f0fcf7,
+      #ebfafb,
+      #ebf8fe,
+      #eef5ff
+    );
+
+/* =====================================================
+    Colorimetría — Textos
+===================================================== */
+
+    /* ===== Text ===== */
+    --text-white1: #ffffff;
+    --text-white2: #f7f8fa;
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-white: #e4d3af;
+    --text-yellow1: #6e4f04;
+    --text-yellow2: #c9a34e;
+    --text-muted: #64748b;
+
+    /* ===== Brand ===== */
+    --brand-primary: #c9a34e;
+    --brand-secondary: #1c374a;
+    --brand-primary-hover: #c9a24e2c;
+
+
+/* =====================================================
+    Estilos de interfaz — Bordes, Sombras, Focus, Colores de Espectro (Logos)
+===================================================== */
+
+    /* ===== Borders & Shadows ===== */
+    --border-subtle: #e5e7eb;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+    /* ===== Focus ===== */
+    --focus-ring: 0 0 0 3px rgba(201, 163, 78, 0.35);
+
+
+/* =====================================================
+    Estilos colores spectrum para logos
+===================================================== */
+
+    /* ===== Spectrum Colors (Logos) ===== */
+    --spectrum-red: #ed1c24;
+    --spectrum-blue: #0000ff;
+    --spectrum-magenta: #ff00ff;
+    --spectrum-green: #8cc63f;
+    --spectrum-gradient: linear-gradient(
+      90deg,
+      var(--spectrum-red) 0%,
+      var(--spectrum-blue) 25%,
+      var(--spectrum-magenta) 50%,
+      var(--spectrum-green) 75%,
+      var(--spectrum-red) 100%
+    );
+
+/* =====================================================
+    Estilos Tipografia Tamaños y escalas
+===================================================== */
+
+    /* ===== Typography Scale ===== */
+    --text-footer1: 0.6rem;
+    --text-footer2: 0.8rem;
+    --text-footer3: 0.9rem;
+    --text-base: 1rem;
+    --leading-tight: 1.2;
+    --leading-normal: 1.6;
+
+    --h1: 3.125rem;
+    --h2: 2.375rem;
+    --h3: 1.8rem;
+    --h4: 1.5rem;
+    --h5: 1.25rem;
+    --h6: 1.125rem;
+  }
+
+/* =====================================================
+    Modo Oscuro — Variables para Dark Mode
+===================================================== */
+
+  /* --- MODO OSCURO --- */
+  .dark {
+    --bg-body: linear-gradient(
+      to right bottom,
+      #030a53,
+      #010b4e,
+      #000c48,
+      #000c43,
+      #010b3d,
+      #1a0736,
+      #26042e,
+      #2d0327,
+      #370319,
+      #390d0a,
+      #361800,
+      #2e2200
+    );
+
+    --bg-primary: #0b0f19;
+    --bg-secondary: #111827;
+    --bg-tertiary: #1f2933;
+    --bg-stack: var(--bg-tertiary);
+    --bg-fullwidth: #0f172a; /* slate-900 aprox */
+
+    --bg-footer: linear-gradient(
+      to right bottom,
+      #9d7413,
+      #a37916,
+      #aa7f18,
+      #b0841b,
+      #b78a1d,
+      #b1851b,
+      #ac8119,
+      #a67c17,
+      #936d10,
+      #805e09,
+      #6e4f04,
+      #5c4100
+    );
+
+    /* Gradiente Oscuro para secciones Hero/CTA en modo Dark */
+    --bg-hero-gradient: linear-gradient(
+      to bottom,
+      #171717,
+      /* neutral-900 */ #0a0a0a /* neutral-950 */
+    );
+
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+
+    --brand-primary: #f5d27a;
+    --brand-primary-hover: rgba(245, 210, 122, 0.45);
+
+    --border-subtle: #1f2937;
+  }
+}
+
+
+/* =====================================================
+    Modo Personalizado — Variables para Dark Mode
+===================================================== */

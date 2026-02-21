@@ -1,7 +1,12 @@
-import React from "react";
-import Image from "next/image";
+"use client";
 
-// Definimos la estructura de los datos de cada tarjeta
+import React from "react";
+// Importamos la tarjeta desde la carpeta UI
+import VerticalCard, { CardTag } from "@/components/ui/VerticalCard"; 
+
+/* =====================================================
+   Tipos
+   ===================================================== */
 export type BenefitItem = {
   title: string;
   description: string;
@@ -10,88 +15,65 @@ export type BenefitItem = {
 };
 
 type BenefitsProps = {
-  title: string;
+  title?: string;
   items: BenefitItem[];
 };
 
 /* =====================================================
-   Benefits
-   Lista de beneficios en formato grid con tarjetas detalladas
+   Helper: Lógica de Colores (Verde vs Rojo)
+   ===================================================== */
+const getTagVariant = (text: string): CardTag["variant"] => {
+  const positives = [
+    "Decisiones técnicas", "Dudas constantes", "Cambios urgentes",
+    "Soporte humano", "Comunicación directa", "Respuesta rápida",
+    "Tranquilidad operativa", "Solución experta"
+  ];
+  return positives.includes(text) ? "success" : "error";
+};
+
+/* =====================================================
+   Componente Benefits
    ===================================================== */
 export default function Benefits({ title, items }: BenefitsProps) {
   return (
-    <section className="space-y-10">
-      {/* Solo mostramos el título si existe */}
+    <section className="w-full space-y-12">
+      
+      {/* Título */}
       {title && (
-        <h2 className="text-2xl font-semibold text-center max-w-2xl mx-auto">
-          {title}
-        </h2>
+        <div className="text-center max-w-3xl mx-auto px-4">
+          <h2>
+            {title}
+          </h2>
+        </div>
       )}
 
-      {/* =========================
-          Grid de beneficios
-          ========================= */}
-      <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((item, index) => (
-          <li
-            key={index}
-            // Agregamos clases de Tailwind para dar el estilo de "Card" (borde, sombra suave, redondeado)
-            className="group card w-full max-w-[350px] h-auto bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col"
-          >
-            {/* 1. Placeholder de Imagen (Espacio reservado) */}
-            <div className="h-48 w-full relative bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-400 shrink-0">
-              {item.image ? (
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill // Ocupa todo el contenedor padre (h-48)
-                  className="object-cover rounded-t-xl transition-transform duration-500 ease-in-out group-hover:scale-105" // Recorta la imagen para llenar sin deformar
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      {/* Grid */}
+      <div className="container mx-auto px-4">
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+          
+          {items.map((item, index) => {
+            
+            // Convertimos tus strings simples en objetos Tag con color
+            const formattedTags: CardTag[] = item.chips.map(chip => ({
+              text: chip,
+              variant: getTagVariant(chip)
+            }));
+
+            return (
+              <li key={index} className="w-full max-w-md flex">
+                <VerticalCard
+                  title={item.title}
+                  description={item.description}
+                  image={item.image}
+                  tags={formattedTags}
+                  // href="/servicios" // Descomenta si quieres que sean clickeables
                 />
-              ) : (
-                <span className="text-sm">[Imagen]</span>
-              )}
-            </div>
+              </li>
+            );
+          })}
 
-
-            {/* Contenedor de contenido con padding */}
-            <div className="p-2 flex flex-col flex-grow items-center text-center space-y-0">
-
-              {/* 2. Título (H3) */}
-              <h3 className="!text-2xl text-neutral-500 dark:text-neutral-100 py-5">
-                {item.title}
-              </h3>
-
-              {/* 3. Descripción (Párrafo) */}
-              <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed py-2">
-                {item.description}
-              </p>
-
-              {/* 4. Listado de Chips */}
-              <div className="mt-auto pt-2 flex flex-wrap justify-center gap-2">
-                {item.chips.map((chip, chipIndex) => {
-                  // Lógica para el chip verde específico
-                  const isGreen = chip === "Decisiones técnicas" || chip === "Dudas constantes" || chip === "Cambios urgentes" || chip === "Soporte humano" || chip === "Comunicación directa" || chip === "Respuesta rápida" || chip === "Tranquilidad operativa";
-
-                  return (
-                    <span
-                      key={chipIndex}
-                      className={`px-2.5 py-0.5 rounded-full text-xs text-[0.8rem] border transition-colors cursor-default leading-tight
-                        ${isGreen
-                          ? "border-green-600 text-green-700 bg-green-50 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800"
-                          : "border-red-600 text-red-700 bg-red-50 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800"
-                        }
-                      `}
-                    >
-                      {chip}
-                    </span>
-                  );
-                })}
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+        </ul>
+      </div>
     </section>
   );
 }

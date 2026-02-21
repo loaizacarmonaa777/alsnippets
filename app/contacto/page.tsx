@@ -8,14 +8,7 @@ import {
   Linkedin,
   Github,
 } from "lucide-react";
-import { Metadata } from "next";
 
-// Metadata específico para la página de contacto
-export const metadata: Metadata = {
-  title: "Contacto",
-  description:
-    "Escríbeme para hablar sobre tu proyecto, resolver tus dudas y dar el siguiente paso con confianza. Estoy aquí para ayudarte.",
-};
 
 
 /* =====================================================
@@ -100,7 +93,7 @@ export default function ContactoPage() {
       {/* =====================================================
           DATOS DE CONTACTO
           ===================================================== */}
-      <main className="w-full space-y-24 mt-24">
+      <main className="w-full max-w-[1200px] mx-auto px-5 pt-12 md:pt-24 pb-0 space-y-32">
         <section className="py-24">
           <div className="max-w-4xl mx-auto px-5 space-y-10 text-center">
 
