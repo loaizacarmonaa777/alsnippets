@@ -1,16 +1,19 @@
 "use client";
 
 import React from "react";
+import Link from "next/link"; // Importamos Link para poder usar el href
 
 interface IconCardProps {
-  // Aceptamos el componente en sí (ej: la función del SVG), no el elemento renderizado (<Icon />)
-  // Usamos 'any' en ElementType para evitar conflictos estrictos con los tipos de tus SVGs
   icon: React.ElementType<any>; 
   title: string;
+  // Añadimos description y href como opciones (el "?" significa que son opcionales)
+  description?: string;
+  href?: string;
 }
 
-export default function IconCard({ icon: Icon, title }: IconCardProps) {
-  return (
+export default function IconCard({ icon: Icon, title, description, href }: IconCardProps) {
+  // 1. Guardamos el diseño de la tarjeta en una variable
+  const cardContent = (
     <div
       className="
         group relative 
@@ -19,6 +22,7 @@ export default function IconCard({ icon: Icon, title }: IconCardProps) {
         p-8 
         flex flex-col items-center justify-center text-center
         min-h-[260px]
+        h-full
         shadow-sm
         border border-[var(--border-subtle)]
         
@@ -42,14 +46,32 @@ export default function IconCard({ icon: Icon, title }: IconCardProps) {
         group-hover:bg-[var(--brand-primary)] 
         group-hover:text-white
       ">
-        {/* Renderizamos el icono y le pasamos la clase para el tamaño y hover */}
         <Icon className="w-12 h-12 transition-transform duration-500 group-hover:scale-110" />
       </div>
 
-      {/* TEXTO */}
+      {/* TÍTULO */}
       <p className="font-bold text-lg text-[var(--text-primary)] transition-colors duration-300">
         {title}
       </p>
+
+      {/* DESCRIPCIÓN (Solo se renderiza si la envías desde el componente padre) */}
+      {description && (
+        <p className="mt-3 text-sm text-[var(--text-secondary)] opacity-90 leading-relaxed">
+          {description}
+        </p>
+      )}
     </div>
   );
+
+  // 2. Si el componente recibe un enlace (href), envolvemos la tarjeta para que sea clickeable
+  if (href) {
+    return (
+      <Link href={href} className="block h-full outline-none">
+        {cardContent}
+      </Link>
+    );
+  }
+
+  // 3. Si no recibe enlace, simplemente mostramos la tarjeta normal
+  return cardContent;
 }
