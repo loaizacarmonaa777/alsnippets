@@ -27,7 +27,7 @@ export default function PageHero({ title, subtitle, image }: PageHeroProps) {
         overflow-hidden
         /* Fondo por defecto usando variables del sistema */
         bg-[var(--bg-tertiary)]
-        transition-colors duration-300
+        transition-colors duration-300 my-0
       "
     >
       {/* =====================================================

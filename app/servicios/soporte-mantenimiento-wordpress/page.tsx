@@ -45,37 +45,37 @@ export default function SoporteMantenimientoPage () {
               title='Errores críticos'
               description='Errores 400, 500, pantallas blancas y fallos que impiden el funcionamiento normal del sitio.'
               image='/images/soporte/soporte.webp'
-              href='/contacto'
+              //href='/contacto'
             />
             <VerticalCard
               title='Actualizaciones sin riesgo'
               description='Actualización segura de WordPress, plugins y themes, evitando conflictos y pérdidas de información.'
               image='/images/soporte/soporte.webp'
-              href='/contacto'
+              //href='/contacto'
             />
             <VerticalCard
               title='Lentitud y rendimiento'
               description='Identificación de cuellos de botella que afectan la velocidad y experiencia del usuario.'
               image='/images/soporte/soporte.webp'
-              href='/servicios/optimizacion-rendimiento'
+              //href='/servicios/optimizacion-rendimiento'
             />
             <VerticalCard
               title='Configuración del servidor'
               description='Revisión de memoria, tiempos de ejecución, SSL, caché y ajustes clave del hosting.'
               image='/images/soporte/soporte.webp'
-              href='/contacto'
+              //href='/contacto'
             />
             <VerticalCard
               title='Soporte técnico real'
               description='Respuesta clara y directa cuando algo falla, sin tickets eternos ni respuestas genéricas.'
               image='/images/soporte/soporte.webp'
-              href='/contacto'
+              //href='/contacto'
             />
             <VerticalCard
               title='Bases de datos'
               description='Optimización, respaldo y restauración de bases de datos WordPress para garantizar la integridad de los datos.'
               image='/images/soporte/soporte.webp'
-              href='/contacto'
+              //href='/contacto'
             />
           </div>
         </section>
@@ -120,7 +120,6 @@ export default function SoporteMantenimientoPage () {
         </section>
 
         {/* SECCIÓN CTA - FULL WIDTH */}
-        {/* Usamos w-screen y márgenes negativos para romper el límite del contenedor padre */}
         <div className='relative w-screen left-[50%] right-[50%] -ml-[50vw] -mr-[50vw] my-0'>
           <GlassCTA
             title='Empieza por una auditoría WordPress'

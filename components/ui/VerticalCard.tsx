@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,6 +20,23 @@ interface VerticalCardProps {
 }
 
 /* =====================================================
+   HELPER: Estilos de los Tags
+   ===================================================== */
+function getTagStyles(variant: CardTag["variant"] = "neutral") {
+  switch (variant) {
+    case "success":
+      return "border-green-200 bg-green-50 text-green-700 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300";
+    case "error":
+      return "border-red-200 bg-red-50 text-red-700 dark:bg-red-900/30 dark:border-red-800 dark:text-red-300";
+    case "brand":
+      return "border-[var(--brand-primary)]/30 bg-[var(--brand-primary)]/10 text-[var(--brand-primary)]";
+    case "neutral":
+    default:
+      return "border-[var(--border-subtle)] bg-[var(--bg-tertiary)] text-[var(--text-secondary)]";
+  }
+}
+
+/* =====================================================
    VerticalCard (Componente UI)
    ===================================================== */
 export default function VerticalCard({
@@ -33,23 +48,22 @@ export default function VerticalCard({
   className = "",
 }: VerticalCardProps) {
   
-  // Clases base compartidas (para Link y div/article)
+  // Clases base compartidas
   const containerClasses = `
     group relative flex flex-col w-full h-full
     bg-[var(--bg-card)] border border-[var(--border-subtle)]
     rounded-2xl overflow-hidden
     shadow-sm transition-all duration-300 ease-out
-    ${href ? "hover:shadow-xl hover:-translate-y-1 cursor-pointer" : ""}
+    hover:border-[var(--brand-primary)]/30
+    ${href ? "hover:shadow-xl hover:-translate-y-1 cursor-pointer" : "hover:-translate-y-1"}
     ${className}
   `;
 
-  // Definimos el contenido interno como una constante o función render
-  // para no duplicar código dentro del return
   const cardContent = (
     <>
-      {/* 1. IMAGEN */}
-      <div className="relative h-56 w-full bg-[var(--bg-tertiary)] overflow-hidden">
-        {image ? (
+      {/* 1. IMAGEN (Solo se renderiza si pasas un link de imagen válido) */}
+      {image && image.trim() !== "" && (
+        <div className="relative h-56 w-full bg-[var(--bg-tertiary)] overflow-hidden shrink-0">
           <Image
             src={image}
             alt={title}
@@ -57,12 +71,8 @@ export default function VerticalCard({
             className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-        ) : (
-          <div className="flex items-center justify-center h-full text-[var(--text-muted)] bg-[var(--bg-tertiary)]">
-            <span className="text-sm">Sin imagen</span>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* 2. BODY */}
       <div className="flex flex-col flex-grow p-5 md:p-6 text-center">
@@ -97,11 +107,7 @@ export default function VerticalCard({
 
   /* =====================================================
      LA REGLA DE LINK vs ARTICLE
-     =====================================================
-     Verificamos que href exista Y que no sea un string vacío.
-     Si es válido -> Renderiza Link.
-     Si no -> Renderiza article (sin enlace).
-  */
+     ===================================================== */
   const isValidLink = href && href.trim() !== "";
 
   if (isValidLink) {
@@ -118,21 +124,4 @@ export default function VerticalCard({
       {cardContent}
     </article>
   );
-}
-
-/* =====================================================
-   HELPER: Estilos de los Tags
-   ===================================================== */
-function getTagStyles(variant: CardTag["variant"] = "neutral") {
-  switch (variant) {
-    case "success":
-      return "border-green-200 bg-green-50 text-green-700 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300";
-    case "error":
-      return "border-red-200 bg-red-50 text-red-700 dark:bg-red-900/30 dark:border-red-800 dark:text-red-300";
-    case "brand":
-      return "border-[var(--brand-primary)]/30 bg-[var(--brand-primary)]/10 text-[var(--brand-primary)]";
-    case "neutral":
-    default:
-      return "border-[var(--border-subtle)] bg-[var(--bg-tertiary)] text-[var(--text-secondary)]";
-  }
 }
