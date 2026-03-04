@@ -179,53 +179,84 @@
     stroke-dashoffset: 0;
   }
 
-  /* =====================================================
-   BUTTON SEND (Avión de papel)
+ /* =====================================================
+   BUTTON SEND (Avión de papel re-centrado SUAVE)
    ===================================================== */
-  .button-send {
-    font-family: inherit;
-    font-size: 1rem;
-    background: var(--brand-primary);
-    color: #fff;
-    padding: 0.7em 1em;
-    padding-left: 0.9em;
-    display: inline-flex;
-    align-items: center;
-    border: none;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.2s ease-out;
-  }
+.button-send {
+  font-family: inherit;
+  font-size: 1rem;
+  background: var(--brand-primary);
+  color: #fff;
+  padding: 0.7em 1em;
+  padding-left: 0.9em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  overflow: hidden;
+  cursor: pointer;
+  min-width: 130px; 
+  /* LA MAGIA AQUÍ: Sincronizamos el botón con un ease-in-out más largo */
+  transition: all 0.5s ease-in-out;
+}
 
-  .button-send span {
-    display: block;
-    margin-left: 0.3em;
-    white-space: nowrap;
-    transition: all 0.3s ease-in-out;
-  }
+.button-send span {
+  display: block;
+  margin-left: 0.4em;
+  white-space: nowrap;
+  opacity: 1;
+  /* Ajustamos el max-width para que sea casi del tamaño real del texto. 
+     Así el encogimiento empieza en el milisegundo 1 */
+  max-width: 130px; 
+  /* Sincronizado exactamente igual que el botón principal */
+  transition: all 0.5s ease-in-out;
+}
 
-  .button-send svg {
-    display: block;
-    transform-origin: center;
-    transition: transform 0.3s ease-in-out;
-  }
+/* El contenedor interno del SVG */
+.button-send .svg-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease-in-out;
+}
 
-  /* Hover effect */
-  .button-send:hover .svg-wrapper {
-    animation: button-send-fly 0.6s ease-in-out infinite alternate;
-  }
+.button-send svg {
+  display: block;
+  transform-origin: center;
+  /* Transición suave para la rotación y el escalado */
+  transition: transform 0.3s ease-in-out;
+}
 
-  .button-send:hover svg {
-    transform: translateX(1.2em) rotate(45deg) scale(1.1);
-  }
+/* =====================================================
+   Efectos en HOVER (Estado Activo)
+   ===================================================== */
 
-  .button-send:hover span {
-    transform: translateX(5em);
-  }
+/* 1. Iniciamos la animación de vuelo (arriba/abajo) */
+.button-send:hover .svg-wrapper {
+  animation: button-send-fly 0.6s ease-in-out infinite alternate;
+}
 
-  .button-send:active {
-    transform: scale(0.95);
-  }
+/* 2. El avión rota y escala (se prepara para despegar) */
+.button-send:hover svg {
+  transform: rotate(45deg) scale(1.1);
+}
+
+/* 3. La MAGIA del re-centrado y empuje */
+.button-send:hover span {
+  /* Empujamos el texto hacia afuera far right */
+  transform: translateX(150%);
+  opacity: 0; /* Desvanecemos */
+  
+  /* CRUCIAL: Hacemos que el texto deje de ocupar espacio en el diseño (width -> 0) */
+  /* Como el botón tiene 'justify-content: center', al quitar el texto, el avión se centra solo */
+  max-width: 0;
+  margin-left: 0;
+}
+
+/* Efecto de click */
+.button-send:active {
+  transform: scale(0.95);
+}
 
   /* =====================================================
      HERO ELEMENTS (Arrows & Dots)
@@ -310,13 +341,11 @@
     stroke-dashoffset: -480;
   }
 
-
   /* =====================================================
    CONTENEDORES DE SECCIÓN
    ===================================================== */
 
   @layer components {
-
     /* 1. SECCIÓN CONTENIDA (Estándar 1200px) 
      Úsala para texto, grids de tarjetas, formularios, etc. */
     .section-contained {

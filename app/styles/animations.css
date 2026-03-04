@@ -68,7 +68,7 @@
 /* Button Send Fly */
 @keyframes button-send-fly {
   from {
-    transform: translateY(0.1em);
+    transform: translateY(0.3em);
   }
   to {
     transform: translateY(-0.1em);

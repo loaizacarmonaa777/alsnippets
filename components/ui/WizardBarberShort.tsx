@@ -25,14 +25,6 @@ const opcionesBarba = [
   { id: 'b2', name: 'Arreglo VIP (Toalla caliente)', price: 15, time: 25 },
 ]
 
-const diasDisponibles = [
-  { id: 'd1', label: 'Hoy', date: '15 Nov' },
-  { id: 'd2', label: 'Mañana', date: '16 Nov' },
-  { id: 'd3', label: 'Jueves', date: '17 Nov' },
-  { id: 'd4', label: 'Viernes', date: '18 Nov' },
-  { id: 'd5', label: 'Sábado', date: '19 Nov' },
-]
-
 const horasDisponibles = [
   '09:00 AM', '09:45 AM', '10:30 AM', '11:15 AM', 
   '02:00 PM', '02:45 PM', '03:30 PM', '04:15 PM', '05:00 PM'
@@ -41,7 +33,8 @@ const horasDisponibles = [
 export default function WizardBarberShort({ userData }: WizardProps) {
   const [step, setStep] = useState(1)
   const [selectedBarber, setSelectedBarber] = useState<any>(null)
-  const [isProcessing, setIsProcessing] = useState(false) // Para simular la carga del pago
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [dynamicDays, setDynamicDays] = useState<{ id: string; label: string; date: string }[]>([])
 
   // ESTADO DEL FORMULARIO
   const [formData, setFormData] = useState({
@@ -54,7 +47,7 @@ export default function WizardBarberShort({ userData }: WizardProps) {
     masaje: false,
     fecha: '',
     hora: '',
-    metodoPago: '', // Nuevo campo para el método de pago
+    metodoPago: '',
   })
 
   // ESTADO DEL RESUMEN
@@ -71,6 +64,38 @@ export default function WizardBarberShort({ userData }: WizardProps) {
     tiempo: 0,
   })
 
+  // EFECTO PARA GENERAR DÍAS DINÁMICOS
+  useEffect(() => {
+    const generateDays = () => {
+      const days = [];
+      const today = new Date();
+      
+      const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+      const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+      for (let i = 0; i < 5; i++) {
+        const currentDate = new Date(today);
+        currentDate.setDate(today.getDate() + i);
+
+        let label = '';
+        if (i === 0) label = 'Hoy';
+        else if (i === 1) label = 'Mañana';
+        else label = dayNames[currentDate.getDay()];
+
+        const dateString = `${currentDate.getDate()} ${monthNames[currentDate.getMonth()]}`;
+
+        days.push({
+          id: `d${i + 1}`,
+          label: label,
+          date: dateString,
+        });
+      }
+      return days;
+    };
+
+    setDynamicDays(generateDays());
+  }, []);
+
   // EFECTO PARA CALCULAR TOTALES Y RESUMEN
   useEffect(() => {
     const corteSeleccionado = opcionesCorte.find(c => c.id === formData.corteId) || opcionesCorte[0]
@@ -85,7 +110,7 @@ export default function WizardBarberShort({ userData }: WizardProps) {
 
     let fechaHoraTexto = 'Pendiente'
     if (formData.fecha && formData.hora) {
-      const diaSeleccionado = diasDisponibles.find(d => d.id === formData.fecha)
+      const diaSeleccionado = dynamicDays.find(d => d.id === formData.fecha)
       fechaHoraTexto = `${diaSeleccionado?.label} (${diaSeleccionado?.date}) a las ${formData.hora}`
     }
 
@@ -101,7 +126,7 @@ export default function WizardBarberShort({ userData }: WizardProps) {
       total: totalCalculado,
       tiempo: tiempoCalculado,
     })
-  }, [formData])
+  }, [formData, dynamicDays])
 
   const barbers = [
     { id: 1, name: 'José Manuel', image: '/images/barber/barber-1.webp' },
@@ -136,36 +161,15 @@ export default function WizardBarberShort({ userData }: WizardProps) {
   // FUNCIÓN ESTRELLA: ENVIAR A WHATSAPP
   // ==========================================================
   const handlePaymentAndWhatsApp = () => {
-    setIsProcessing(true) // Activa estado de "cargando"
+    setIsProcessing(true)
     
-    // Simula una pequeña espera bancaria de 1.5 segundos
     setTimeout(() => {
-      // 1. Construir el mensaje
-      const mensaje = `¡Hola Adrián! Acabo de probar la demo de *Barber Short*. 💈✂️
+      const mensaje = `¡Hola Adrián! Acabo de probar la demo de *Barber Short*. 💈✂️\n\nAquí están los detalles de la reserva simulada que acabo de pagar:\n👤 *Cliente:* ${userData.name}\n📱 *Teléfono:* ${userData.phone}\n👨‍🎨 *Barbero elegido:* ${selectedBarber.name}\n📅 *Fecha y Hora:* ${reservationData.fechaHora}\n\n*Servicios Seleccionados:*\n- Corte: ${reservationData.corte}\n- Barba: ${reservationData.barba}\n- Extras: Cejas (${reservationData.cejas}), Limpieza Facial (${reservationData.limpieza}), Masaje Capilar (${reservationData.masaje})\n\n💰 *Total Pagado:* $${reservationData.total.toFixed(2)}\n💳 *Método de pago:* ${formData.metodoPago}\n\nYa tienes mi contacto. ¿Empezamos a crear tu barbería online personalizada basada en Barber Short?🚀`;
 
-Aquí están los detalles de la reserva simulada que acabo de pagar:
-👤 *Cliente:* ${userData.name}
-📱 *Teléfono:* ${userData.phone}
-👨‍🎨 *Barbero elegido:* ${selectedBarber.name}
-📅 *Fecha y Hora:* ${reservationData.fechaHora}
-
-*Servicios Seleccionados:*
-- Corte: ${reservationData.corte}
-- Barba: ${reservationData.barba}
-- Extras: Cejas (${reservationData.cejas}), Limpieza Facial (${reservationData.limpieza}), Masaje Capilar (${reservationData.masaje})
-
-💰 *Total Pagado:* $${reservationData.total.toFixed(2)}
-💳 *Método de pago:* ${formData.metodoPago}
-
-Ya tienes mi contacto. ¿Empezamos a crear tu barbería online personalizada basada en Barber Short?🚀`;
-
-      // 2. Codificar la URL
       const whatsappUrl = `https://wa.me/573246454061?text=${encodeURIComponent(mensaje)}`;
       
-      // 3. Abrir WhatsApp en una nueva pestaña
       window.open(whatsappUrl, '_blank');
       
-      // 4. Pasar al paso de "Éxito"
       setIsProcessing(false)
       setStep(5)
     }, 1500)
@@ -365,7 +369,7 @@ Ya tienes mi contacto. ¿Empezamos a crear tu barbería online personalizada bas
                   <div>
                     <h4 className="font-semibold mb-3 text-white">Días disponibles</h4>
                     <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-                      {diasDisponibles.map(dia => (
+                      {dynamicDays.map(dia => (
                         <div 
                           key={dia.id}
                           onClick={() => selectDate(dia.id)}
@@ -379,7 +383,7 @@ Ya tienes mi contacto. ¿Empezamos a crear tu barbería online personalizada bas
                   </div>
 
                   <div className={`transition-all duration-500 ${formData.fecha ? 'opacity-100' : 'opacity-30 pointer-events-none'}`}>
-                    <h4 className="font-semibold mb-3 text-white">Horas disponibles {formData.fecha && `para el ${diasDisponibles.find(d => d.id === formData.fecha)?.date}`}</h4>
+                    <h4 className="font-semibold mb-3 text-white">Horas disponibles {formData.fecha && `para el ${dynamicDays.find(d => d.id === formData.fecha)?.date}`}</h4>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                       {horasDisponibles.map(hora => (
                         <button

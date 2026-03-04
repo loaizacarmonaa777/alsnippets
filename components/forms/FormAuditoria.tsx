@@ -1,98 +1,204 @@
+// components/forms/FormAuditoria.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { Turnstile } from '@marsidev/react-turnstile'
+import confetti from 'canvas-confetti'
+import { CheckCircle } from 'lucide-react'
 
-export default function FormAuditoria () {
+/* =====================================================
+   REGLAS DE VALIDACIÓN TELEFÓNICA POR PAÍS
+===================================================== */
+const PHONE_RULES: Record<string, { min: number; max: number; msg: string }> = {
+  '+57': { min: 10, max: 10, msg: 'Colombia: 10 dígitos' },
+  '+52': { min: 10, max: 10, msg: 'México: 10 dígitos' },
+  '+34': { min: 9, max: 9, msg: 'España: 9 dígitos' },
+  '+1': { min: 10, max: 10, msg: 'USA/Canadá: 10 dígitos' },
+  '+54': { min: 10, max: 10, msg: 'Argentina: 10 dígitos' },
+  '+56': { min: 9, max: 9, msg: 'Chile: 9 dígitos' },
+  '+51': { min: 9, max: 9, msg: 'Perú: 9 dígitos' },
+  '+58': { min: 10, max: 10, msg: 'Venezuela: 10 dígitos' },
+  '+593': { min: 9, max: 9, msg: 'Ecuador: 9 dígitos' },
+  '+55': { min: 10, max: 11, msg: 'Brasil: 10 u 11 dígitos' },
+  default: { min: 7, max: 15, msg: 'Entre 7 y 15 dígitos' }
+}
+
+export default function FormAuditoria() {
   const [tipoServicio, setTipoServicio] = useState('')
   const [nombreCompleto, setNombreCompleto] = useState('')
   const [email, setEmail] = useState('')
+  const [codigoPais, setCodigoPais] = useState('')
   const [telefono, setTelefono] = useState('')
   const [mensajeAuditoria, setMensajeAuditoria] = useState('')
   const [medioContacto, setMedioContacto] = useState('')
-  const [medioContactoError, setMedioContactoError] = useState('')
   const [aceptaLegales, setAceptaLegales] = useState(false)
-  const [errores, setErrores] = useState<Record<string, string>>({})
-
+  
+  // Estados de errores y UI
   const [nombreError, setNombreError] = useState('')
   const [emailError, setEmailError] = useState('')
   const [telefonoError, setTelefonoError] = useState('')
+  const [medioContactoError, setMedioContactoError] = useState('')
+  
+  // Estados de Backend e Inteligencia del Botón
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
+  const [apiError, setApiError] = useState('')
+  const [turnstileToken, setTurnstileToken] = useState('')
+  const [isFormValid, setIsFormValid] = useState(false) // <--- Estado del botón inteligente
 
   const MAX_CARACTERES = 500
   const caracteresRestantes = MAX_CARACTERES - mensajeAuditoria.length
 
-  const validarFormulario = () => {
-    const nuevosErrores: Record<string, string> = {}
+  const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
-    if (!tipoServicio) nuevosErrores.tipoServicio = 'Este campo es obligatorio.'
-    if (!nombreCompleto)
-      nuevosErrores.nombreCompleto = 'El nombre completo es obligatorio.'
-    if (!email) {
-      nuevosErrores.email = 'El correo electrónico es obligatorio.'
-    } else if (!email.includes('@')) {
-      nuevosErrores.email = 'Verifica que tu email tenga el @ y sea válido.'
-    }
-    if (!telefono) {
-      nuevosErrores.telefono = 'El número de teléfono es obligatorio.'
-    } else if (!/^\d+$/.test(telefono)) {
-      nuevosErrores.telefono = 'Por favor, solo caracteres numéricos.'
-    }
-    if (tipoServicio === 'auditoria' && !mensajeAuditoria) {
-      nuevosErrores.mensajeAuditoria =
-        'Este campo es obligatorio para solicitar una auditoría.'
-    }
-    if (!aceptaLegales) {
-      nuevosErrores.legales = 'Debes aceptar los términos, políticas y cookies.'
+  /* =====================================================
+     EFECTO: EVALUAR CONSTANTEMENTE SI TODO ES VÁLIDO
+  ===================================================== */
+  useEffect(() => {
+    const tieneNombreValido = nombreCompleto.trim().split(/\s+/).length >= 2
+    const tieneEmailValido = regexEmail.test(email)
+    
+    let tieneTelefonoValido = false
+    if (codigoPais) {
+      const regla = PHONE_RULES[codigoPais] || PHONE_RULES['default']
+      tieneTelefonoValido = telefono.length >= regla.min && telefono.length <= regla.max
     }
 
-    setErrores(nuevosErrores)
-    return Object.keys(nuevosErrores).length === 0
-  }
+    const tieneServicio = tipoServicio !== ''
+    const tieneMedio = medioContacto !== ''
+    const tieneMensajeValido = tipoServicio === 'auditoria' ? mensajeAuditoria.trim().length > 0 : true
+    const checkLegales = aceptaLegales
+    const checkTurnstile = turnstileToken !== ''
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const todoValido = 
+      tieneNombreValido && 
+      tieneEmailValido && 
+      tieneTelefonoValido && 
+      tieneServicio && 
+      tieneMedio && 
+      tieneMensajeValido && 
+      checkLegales && 
+      checkTurnstile
+
+    setIsFormValid(todoValido)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nombreCompleto, email, codigoPais, telefono, tipoServicio, medioContacto, mensajeAuditoria, aceptaLegales, turnstileToken])
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    
+    if (!isFormValid) return // Seguridad extra
+
     const form = e.currentTarget
-    const honeypot = (form.elements.namedItem('empresa') as HTMLInputElement)
-      ?.value
+    const honeypot = (form.elements.namedItem('empresa') as HTMLInputElement)?.value
     if (honeypot) return
 
-    if (validarFormulario()) {
-      // Aquí irá el envío real al endpoint /api/auditoria en el futuro
-      console.log('Formulario válido, enviando a contact@alsnippets.com...')
+    setIsSubmitting(true)
+    setApiError('')
+
+    try {
+      const response = await fetch('/api/auditoria', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tipoServicio,
+          nombreCompleto,
+          email,
+          codigoPais,
+          telefono,
+          medioContacto,
+          mensajeAuditoria,
+          turnstileToken
+        })
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        // 🎉 ¡LANZAR CONFETTI! 🎉
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#c9a34e', '#ffffff', '#1c374a']
+        })
+        setIsSuccess(true)
+      } else {
+        setApiError(data.error || 'Hubo un error al enviar tu solicitud.')
+        if (typeof window.turnstile !== 'undefined') window.turnstile.reset()
+      }
+    } catch (error) {
+      setApiError('Error de red. Verifica tu conexión e intenta nuevamente.')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
+  /* =====================================================
+     Validaciones OnBlur para mostrar mensajes rojos
+  ===================================================== */
   const validarNombreCompleto = () => {
     const palabras = nombreCompleto.trim().split(/\s+/)
-    if (palabras.length < 2)
-      setNombreError('Por favor, escribe al menos un nombre y apellido.')
+    if (palabras.length < 2 && nombreCompleto.length > 0) setNombreError('Por favor, escribe al menos un nombre y apellido.')
     else setNombreError('')
   }
 
   const validarEmail = () => {
-    if (!email || !email.includes('@'))
-      setEmailError("Por favor, pon un correo válido con '@'.")
+    if (email.length > 0 && !regexEmail.test(email)) setEmailError("Por favor, pon un correo válido con '@'.")
     else setEmailError('')
   }
 
   const validarMedioContacto = () => {
-    if (!medioContacto)
-      setMedioContactoError('Por favor selecciona un medio de contacto.')
+    if (!medioContacto) setMedioContactoError('Por favor selecciona un medio de contacto.')
     else setMedioContactoError('')
   }
 
+  const validarTelefono = (valor: string, paisSeleccionado: string) => {
+    if (!paisSeleccionado) {
+      setTelefonoError('Primero selecciona tu país.')
+      return
+    }
+    const regla = PHONE_RULES[paisSeleccionado] || PHONE_RULES['default']
+    if (valor.length === 0) setTelefonoError('')
+    else if (valor.length < regla.min) setTelefonoError(`Faltan números (${regla.msg})`)
+    else if (valor.length > regla.max) setTelefonoError(`Excediste los números permitidos (${regla.msg})`)
+    else setTelefonoError('')
+  }
+
+  // ==== VISTA DE ÉXITO ====
+  if (isSuccess) {
+    return (
+      <div className="flex flex-col items-center justify-center text-center space-y-6 py-12 animate-fade-in">
+        <CheckCircle className="w-20 h-20 text-[var(--brand-primary)] animate-bounce" />
+        <h3 className="text-3xl font-bold text-[var(--text-primary)]">¡Solicitud Enviada!</h3>
+        <p className="text-[var(--text-secondary)] max-w-md leading-relaxed">
+          He recibido tu solicitud correctamente. Estaré revisando la información y me pondré en contacto contigo en las próximas 24-48 horas hábiles a través de <strong>{medioContacto}</strong>.
+        </p>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="mt-6 text-[var(--brand-primary)] hover:underline font-bold"
+        >
+          Volver al inicio
+        </button>
+      </div>
+    )
+  }
+
+  // ==== VISTA DEL FORMULARIO ====
   return (
-    <form onSubmit={handleSubmit} className='space-y-8'>
+    <form onSubmit={handleSubmit} className='space-y-8 animate-fade-in relative'>
       {/* Honeypot anti-spam (invisible) */}
-      <input
-        type='text'
-        name='empresa'
-        tabIndex={-1}
-        autoComplete='off'
-        className='hidden'
-      />
+      <input type='text' name='empresa' tabIndex={-1} autoComplete='off' className='hidden' />
+
+      {apiError && (
+        <div className="p-4 bg-red-500/10 border border-red-500/30 text-red-500 text-sm rounded-xl text-center font-medium animate-pulse">
+          {apiError}
+        </div>
+      )}
 
       <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+        
         {/* TIPO DE SERVICIO */}
         <div className='space-y-2 md:col-span-2'>
           <label className='text-sm font-bold text-[var(--text-secondary)] uppercase tracking-wider'>
@@ -101,17 +207,13 @@ export default function FormAuditoria () {
           <select
             value={tipoServicio}
             onChange={e => setTipoServicio(e.target.value)}
-            className='w-full bg-[var(--bg-body)] border border-[var(--border-subtle)] focus:border-[var(--brand-primary)] focus:ring-1 focus:ring-[var(--brand-primary)] rounded-xl px-4 py-3.5 outline-none transition-colors'
+            disabled={isSubmitting}
+            className='w-full bg-[var(--bg-body)] border border-[var(--border-subtle)] focus:border-[var(--brand-primary)] focus:ring-1 focus:ring-[var(--brand-primary)] rounded-xl px-4 py-3.5 outline-none transition-colors disabled:opacity-50'
           >
             <option value=''>Selecciona una opción</option>
             <option value='consultoria'>Quiero una consultoría</option>
             <option value='auditoria'>Quiero una auditoría técnica</option>
           </select>
-          {errores.tipoServicio && (
-            <p className='text-red-500 text-sm font-medium'>
-              {errores.tipoServicio}
-            </p>
-          )}
         </div>
 
         {/* NOMBRE */}
@@ -123,17 +225,17 @@ export default function FormAuditoria () {
             type='text'
             value={nombreCompleto}
             placeholder='Ej: Adrián Loaiza Carmona'
-            onChange={e => setNombreCompleto(e.target.value)}
+            onChange={e => {
+              setNombreCompleto(e.target.value)
+              if (nombreError) setNombreError('')
+            }}
             onBlur={validarNombreCompleto}
-            className={`w-full bg-[var(--bg-body)] border focus:ring-1 outline-none transition-colors rounded-xl px-4 py-3.5 ${
-              nombreError
-                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                : 'border-[var(--border-subtle)] focus:border-[var(--brand-primary)] focus:ring-[var(--brand-primary)]'
+            disabled={isSubmitting}
+            className={`w-full bg-[var(--bg-body)] border focus:ring-1 outline-none transition-colors rounded-xl px-4 py-3.5 disabled:opacity-50 ${
+              nombreError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-[var(--border-subtle)] focus:border-[var(--brand-primary)] focus:ring-[var(--brand-primary)]'
             }`}
           />
-          {nombreError && (
-            <p className='text-red-500 text-sm font-medium'>{nombreError}</p>
-          )}
+          {nombreError && <p className='text-red-500 text-sm font-medium'>{nombreError}</p>}
         </div>
 
         {/* EMAIL */}
@@ -145,17 +247,17 @@ export default function FormAuditoria () {
             type='email'
             value={email}
             placeholder='tuemail@ejemplo.com'
-            onChange={e => setEmail(e.target.value)}
+            onChange={e => {
+              setEmail(e.target.value)
+              if (emailError) setEmailError('')
+            }}
             onBlur={validarEmail}
-            className={`w-full bg-[var(--bg-body)] border focus:ring-1 outline-none transition-colors rounded-xl px-4 py-3.5 ${
-              emailError
-                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                : 'border-[var(--border-subtle)] focus:border-[var(--brand-primary)] focus:ring-[var(--brand-primary)]'
+            disabled={isSubmitting}
+            className={`w-full bg-[var(--bg-body)] border focus:ring-1 outline-none transition-colors rounded-xl px-4 py-3.5 disabled:opacity-50 ${
+              emailError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-[var(--border-subtle)] focus:border-[var(--brand-primary)] focus:ring-[var(--brand-primary)]'
             }`}
           />
-          {emailError && (
-            <p className='text-red-500 text-sm font-medium'>{emailError}</p>
-          )}
+          {emailError && <p className='text-red-500 text-sm font-medium'>{emailError}</p>}
         </div>
 
         {/* MEDIO DE CONTACTO */}
@@ -165,12 +267,14 @@ export default function FormAuditoria () {
           </label>
           <select
             value={medioContacto}
-            onChange={e => setMedioContacto(e.target.value)}
+            onChange={e => {
+              setMedioContacto(e.target.value)
+              if (medioContactoError) setMedioContactoError('')
+            }}
             onBlur={validarMedioContacto}
-            className={`w-full bg-[var(--bg-body)] border focus:ring-1 outline-none transition-colors rounded-xl px-4 py-3.5 ${
-              medioContactoError
-                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                : 'border-[var(--border-subtle)] focus:border-[var(--brand-primary)] focus:ring-[var(--brand-primary)]'
+            disabled={isSubmitting}
+            className={`w-full bg-[var(--bg-body)] border focus:ring-1 outline-none transition-colors rounded-xl px-4 py-3.5 disabled:opacity-50 ${
+              medioContactoError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-[var(--border-subtle)] focus:border-[var(--brand-primary)] focus:ring-[var(--brand-primary)]'
             }`}
           >
             <option value=''>Selecciona una plataforma</option>
@@ -179,14 +283,8 @@ export default function FormAuditoria () {
             <option value='microsoft-teams'>Microsoft Teams</option>
             <option value='zoom'>Zoom</option>
           </select>
-          <p className='text-xs text-[var(--text-muted)] mt-1'>
-            Para Meet, Teams o Zoom recibirás un enlace por correo.
-          </p>
-          {medioContactoError && (
-            <p className='text-red-500 text-sm font-medium'>
-              {medioContactoError}
-            </p>
-          )}
+          <p className='text-xs text-[var(--text-muted)] mt-1'>Para Meet, Teams o Zoom recibirás un enlace por correo.</p>
+          {medioContactoError && <p className='text-red-500 text-sm font-medium'>{medioContactoError}</p>}
         </div>
 
         {/* TELÉFONO */}
@@ -196,8 +294,13 @@ export default function FormAuditoria () {
           </label>
           <div className='flex gap-3'>
             <select
-              required
-              className='w-[120px] bg-[var(--bg-body)] border border-[var(--border-subtle)] focus:border-[var(--brand-primary)] focus:ring-1 focus:ring-[var(--brand-primary)] rounded-xl px-3 py-3.5 outline-none transition-colors shrink-0'
+              value={codigoPais}
+              onChange={e => {
+                setCodigoPais(e.target.value)
+                if (telefono) validarTelefono(telefono, e.target.value)
+              }}
+              disabled={isSubmitting}
+              className='w-[120px] bg-[var(--bg-body)] border border-[var(--border-subtle)] focus:border-[var(--brand-primary)] focus:ring-1 focus:ring-[var(--brand-primary)] outline-none transition-colors rounded-xl px-3 py-3.5 shrink-0 disabled:opacity-50'
             >
               <option value=''>Código</option>
               <optgroup label='Norteamérica'>
@@ -230,7 +333,7 @@ export default function FormAuditoria () {
               <optgroup label='Caribe'>
                 <option value='+53'>+53 Cuba</option>
                 <option value='+509'>+509 Haití</option>
-                <option value='+1'>+1 Rep. Dom.</option>
+                <option value='+1809'>+1 Rep. Dom.</option>
               </optgroup>
               <optgroup label='Europa'>
                 <option value='+34'>+34 España</option>
@@ -245,25 +348,25 @@ export default function FormAuditoria () {
               inputMode='numeric'
               value={telefono}
               placeholder='Ej: 3001234567'
+              disabled={isSubmitting || !codigoPais}
               onChange={e => {
                 const valor = e.target.value
                 if (/^\d*$/.test(valor)) {
-                  setTelefono(valor)
-                  setTelefonoError('')
-                } else {
-                  setTelefonoError('Escribe sólo números sin espacios.')
+                  const regla = PHONE_RULES[codigoPais] || PHONE_RULES['default']
+                  if (valor.length <= regla.max) {
+                    setTelefono(valor)
+                    validarTelefono(valor, codigoPais)
+                  } else {
+                    setTelefonoError(`Excediste los números permitidos (${regla.msg})`)
+                  }
                 }
               }}
-              className={`w-full bg-[var(--bg-body)] border focus:ring-1 outline-none transition-colors rounded-xl px-4 py-3.5 ${
-                telefonoError
-                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                  : 'border-[var(--border-subtle)] focus:border-[var(--brand-primary)] focus:ring-[var(--brand-primary)]'
+              className={`w-full bg-[var(--bg-body)] border focus:ring-1 outline-none transition-colors rounded-xl px-4 py-3.5 disabled:opacity-50 ${
+                telefonoError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-[var(--border-subtle)] focus:border-[var(--brand-primary)] focus:ring-[var(--brand-primary)]'
               }`}
             />
           </div>
-          {telefonoError && (
-            <p className='text-red-500 text-sm font-medium'>{telefonoError}</p>
-          )}
+          {telefonoError && <p className='text-red-500 text-sm font-medium'>{telefonoError}</p>}
         </div>
 
         {/* CONDICIONAL: MENSAJE AUDITORÍA */}
@@ -274,29 +377,23 @@ export default function FormAuditoria () {
             </label>
             <textarea
               value={mensajeAuditoria}
+              disabled={isSubmitting}
               onChange={e => {
                 if (e.target.value.length <= MAX_CARACTERES) {
                   setMensajeAuditoria(e.target.value)
                 }
               }}
               placeholder='Pega aquí el enlace de tu sitio web y cuéntame brevemente qué problemas estás experimentando...'
-              className='w-full bg-[var(--bg-body)] border border-[var(--border-subtle)] focus:border-[var(--brand-primary)] focus:ring-1 focus:ring-[var(--brand-primary)] rounded-xl px-4 py-4 outline-none transition-colors min-h-[140px] resize-y'
+              className='w-full bg-[var(--bg-body)] border border-[var(--border-subtle)] focus:border-[var(--brand-primary)] focus:ring-1 focus:ring-[var(--brand-primary)] rounded-xl px-4 py-4 outline-none transition-colors min-h-[140px] resize-y disabled:opacity-50'
             />
             <div className='flex justify-between items-center'>
               <p className='text-xs font-medium text-[var(--text-muted)]'>
                 Caracteres restantes:{' '}
-                <span
-                  className={caracteresRestantes < 50 ? 'text-red-500' : ''}
-                >
+                <span className={caracteresRestantes < 50 ? 'text-red-500' : ''}>
                   {caracteresRestantes}
                 </span>
               </p>
             </div>
-            {errores.mensajeAuditoria && (
-              <p className='text-red-500 text-sm font-medium'>
-                {errores.mensajeAuditoria}
-              </p>
-            )}
           </div>
         )}
 
@@ -306,65 +403,66 @@ export default function FormAuditoria () {
             <input
               type='checkbox'
               checked={aceptaLegales}
+              disabled={isSubmitting}
               onChange={e => setAceptaLegales(e.target.checked)}
-              className='mt-1 w-5 h-5 accent-[var(--brand-primary)] rounded border-gray-300'
+              className='mt-1 w-5 h-5 accent-[var(--brand-primary)] rounded border-[var(--border-subtle)] disabled:opacity-50'
             />
             <span className='text-sm text-[var(--text-secondary)] leading-relaxed'>
-              He leído y acepto los{' '}
-              <Link
-                href='/terminos'
-                className='font-bold text-[var(--brand-primary)] hover:underline'
-              >
-                términos y condiciones
-              </Link>{' '}
-              y la{' '}
-              <Link
-                href='/privacidad'
-                className='font-bold text-[var(--brand-primary)] hover:underline'
-              >
-                política de privacidad
-              </Link>
-              . Entiendo que mis datos serán tratados con estricta
-              confidencialidad.
+              He leído y acepto los <Link href='/terminos' className='font-bold text-[var(--brand-primary)] hover:underline'>términos y condiciones</Link> y la <Link href='/privacidad' className='font-bold text-[var(--brand-primary)] hover:underline'>política de privacidad</Link>. Entiendo que mis datos serán tratados con estricta confidencialidad.
             </span>
           </label>
-          {errores.legales && (
-            <p className='text-red-500 text-sm font-medium ml-8'>
-              {errores.legales}
-            </p>
-          )}
         </div>
 
-        {/* BOTÓN ENVIAR */}
-        <div className='md:col-span-2 pt-4'>
+        {/* TURNSTILE CAPTCHA */}
+        <div className="md:col-span-2 flex flex-col items-center justify-center my-2 [&_iframe]:!border-none [&_iframe] overflow-hidden">
+          <Turnstile 
+            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!} 
+            onSuccess={token => setTurnstileToken(token)}
+            options={{ theme: 'auto', size: 'flexible' }} 
+          />
+        </div>
+
+        {/* =====================================================
+            Botón Enviar (Inteligente)
+            ===================================================== */}
+        <div className={`md:col-span-2 pt-4 flex justify-center w-full ${!isFormValid || isSubmitting ? 'cursor-not-allowed' : ''}`}>
           <button
             type='submit'
-            className='group relative flex items-center justify-center w-full md:w-72 h-14 bg-[var(--brand-primary)] text-[var(--text-primary)] font-bold rounded-xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-lg hover:bg-[var(--text-yellow2)] mx-auto'
+            disabled={isSubmitting || !isFormValid}
+            title={!isFormValid ? 'Debes completar el formulario correctamente' : 'Enviar solicitud'}
+            className={`button-send w-full md:w-72 h-14 m-0 rounded-xl font-bold transition-all duration-300 shadow-md ${
+              !isFormValid || isSubmitting
+                ? 'opacity-50 grayscale pointer-events-none'
+                : 'hover:scale-[1.02] hover:shadow-lg'
+            }`}
           >
-            {/* Avión: Inicialmente a la izquierda. Al hacer hover se va justo al centro, crece un poco y se inclina */}
-            <div className='absolute left-8 transition-all duration-500 ease-in-out group-hover:left-1/2 group-hover:-translate-x-1/2 group-hover:-translate-y-1 group-hover:scale-125 group-hover:-rotate-12'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                viewBox='0 0 24 24'
-                width='22'
-                height='22'
-                aria-hidden='true'
-                className='text-[var(--text-primary)]'
-              >
-                <path fill='none' d='M0 0h24v24H0z' />
-                <path
-                  fill='currentColor'
-                  d='M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z'
-                />
-              </svg>
+            <div className='svg-wrapper-1'>
+              <div className='svg-wrapper'>
+                {isSubmitting ? (
+                  <svg className='animate-spin h-5 w-5 text-current' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'>
+                    <circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4'></circle>
+                    <path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
+                  </svg>
+                ) : (
+                  <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='20' height='20' aria-hidden='true'>
+                    <path fill='none' d='M0 0h24v24H0z' />
+                    <path fill='currentColor' d='M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z' />
+                  </svg>
+                )}
+              </div>
             </div>
-
-            {/* Texto: Empujado ligeramente a la derecha al inicio. Al hacer hover, sale volando y se desvanece */}
-            <span className='ml-8 transition-all duration-500 ease-in-out group-hover:translate-x-[200%] group-hover:opacity-0 whitespace-nowrap'>
-              Enviar solicitud oficial
+            
+            <span>
+              {isSubmitting 
+                ? 'Enviando...' 
+                : !isFormValid 
+                ? 'Faltan datos' 
+                : 'Enviar solicitud oficial'
+              }
             </span>
           </button>
         </div>
+        
       </div>
     </form>
   )

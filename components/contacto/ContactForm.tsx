@@ -1,18 +1,33 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { motion, AnimatePresence } from 'framer-motion'
+import confetti from 'canvas-confetti' // Importamos el confeti
+import { Turnstile } from '@marsidev/react-turnstile'
 
 /* =====================================================
-   FORMULARIO DE CONTACTO
-   - Mismas validaciones que Auditoría
-   - Anti-spam (honeypot)
-   - Mobile first
+   REGLAS DE VALIDACIÓN TELEFÓNICA POR PAÍS
 ===================================================== */
+const PHONE_RULES: Record<string, { min: number; max: number; msg: string }> = {
+  '+57': { min: 10, max: 10, msg: 'Colombia: 10 dígitos' },
+  '+52': { min: 10, max: 10, msg: 'México: 10 dígitos' },
+  '+34': { min: 9, max: 9, msg: 'España: 9 dígitos' },
+  '+1': { min: 10, max: 10, msg: 'USA/Canadá: 10 dígitos' },
+  '+54': { min: 10, max: 10, msg: 'Argentina: 10 dígitos' },
+  '+56': { min: 9, max: 9, msg: 'Chile: 9 dígitos' },
+  '+51': { min: 9, max: 9, msg: 'Perú: 9 dígitos' },
+  '+58': { min: 10, max: 10, msg: 'Venezuela: 10 dígitos' },
+  '+593': { min: 9, max: 9, msg: 'Ecuador: 9 dígitos' },
+  '+55': { min: 10, max: 11, msg: 'Brasil: 10 u 11 dígitos' },
+  // Regla por defecto para países menos comunes
+  default: { min: 7, max: 15, msg: 'Entre 7 y 15 dígitos' }
+}
+
 export default function ContactForm () {
   /* =====================================================
      Estados
-     ===================================================== */
+  ===================================================== */
   const [nombreCompleto, setNombreCompleto] = useState('')
   const [email, setEmail] = useState('')
   const [codigoPais, setCodigoPais] = useState('')
@@ -20,93 +35,242 @@ export default function ContactForm () {
   const [mensaje, setMensaje] = useState('')
   const [aceptaLegales, setAceptaLegales] = useState(false)
 
-  const [errores, setErrores] = useState<Record<string, string>>({})
+  // Estados de envío y validación
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [isFormValid, setIsFormValid] = useState(false)
 
-  // Mensajes en tiempo real
+  // Mensajes de error en tiempo real
   const [nombreError, setNombreError] = useState('')
   const [emailError, setEmailError] = useState('')
   const [telefonoError, setTelefonoError] = useState('')
 
-  // Contador de caracteres
+  // State para el token de Turnstile (aunque no lo usamos directamente aquí, lo dejamos preparado por si queremos mostrar algo relacionado en el futuro)
+  const [turnstileToken, setTurnstileToken] = useState<string>('')
+
   const MAX_CARACTERES = 200
   const caracteresRestantes = MAX_CARACTERES - mensaje.length
 
   /* =====================================================
-     Validación general del formulario
-     ===================================================== */
-  const validarFormulario = () => {
-    const nuevosErrores: Record<string, string> = {}
+     Expresiones Regulares (Regex)
+  ===================================================== */
+  // Obliga a tener texto @ texto . texto (ej: hola@gmail.com)
+  const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
-    if (!nombreCompleto) {
-      nuevosErrores.nombreCompleto = 'El nombre completo es obligatorio.'
+  /* =====================================================
+     Efecto: Evaluar constantemente si TODO es válido
+  ===================================================== */
+  useEffect(() => {
+    const tieneNombreValido = nombreCompleto.trim().split(/\s+/).length >= 2
+    const tieneEmailValido = regexEmail.test(email)
+
+    let tieneTelefonoValido = false
+    if (codigoPais) {
+      const regla = PHONE_RULES[codigoPais] || PHONE_RULES['default']
+      tieneTelefonoValido =
+        telefono.length >= regla.min && telefono.length <= regla.max
     }
 
-    if (!email) {
-      nuevosErrores.email = 'El correo electrónico es obligatorio.'
-    } else if (!email.includes('@')) {
-      nuevosErrores.email = 'Verifica que el correo sea válido.'
+    const todoValido =
+      tieneNombreValido &&
+      tieneEmailValido &&
+      tieneTelefonoValido &&
+      aceptaLegales &&
+      codigoPais !== '' &&
+      turnstileToken !== ''
+
+    setIsFormValid(todoValido)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nombreCompleto, email, codigoPais, telefono, aceptaLegales])
+
+  /* =====================================================
+     Disparador de Confeti de Corazones
+  ===================================================== */
+  const triggerHeartsConfetti = () => {
+    const duration = 3000
+    const animationEnd = Date.now() + duration
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 }
+
+    function randomInRange (min: number, max: number) {
+      return Math.random() * (max - min) + min
     }
 
-    if (!telefono) {
-      nuevosErrores.telefono = 'El teléfono es obligatorio.'
-    } else if (!/^\d+$/.test(telefono)) {
-      nuevosErrores.telefono = 'Solo se permiten números.'
-    }
+    const interval: any = setInterval(function () {
+      const timeLeft = animationEnd - Date.now()
 
-    if (!aceptaLegales) {
-      nuevosErrores.legales =
-        'Debes aceptar los términos y la política de privacidad.'
-    }
+      if (timeLeft <= 0) {
+        return clearInterval(interval)
+      }
 
-    setErrores(nuevosErrores)
-    return Object.keys(nuevosErrores).length === 0
+      const particleCount = 50 * (timeLeft / duration)
+
+      try {
+        // Intentamos generar corazones (Soportado en versiones recientes de canvas-confetti)
+        const heart = confetti.shapeFromText({ text: '❤️', scalar: 2 })
+        confetti(
+          Object.assign({}, defaults, {
+            particleCount,
+            origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+            shapes: [heart],
+            colors: ['#FF0000']
+          })
+        )
+        confetti(
+          Object.assign({}, defaults, {
+            particleCount,
+            origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+            shapes: [heart],
+            colors: ['#FF0000']
+          })
+        )
+      } catch (e) {
+        // Fallback: Si el navegador no soporta emojis en canvas, tira confeti rojo y rosado estándar
+        confetti(
+          Object.assign({}, defaults, {
+            particleCount,
+            origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+            colors: ['#ff0000', '#ffc0cb', '#ff69b4']
+          })
+        )
+        confetti(
+          Object.assign({}, defaults, {
+            particleCount,
+            origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+            colors: ['#ff0000', '#ffc0cb', '#ff69b4']
+          })
+        )
+      }
+    }, 250)
   }
 
   /* =====================================================
-     Envío con honeypot anti-spam
-     ===================================================== */
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    const form = e.currentTarget
-    const honeypot = (form.elements.namedItem('empresa') as HTMLInputElement)
-      ?.value
-
-    // Bot detectado
-    if (honeypot) return
-
-    if (validarFormulario()) {
-      console.log('Formulario de contacto válido')
-      // POST futuro a /api/contacto
-    }
-  }
-
-  /* =====================================================
-     Validaciones onBlur
-     ===================================================== */
+     Validaciones individuales (onBlur / onChange)
+  ===================================================== */
   const validarNombreCompleto = () => {
     const palabras = nombreCompleto.trim().split(/\s+/)
-    if (palabras.length < 2) {
-      setNombreError('Escribe al menos nombre y apellido.')
+    if (palabras.length < 2 && nombreCompleto.length > 0) {
+      setNombreError('Escribe al menos tu nombre y apellido.')
     } else {
       setNombreError('')
     }
   }
 
   const validarEmail = () => {
-    if (!email || !email.includes('@')) {
-      setEmailError('Introduce un correo válido.')
+    if (email.length > 0 && !regexEmail.test(email)) {
+      setEmailError('Introduce un correo válido (ej: nombre@dominio.com).')
     } else {
       setEmailError('')
     }
   }
 
+  const validarTelefono = (valor: string, paisSeleccionado: string) => {
+    if (!paisSeleccionado) {
+      setTelefonoError('Primero selecciona tu país.')
+      return
+    }
+
+    const regla = PHONE_RULES[paisSeleccionado] || PHONE_RULES['default']
+
+    if (valor.length === 0) {
+      setTelefonoError('')
+    } else if (valor.length < regla.min) {
+      setTelefonoError(`Faltan números (${regla.msg})`)
+    } else if (valor.length > regla.max) {
+      setTelefonoError(`Excediste los números permitidos (${regla.msg})`)
+    } else {
+      setTelefonoError('') // Está perfecto
+    }
+  }
+
   /* =====================================================
-     Render
-     ===================================================== */
+     Envío REAL a la API
+  ===================================================== */
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    // Si el botón logró ser clickeado pero algo no es válido por trampa, lo detenemos
+    if (!isFormValid) return
+
+    setErrorMessage('')
+    setSuccessMessage('')
+
+    const form = e.currentTarget
+    const honeypot = (form.elements.namedItem('empresa') as HTMLInputElement)
+      ?.value
+    if (honeypot) return
+
+    setIsSubmitting(true)
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: nombreCompleto,
+          email,
+          telefono: `${codigoPais} ${telefono}`,
+          pais: codigoPais,
+          mensaje,
+          turnstileToken
+        })
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        setSuccessMessage(
+          '¡Mensaje enviado con éxito! Te contactaremos pronto.'
+        )
+        triggerHeartsConfetti() // 🎊 EXPLOSIÓN DE CORAZONES 🎊
+
+        // Limpiar formulario
+        setNombreCompleto('')
+        setEmail('')
+        setTelefono('')
+        setMensaje('')
+        setAceptaLegales(false)
+        setCodigoPais('')
+
+        setTimeout(() => setSuccessMessage(''), 8000)
+      } else {
+        setErrorMessage('Hubo un error al enviar el mensaje. Intenta de nuevo.')
+      }
+    } catch (error) {
+      setErrorMessage(
+        'Error de conexión. Revisa tu internet e intenta nuevamente.'
+      )
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit} className='space-y-6'>
-      {/* Honeypot */}
+    <form onSubmit={handleSubmit} className='space-y-6 relative'>
+      {/* Feedback Visual */}
+      <AnimatePresence>
+        {successMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className='p-4 bg-green-500/10 border border-green-500/30 text-green-600 rounded-xl font-medium text-center text-sm'
+          >
+            {successMessage}
+          </motion.div>
+        )}
+        {errorMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className='p-4 bg-red-500/10 border border-red-500/30 text-red-600 rounded-xl font-medium text-center text-sm'
+          >
+            {errorMessage}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <input
         type='text'
         name='empresa'
@@ -115,262 +279,253 @@ export default function ContactForm () {
         className='hidden'
       />
 
-      {/* =====================================================
-          Nombre completo
-          ===================================================== */}
+      {/* Nombre */}
       <div className='space-y-1'>
         <label className='text-sm font-medium'>Nombre completo *</label>
-
         <input
           type='text'
           value={nombreCompleto}
-          onChange={e => setNombreCompleto(e.target.value)}
+          onChange={e => {
+            setNombreCompleto(e.target.value)
+            if (nombreError) setNombreError('')
+          }}
           onBlur={validarNombreCompleto}
-          className={`w-full border rounded-lg px-4 py-3 ${
-            nombreError ? 'border-red-500' : ''
-          }`}
+          disabled={isSubmitting}
+          className={`w-full border rounded-lg px-4 py-3 bg-[var(--bg-body)] text-[var(--text-primary)] focus:border-[var(--brand-primary)] outline-none transition-colors ${
+            nombreError ? 'border-red-500' : 'border-[var(--border-subtle)]'
+          } disabled:opacity-50`}
         />
-
-        {nombreError && <p className='text-red-500 text-sm'>{nombreError}</p>}
+        {nombreError && (
+          <p className='text-red-500 text-xs font-bold'>{nombreError}</p>
+        )}
       </div>
 
-      {/* =====================================================
-          Email
-          ===================================================== */}
+      {/* Email */}
       <div className='space-y-1'>
         <label className='text-sm font-medium'>Correo electrónico *</label>
-
         <input
           type='email'
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={e => {
+            setEmail(e.target.value)
+            if (emailError) setEmailError('')
+          }}
           onBlur={validarEmail}
-          className={`w-full border rounded-lg px-4 py-3 ${
-            emailError ? 'border-red-500' : ''
-          }`}
+          disabled={isSubmitting}
+          className={`w-full border rounded-lg px-4 py-3 bg-[var(--bg-body)] text-[var(--text-primary)] focus:border-[var(--brand-primary)] outline-none transition-colors ${
+            emailError ? 'border-red-500' : 'border-[var(--border-subtle)]'
+          } disabled:opacity-50`}
         />
-
-        {emailError && <p className='text-red-500 text-sm'>{emailError}</p>}
+        {emailError && (
+          <p className='text-red-500 text-xs font-bold'>{emailError}</p>
+        )}
       </div>
 
-      {/* =====================================================
-    Teléfono con código de país
-===================================================== */}
+      {/* Teléfono */}
       <div className='space-y-1'>
-        <label className='text-sm font-medium'>
-          Teléfono (con código de país) <span className='text-red-500'>*</span>
-        </label>
-
+        <label className='text-sm font-medium'>Teléfono *</label>
         <div className='flex gap-3'>
-          {/* Código de país */}
           <select
             value={codigoPais}
-            onChange={e => setCodigoPais(e.target.value)}
+            onChange={e => {
+              setCodigoPais(e.target.value)
+              if (telefono) validarTelefono(telefono, e.target.value) // Revalida si cambias de país
+            }}
             required
-            className='w-1/3 border rounded-lg px-3 py-3'
+            disabled={isSubmitting}
+            className='w-1/3 border border-[var(--border-subtle)] bg-[var(--bg-body)] text-[var(--text-primary)] focus:border-[var(--brand-primary)] outline-none rounded-lg px-2 py-3 disabled:opacity-50'
           >
             <option value=''>Código</option>
-
-            {/* =========================
-         Norteamérica
-         ========================= */}
-            <optgroup label='Norteamérica'>
-              <option value='+1'>+1 Canadá</option>
-              <option value='+1'>+1 Estados Unidos</option>
-              <option value='+52'>+52 México</option>
-            </optgroup>
-
-            {/* =========================
-          Centroamérica
-         ========================= */}
-            <optgroup label='Centroamérica'>
-              <option value='+501'>+501 Belice</option>
-              <option value='+506'>+506 Costa Rica</option>
-              <option value='+503'>+503 El Salvador</option>
-              <option value='+502'>+502 Guatemala</option>
-              <option value='+504'>+504 Honduras</option>
-              <option value='+505'>+505 Nicaragua</option>
-              <option value='+507'>+507 Panamá</option>
-            </optgroup>
-
-            {/* =========================
-          Sudamérica
-         ========================= */}
-            <optgroup label='Sudamérica'>
-              <option value='+54'>+54 Argentina</option>
-              <option value='+591'>+591 Bolivia</option>
-              <option value='+55'>+55 Brasil</option>
-              <option value='+56'>+56 Chile</option>
+            <optgroup label='Latinoamérica'>
               <option value='+57'>+57 Colombia</option>
-              <option value='+593'>+593 Ecuador</option>
-              <option value='+592'>+592 Guyana</option>
-              <option value='+595'>+595 Paraguay</option>
+              <option value='+52'>+52 México</option>
+              <option value='+54'>+54 Argentina</option>
+              <option value='+56'>+56 Chile</option>
               <option value='+51'>+51 Perú</option>
-              <option value='+597'>+597 Surinam</option>
-              <option value='+598'>+598 Uruguay</option>
               <option value='+58'>+58 Venezuela</option>
+              <option value='+593'>+593 Ecuador</option>
+              <option value='+55'>+55 Brasil</option>
+              <option value='+506'>+506 Costa Rica</option>
             </optgroup>
-
-            {/* =========================
-          Caribe
-         ========================= */}
-            <optgroup label='Caribe'>
-              <option value='+1'>+1 Antigua y Barbuda</option>
-              <option value='+1'>+1 Bahamas</option>
-              <option value='+1'>+1 Barbados</option>
-              <option value='+53'>+53 Cuba</option>
-              <option value='+1'>+1 Dominica</option>
-              <option value='+1'>+1 Granada</option>
-              <option value='+509'>+509 Haití</option>
-              <option value='+1'>+1 Jamaica</option>
-              <option value='+1'>+1 República Dominicana</option>
-              <option value='+1'>+1 San Cristóbal y Nieves</option>
-              <option value='+1'>+1 San Vicente y las Granadinas</option>
-              <option value='+1'>+1 Santa Lucía</option>
-              <option value='+1'>+1 Trinidad y Tobago</option>
-            </optgroup>
-
-            {/* =========================
-          Unión Europea
-          ========================= */}
-            <optgroup label='Unión Europea'>
-              <option value='+49'>+49 Alemania</option>
-              <option value='+43'>+43 Austria</option>
-              <option value='+32'>+32 Bélgica</option>
-              <option value='+359'>+359 Bulgaria</option>
-              <option value='+420'>+420 Chequia</option>
-              <option value='+357'>+357 Chipre</option>
-              <option value='+385'>+385 Croacia</option>
-              <option value='+45'>+45 Dinamarca</option>
-              <option value='+421'>+421 Eslovaquia</option>
-              <option value='+386'>+386 Eslovenia</option>
+            <optgroup label='Europa y Norteamérica'>
               <option value='+34'>+34 España</option>
-              <option value='+372'>+372 Estonia</option>
-              <option value='+358'>+358 Finlandia</option>
-              <option value='+33'>+33 Francia</option>
-              <option value='+30'>+30 Grecia</option>
-              <option value='+36'>+36 Hungría</option>
-              <option value='+353'>+353 Irlanda</option>
-              <option value='+39'>+39 Italia</option>
-              <option value='+371'>+371 Letonia</option>
-              <option value='+370'>+370 Lituania</option>
-              <option value='+352'>+352 Luxemburgo</option>
-              <option value='+356'>+356 Malta</option>
-              <option value='+31'>+31 Países Bajos</option>
-              <option value='+48'>+48 Polonia</option>
-              <option value='+351'>+351 Portugal</option>
-              <option value='+40'>+40 Rumanía</option>
-              <option value='+46'>+46 Suecia</option>
-            </optgroup>
-
-            {/* =========================
-                     Reino Unido
-                    ========================= */}
-            <optgroup label='Reino Unido'>
-              <option value='+44'>+44 Reino Unido</option>
+              <option value='+1'>+1 USA / Canadá</option>
             </optgroup>
           </select>
 
-          {/* Número */}
           <input
             type='text'
             inputMode='numeric'
             value={telefono}
             placeholder='Número de teléfono'
+            disabled={isSubmitting || !codigoPais} // Se bloquea si no hay país seleccionado
             onChange={e => {
               const valor = e.target.value
-
               if (/^\d*$/.test(valor)) {
-                setTelefono(valor)
-                setTelefonoError('')
-              } else {
-                setTelefonoError('Escribe sólo números sin espacios.')
+                // Prevenir que se exceda el máximo permitido
+                const regla = PHONE_RULES[codigoPais] || PHONE_RULES['default']
+                if (valor.length <= regla.max) {
+                  setTelefono(valor)
+                  validarTelefono(valor, codigoPais)
+                } else {
+                  // Si intenta meter un número extra, le mostramos el error
+                  setTelefonoError(
+                    `Excediste los números permitidos (${regla.msg})`
+                  )
+                }
               }
             }}
-            className={`w-2/3 border rounded-lg px-4 py-3 ${
-              telefonoError ? 'border-red-500' : ''
-            }`}
+            className={`w-2/3 border rounded-lg px-4 py-3 bg-[var(--bg-body)] text-[var(--text-primary)] focus:border-[var(--brand-primary)] outline-none transition-colors ${
+              telefonoError ? 'border-red-500' : 'border-[var(--border-subtle)]'
+            } disabled:opacity-50`}
           />
         </div>
-
-        {(telefonoError || errores.telefono) && (
-          <p className='text-red-500 text-sm'>
-            {telefonoError || errores.telefono}
-          </p>
+        {telefonoError && (
+          <p className='text-red-500 text-xs font-bold'>{telefonoError}</p>
         )}
       </div>
 
-      {/* =====================================================
-          Mensaje (máx. 200 caracteres)
-          ===================================================== */}
+      {/* Mensaje */}
       <div className='space-y-1'>
         <label className='text-sm font-medium'>Mensaje</label>
-
         <div className='relative'>
           <textarea
             value={mensaje}
+            disabled={isSubmitting}
             onChange={e => {
               if (e.target.value.length <= MAX_CARACTERES) {
                 setMensaje(e.target.value)
               }
             }}
-            placeholder='Escribe aquí tu mensaje...'
-            className='w-full border rounded-lg px-4 py-3 min-h-[140px] pb-10'
+            placeholder='Opcional: Cuéntame brevemente en qué puedo ayudarte...'
+            className='w-full border border-[var(--border-subtle)] rounded-lg px-4 py-3 min-h-[120px] pb-8 bg-[var(--bg-body)] text-[var(--text-primary)] focus:border-[var(--brand-primary)] outline-none transition-colors resize-none disabled:opacity-50'
           />
-
-          {/* Contador */}
-          <span className='absolute bottom-3 right-4 text-xs opacity-60'>
+          <span
+            className={`absolute bottom-3 right-4 text-xs font-bold ${
+              caracteresRestantes < 20
+                ? 'text-red-500'
+                : 'text-[var(--text-secondary)] opacity-60'
+            }`}
+          >
             {caracteresRestantes}
           </span>
         </div>
       </div>
 
-      {/* =====================================================
-          Legales
-          ===================================================== */}
+      {/* Legales */}
       <div className='space-y-2 text-sm'>
-        <label className='flex gap-2'>
+        <label className='flex gap-2 text-[var(--text-secondary)]'>
           <input
             type='checkbox'
             checked={aceptaLegales}
+            disabled={isSubmitting}
             onChange={e => setAceptaLegales(e.target.checked)}
+            className='accent-[var(--brand-primary)] mt-1 shrink-0'
           />
-          Acepto los{' '}
-          <Link href='/terminos' className='underline'>
-            términos y condiciones
-          </Link>{' '}
-          y la{' '}
-          <Link href='/privacidad' className='underline'>
-            política de privacidad
-          </Link>
+          <span className='leading-snug'>
+            Acepto los{' '}
+            <Link
+              href='/terminos'
+              className='underline hover:text-[var(--brand-primary)]'
+            >
+              términos y condiciones
+            </Link>{' '}
+            y la{' '}
+            <Link
+              href='/privacidad'
+              className='underline hover:text-[var(--brand-primary)]'
+            >
+              política de privacidad
+            </Link>
+            .
+          </span>
         </label>
+      </div>
 
-        {errores.legales && <p className='text-red-500'>{errores.legales}</p>}
+      {/* Cloudflare Turnstile */}
+      <div className='flex justify-center my-4'>
+        <Turnstile
+          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+          onSuccess={token => setTurnstileToken(token)}
+          options={{
+            theme: 'auto' // Se adapta a modo oscuro/claro
+          }}
+        />
       </div>
 
       {/* =====================================================
-          Enviar
+          Botón Enviar (Inteligente y sin bug de Hover)
           ===================================================== */}
-      <button type='submit' className='button-send text-[var(--text-white2)]'>
-        <div className='svg-wrapper-1'>
-          <div className='svg-wrapper'>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 24 24'
-              width='20'
-              height='20'
-              aria-hidden='true'
-            >
-              <path fill='none' d='M0 0h24v24H0z' />
-              <path
-                fill='currentColor'
-                d='M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z'
-              />
-            </svg>
+      <div
+        className={
+          !isFormValid || isSubmitting ? 'cursor-not-allowed w-fit' : 'w-fit'
+        }
+      >
+        <button
+          type='submit'
+          disabled={isSubmitting || !isFormValid}
+          title={
+            !isFormValid
+              ? 'Debes completar el formulario correctamente'
+              : 'Enviar mensaje'
+          }
+          className={`button-send overflow-hidden text-[var(--text-white2)] transition-all duration-300 ${
+            !isFormValid || isSubmitting
+              ? 'opacity-50 grayscale pointer-events-none' // <-- Esto APAGA la animación rota
+              : 'hover:scale-[1.02]'
+          }`}
+        >
+          <div className='svg-wrapper-1'>
+            <div className='svg-wrapper'>
+              {isSubmitting ? (
+                <svg
+                  className='animate-spin -ml-1 mr-3 h-5 w-5 text-white'
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                >
+                  <circle
+                    className='opacity-25'
+                    cx='12'
+                    cy='12'
+                    r='10'
+                    stroke='currentColor'
+                    strokeWidth='4'
+                  ></circle>
+                  <path
+                    className='opacity-75'
+                    fill='currentColor'
+                    d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
+                  ></path>
+                </svg>
+              ) : (
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 24 24'
+                  width='20'
+                  height='20'
+                  aria-hidden='true'
+                >
+                  <path fill='none' d='M0 0h24v24H0z' />
+                  <path
+                    fill='currentColor'
+                    d='M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z'
+                  />
+                </svg>
+              )}
+            </div>
           </div>
-        </div>
-        <span>Enviar</span>
-      </button>
+          <span>
+            {isSubmitting
+              ? 'Enviando...'
+              : !isFormValid
+              ? 'Faltan datos'
+              : 'Enviar mensaje'}
+          </span>
+        </button>
+      </div>
     </form>
   )
 }
+
+

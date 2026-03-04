@@ -3,7 +3,7 @@ import PageHero from '@/components/hero/PageHero'
 import VerticalCard from '@/components/ui/VerticalCard'
 import HorizontalCard from '@/components/ui/HorizontalCard'
 import GlassCTA from '@/components/ui/GlassCTA'
-import QuoteCalculator from '@/components/forms/QuoteCalculator'
+import CotizadorApp from '@/components/cotizador/CotizadorApp'
 
 /* =====================================================
    Página — Precios
@@ -34,7 +34,7 @@ export default function PreciosPage () {
             </p>
           </div>
 
-          <QuoteCalculator />
+          <CotizadorApp />
         </section>
       </div>
 

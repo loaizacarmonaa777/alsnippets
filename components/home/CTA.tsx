@@ -73,7 +73,7 @@ export default function CTA() {
 
           <div className="pt-6 flex flex-col items-center space-y-4">
             <Link
-              href="/auditoria"
+              href="/auditoria#form"
               className="
                 group relative inline-flex items-center justify-center px-8 py-4 
                 text-lg font-bold rounded-full overflow-hidden shadow-lg
@@ -103,7 +103,7 @@ export default function CTA() {
             </Link>
 
             <p className="text-sm text-white/80 font-medium">
-              Sin compromiso. Sin tecnicismos innecesarios.
+              Sin compromiso. Sin historias raras.
             </p>
           </div>
         </div>

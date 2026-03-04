@@ -7,6 +7,7 @@ import WebIcon from '@/components/icons/WebIcon'
 import PinIcon from '@/components/icons/PinIcon'
 import SunIcon from '@/components/icons/SunIcon'
 import MoonIcon from '@/components/icons/MoonIcon'
+import FormNewsletter from '@/components/forms/FormNewsletter'
 
 /* =====================================================
    Footer — Alsnippets
@@ -306,51 +307,11 @@ export default function Footer () {
               Suscríbete al boletín
             </h4>
 
-            {/* Newsletter Input (RESTAURADO) */}
-            <div className='flex mb-6 shadow-[0_12px_32px_rgba(0,0,0,0.25)]'>
-              <input
-                type='email'
-                placeholder='Ingresa tu correo@'
-                className='
-                  w-[70%]
-                  px-5 py-3
-                  border
-                  border-r-0
-                  border-[var(--brand-primary)]
-                  bg-transparent
-                  outline-none
-                  flex items-center
-                  text-[var(--text-white2)] placeholder-[var(--text-white2)]/50
-                '
-              />
-
-              <button
-                type='submit'
-                className='button-send text-[var(--text-white2)]'
-              >
-                <div className='svg-wrapper-1'>
-                  <div className='svg-wrapper'>
-                    <svg
-                      xmlns='http://www.w3.org/2000/svg'
-                      viewBox='0 0 24 24'
-                      width='20'
-                      height='20'
-                      aria-hidden='true'
-                    >
-                      <path fill='none' d='M0 0h24v24H0z' />
-                      <path
-                        fill='currentColor'
-                        d='M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z'
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <span>Enviar</span>
-              </button>
-            </div>
+            {/* Suscripción a Newsletter */}
+            <FormNewsletter />
 
             {/* Trust Badges */}
-            <div className='text-base space-y-3 opacity-90 text-center md:text-left flex-grow'>
+            <div className='text-base space-y-3 pt-4 opacity-90 text-center md:text-left flex-grow'>
               <p className='font-medium'>Trabajo WordPress profesional.</p>
               <ul className='space-y-1.5 text-base opacity-80'>
                 <li>✔️ +6 años de experiencia</li>
