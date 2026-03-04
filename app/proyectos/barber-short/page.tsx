@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import Image from 'next/image' // <-- Añadimos el import de Image
 import FormDemoBarberShort from '@/components/forms/FormDemoBarberShort' 
 import WizardBarberShort from '@/components/ui/WizardBarberShort' 
 
@@ -27,8 +28,22 @@ export default function BarberShortPage() {
         
         {/* CABECERA */}
         {!isLoggedIn && (
-          <section className="text-center space-y-6 mb-12">
-            <h2 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold">
+          <section className="text-center space-y-6 mb-12 flex flex-col items-center animate-fade-in-up">
+            
+            {/* =====================================================
+                LOGO DE BARBER SHORT
+                ===================================================== */}
+            <div className="relative w-64 h-28 md:w-80 md:h-36 mb-2 drop-shadow-xl">
+              <Image 
+                src="/images/barber/logo-barber-short-blanco.png" 
+                alt="Logo Barber Short" 
+                fill
+                className="object-contain"
+                priority // Carga prioritaria porque está en el primer pantallazo (Above the fold)
+              />
+            </div>
+
+            <h2 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold !my-0">
               Barber Short Demo
             </h2>
             <p className="text-white/90 text-lg md:text-xl max-w-3xl mx-auto">
@@ -41,7 +56,9 @@ export default function BarberShortPage() {
         {!isLoggedIn ? (
           <FormDemoBarberShort onLoginSuccess={handleLoginSuccess} />
         ) : (
-          <WizardBarberShort userData={userData} />
+          <div className="animate-fade-in">
+            <WizardBarberShort userData={userData} />
+          </div>
         )}
 
       </div>

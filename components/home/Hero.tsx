@@ -38,8 +38,8 @@ const slides: Slide[] = [
     imageDesktop: "/images/home/hero-home-desktop-seo-geo.webp",
     imageMobile: "/images/home/hero-home-mobile-seo-geo.webp",
     textColor: "text-neutral-900", // Slide 2: Texto Oscuro
-    ctaText: "Ver Suite Text",
-    ctaHref: "/suite-text",
+    ctaText: "Jugar en Suite Text",
+    ctaHref: "/proyectos/suite-text",
     ctaVariant: "secondary",
   },
   {
@@ -49,7 +49,7 @@ const slides: Slide[] = [
     imageDesktop: "/images/home/hero-home-desktop-qr.webp",
     imageMobile: "/images/home/hero-home-mobile-qr.webp",
     textColor: "text-neutral-900", // Slide 3: Texto Oscuro
-    ctaText: "Contacto",
+    ctaText: "Contacta para tu QR",
     ctaHref: "/contacto",
     ctaVariant: "secondary",
   },

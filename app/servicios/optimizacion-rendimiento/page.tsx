@@ -39,38 +39,38 @@ export default function OptimizacionPage () {
             <VerticalCard
               title='Carga lenta del sitio'
               description='Tiempos de respuesta elevados que afectan la experiencia del usuario, aumentan la tasa de rebote y perjudican el posicionamiento en buscadores.'
-              image='/images/optimizacion/vertical.webp'
-              href='/contacto'
+              image='/images/optimizacion/carga-lenta-sitio.webp'
+              //href='/contacto'
             />
             <VerticalCard
               title='Imágenes sin optimizar'
               description='Archivos demasiado pesados, sin compresión o sin formatos modernos (WebP/AVIF), que ralentizan la carga en móviles y conexiones lentas.'
-              image='/images/optimizacion/vertical.webp'
-              href='/contacto'
+              image='/images/optimizacion/imagenes-sin-optimizar.webp'
+              //href='/contacto'
             />
             <VerticalCard
               title='Exceso de plugins'
               description='Extensiones innecesarias, duplicadas o mal desarrolladas que consumen recursos del servidor y generan conflictos internos.'
-              image='/images/optimizacion/vertical.webp'
-              href='/contacto'
+              image='/images/optimizacion/exceso-plugins.webp'
+              //href='/contacto'
             />
             <VerticalCard
               title='Base de datos saturada'
               description='Revisiones acumuladas, transients expirados, tablas huérfanas y registros innecesarios que incrementan las consultas y reducen la velocidad del sitio.'
-              image='/images/optimizacion/vertical.webp'
-              href='/contacto'
+              image='/images/optimizacion/base-datos-saturada.webp'
+              //href='/contacto'
             />
             <VerticalCard
               title='Hosting mal configurado'
               description='Servidores sin sistemas de caché activos, versiones antiguas de PHP, límites de memoria bajos o infraestructura compartida de bajo rendimiento.'
-              image='/images/optimizacion/vertical.webp'
-              href='/contacto'
+              image='/images/optimizacion/hosting-mal-configurado.webp'
+              //href='/contacto'
             />
             <VerticalCard
               title='Falta de sistema de caché y optimización'
               description='Ausencia de caché de página, minificación de archivos CSS/JS o carga diferida (lazy load), lo que obliga al servidor a generar cada página desde cero.'
-              image='/images/optimizacion/vertical.webp'
-              href='/contacto'
+              image='/images/optimizacion/falta-sistema-cache-optimizacion.webp'
+              //href='/contacto'
             />
           </div>
         </section>
@@ -94,26 +94,30 @@ export default function OptimizacionPage () {
             <HorizontalCard
               title='Optimización estructural de recursos'
               description='Reorganización de imágenes, scripts y estilos para mejorar los tiempos de carga y fortalecer la salud general del sitio WordPress.'
-              image='/images/optimizacion/horizontal.webp'
-              href='/contacto'
+              image='/images/optimizacion/optimizacion-estructural-recursos.webp'
+              href='/blog/optimizacion-estructural-de-recursos'
+              target="_blank"
             />
             <HorizontalCard
               title='Implementación estratégica de caché multinivel'
               description='Configuración coordinada entre servidor y aplicación para reducir carga innecesaria y mantener estable la salud técnica del sitio.'
-              image='/images/optimizacion/horizontal.webp'
-              href='/contacto'
+              image='/images/optimizacion/implementacion-estrategica-cache-multinivel.webp'
+              href='/blog/implementacion-estrategica-de-cache-multinivel'
+              target="_blank"
             />
             <HorizontalCard
               title='Depuración avanzada de base de datos'
               description='Optimización de tablas, consultas e índices para mejorar el rendimiento interno y preservar la salud estructural del sistema.'
-              image='/images/optimizacion/horizontal.webp'
-              href='/contacto'
+              image='/images/optimizacion/depuracion-avanzada-base-datos.webp'
+              href='/blog/depuracion-avanzada-de-base-de-datos'
+              target="_blank"
             />
             <HorizontalCard
               title='Auditoría técnica de dependencias'
               description='Evaluación del impacto real de plugins y recursos externos para prevenir sobrecargas que afecten la salud y estabilidad del sitio.'
-              image='/images/optimizacion/horizontal.webp'
-              href='/contacto'
+              image='/images/optimizacion/auditoria-tecnica-dependencias.webp'
+              href='/blog/auditoria-tecnica-de-dependencias'
+              target="_blank"
             />
           </div>
         </section>
@@ -124,39 +128,42 @@ export default function OptimizacionPage () {
         <section className='w-full max-w-[1200px] mx-auto px-5 py-16 space-y-12 border-t border-[var(--border-subtle)]'>
           <div className='text-center space-y-4 max-w-3xl mx-auto'>
             <h2>
-              Rendimiento orientado a la experiencia
+              Ingeniería de rendimiento web y optimización técnica avanzada
             </h2>
             <p className='text-lg text-[var(--text-secondary)] opacity-90'>
-              No se trata solo de números en una herramienta, sino de cómo se
-              siente el sitio al navegarlo.
+              Diseño y optimizo la arquitectura técnica del sitio para garantizar velocidad real, estabilidad visual y respuesta inmediata. No se trata solo de métricas, sino de cómo el navegador procesa, renderiza e interactúa con cada recurso. Implemento mejoras estructurales que impactan directamente en experiencia de usuario, eficiencia del servidor y capacidad de indexación por motores de búsqueda y modelos de IA.
             </p>
           </div>
 
           {/* MEJORA CRÍTICA: Igual que arriba, grid-cols-1 en mobile para tarjetas horizontales */}
           <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
             <HorizontalCard
-              title='Mejora de Core Web Vitals'
-              description='Optimización de métricas clave como LCP, CLS e INP para ofrecer una experiencia estable, rápida y alineada con los estándares actuales de Google.'
-              image='/images/optimizacion/horizontal.webp'
-              href='/contacto'
+              title='Arquitectura de rendimiento web'
+              description='Diseño una arquitectura orientada a minimizar bloqueos, priorizar recursos críticos y optimizar la carga progresiva, asegurando estabilidad, eficiencia técnica y mejor procesamiento por buscadores y modelos generativos.'
+              image='/images/optimizacion/arquitectura-de-rendimiento.webp'
+              href='/blog/arquitectura-de-rendimiento-web'
+              target="_blank"
             />
             <HorizontalCard
-              title='Reducción de tiempos de respuesta'
-              description='Disminución del tiempo que tarda el servidor en procesar y entregar cada página, mejorando la percepción inmediata de velocidad.'
-              image='/images/optimizacion/horizontal.webp'
-              href='/contacto'
+              title='Optimización del servidor y tiempos de respuesta'
+              description='Reduzco TTFB y latencia mediante configuración avanzada de servidor, caché estratégica, compresión, CDN y mejora de consultas, garantizando entrega rápida y consistente del contenido.'
+              image='/images/optimizacion/optimizacion-del-servidor.webp'
+              href='/blog/optimizacion-del-servidor-y-tiempos-de-respuesta'
+              target="_blank"
             />
             <HorizontalCard
-              title='Navegación más fluida'
-              description='Carga progresiva y comportamiento visual estable que permite recorrer el sitio sin saltos, bloqueos ni esperas innecesarias.'
-              image='/images/optimizacion/horizontal.webp'
-              href='/contacto'
+              title='Renderizado y carga crítica optimizada'
+              description='Priorizo el contenido visible mediante optimización del critical rendering path, carga diferida y eliminación de recursos bloqueantes, mejorando percepción de velocidad y procesamiento estructural del documento.'
+              image='/images/optimizacion/renderizado-y-carga.webp'
+              href='/blog/renderizado-y-carga-critica-optimizada'
+              target="_blank"
             />
             <HorizontalCard
-              title='Menor tasa de rebote'
-              description='Mejora de la experiencia general para que los usuarios permanezcan más tiempo, interactúen más y aumenten las probabilidades de conversión.'
-              image='/images/optimizacion/horizontal.webp'
-              href='/contacto'
+              title='Estabilidad visual y experiencia interactiva'
+              description='Elimino saltos de diseño, bloqueos de interfaz y retrasos en interacción, asegurando fluidez, consistencia visual y comportamiento predecible en distintos dispositivos y condiciones de red.'
+              image='/images/optimizacion/estabilidad-visual.webp'
+              href='/blog/estabilidad-visual-y-experiencia-interactiva'
+              target="_blank"
             />
           </div>
         </section>
@@ -212,8 +219,7 @@ export default function OptimizacionPage () {
             description='Antes de intervenir, realizo una auditoría de seguridad para identificar vulnerabilidades y definir la mejor estrategia de limpieza y protección. Esto garantiza una intervención precisa y efectiva.'
             buttonText='Solicitar auditoría de seguridad'
             buttonHref='/contacto'
-            disclaimer='Consultoría técnica disponible para España, USA y Latinoamérica.'
-            className='!my-0'
+            disclaimer='Consultoría técnica disponible.'
           />
         </div>
       </main>

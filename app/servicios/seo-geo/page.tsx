@@ -49,26 +49,26 @@ export default function SeoPage () {
             <VerticalCard
               title='Arquitectura clara del sitio'
               description='Estructura lógica de páginas y contenidos para que buscadores y personas entiendan el sitio sin fricción.'
-              image='/images/optimizacion/vertical.webp'
-              href='/contacto'
+              image='/images/seo/arquitectura-clara-sitio.webp'
+              //href='/contacto'
             />
             <VerticalCard
               title='Contenido comprensible y jerarquizado'
               description='Uso correcto de títulos, secciones y niveles de información que facilitan la lectura y el análisis.'
-              image='/images/optimizacion/vertical.webp'
-              href='/contacto'
+              image='/images/seo/contenido-comprensible-jerarquizado.webp'
+              //href='/contacto'
             />
             <VerticalCard
               title='Contexto real, no texto inflado'
               description='Contenido con intención clara, sin relleno artificial ni repeticiones forzadas de palabras clave.'
-              image='/images/optimizacion/vertical.webp'
-              href='/contacto'
+              image='/images/seo/contexto-real-no-inflado.webp'
+              //href='/contacto'
             />
             <VerticalCard
               title='Experiencia técnica sólida'
               description='Rendimiento, accesibilidad y estabilidad técnica como base del posicionamiento real.'
-              image='/images/optimizacion/vertical.webp'
-              href='/contacto'
+              image='/images/seo/experiencia-tecnica-solida.webp'
+              //href='/contacto'
             />
           </div>
         </section>
@@ -96,26 +96,26 @@ export default function SeoPage () {
             <VerticalCard
               title='Lenguaje claro y directo'
               description='Contenido escrito para personas reales, sin tecnicismos innecesarios ni frases ambiguas.'
-              image='/images/optimizacion/vertical.webp'
-              href='/contacto'
+              image='/images/seo/lenguaje-claro-directo.webp'
+              //href='/contacto'
             />
             <VerticalCard
               title='Contexto completo por sección'
               description='Información suficiente para entender el tema sin depender de otros bloques del sitio.'
-              image='/images/optimizacion/vertical.webp'
-              href='/contacto'
+              image='/images/seo/contexto-completo-seccion.webp'
+              //href='/contacto'
             />
             <VerticalCard
               title='Respuestas bien delimitadas'
               description='Cada sección responde a una intención concreta, facilitando la lectura y el análisis por sistemas de IA.'
-              image='/images/optimizacion/vertical.webp'
-              href='/contacto'
+              image='/images/seo/respuestas-delimitadas.webp'
+              //href='/contacto'
             />
             <VerticalCard
               title='Señales de autoridad y experiencia'
               description='Contenido respaldado por experiencia real, coherencia técnica y enfoque profesional.'
-              image='/images/optimizacion/vertical.webp'
-              href='/contacto'
+              image='/images/seo/senales-autoridad-experiencia.webp'
+              //href='/contacto'
             />
           </div>
         </section>
@@ -136,38 +136,44 @@ export default function SeoPage () {
             <HorizontalCard
               title='Mejora de Core Web Vitals'
               description='Optimización de métricas clave como LCP, CLS e INP para ofrecer una experiencia estable, rápida y alineada con los estándares actuales de Google.'
-              image='/images/optimizacion/horizontal.webp'
-              href='/contacto'
+              image='/images/seo/mejora-core-web-vitals.webp'
+              href='/blog/mejora-de-core-web-vitals'
+              target="_blank"
             />
             <HorizontalCard
               title='Análisis de intención y estructura'
               description='Identificación de qué busca el usuario y cómo debe organizarse el contenido para responder correctamente.'
-              image='/images/optimizacion/horizontal.webp'
-              href='/contacto'
+              image='/images/seo/analisis-intencion-estructura.webp'
+              href='/blog/analisis-de-intencion-y-estructura'
+              target="_blank"
             />
             <HorizontalCard
               title='Reorganización semántica del sitio'
               description='Ajuste de secciones, jerarquías y relaciones entre páginas para mejorar comprensión y relevancia.'
-              image='/images/optimizacion/horizontal.webp'
-              href='/contacto'
+              image='/images/seo/reorganizacion-semantica-sitio.webp'
+              href='/blog/reorganizacion-semantica-del-sitio'
+              target="_blank"
             />
             <HorizontalCard
               title='Optimización para buscadores y LLMs'
               description='Preparación del contenido para Google y modelos de lenguaje, priorizando claridad, contexto y autoridad.'
-              image='/images/optimizacion/horizontal.webp'
-              href='/contacto'
+              image='/images/seo/optimizacion-rendimiento.webp'
+              href='/blog/optimizacion-para-buscadores-y-llms'
+              target="_blank"
             />
             <HorizontalCard
               title='Seguimiento y ajustes progresivos'
               description='Evaluación continua del rendimiento y ajustes estratégicos según resultados y evolución del proyecto.'
-              image='/images/optimizacion/horizontal.webp'
-              href='/contacto'
+              image='/images/seo/seguimiento-ajustes-proguresivos.webp'
+              href='/blog/seguimiento-y-ajustes-progresivos'
+              target="_blank"
             />
             <HorizontalCard
               title='Estrategia de contenido a largo plazo'
               description='Con una visión a mediano y largo plazo, desarrollo una estrategia de contenido que evoluciona con el proyecto, adaptándose a cambios en el mercado y en los algoritmos.'
-              image='/images/optimizacion/horizontal.webp'
-              href='/contacto'
+              image='/images/seo/estrategia-contenido-largo-plazo.webp'
+              href='/blog/estrategia-de-contenido-a-largo-plazo'
+              target="_blank"
             />
           </div>
         </section>
@@ -183,7 +189,7 @@ export default function SeoPage () {
             {/* IMAGEN (Izquierda) */}
             <div className='w-full lg:w-1/2 relative h-[350px] md:h-[500px] rounded-2xl overflow-hidden shadow-xl border border-[var(--border-subtle)]'>
               <Image
-                src='/images/sobre-mi/que-hago.webp'
+                src='/images/seo/que-debes-tener-en-cuenta.webp'
                 alt='Qué hago - Adrián Loaiza'
                 fill
                 className='object-cover'
@@ -221,9 +227,8 @@ export default function SeoPage () {
             title='Auditoría de seguridad para tu sitio web'
             description='Antes de intervenir, realizo una auditoría de seguridad para identificar vulnerabilidades y definir la mejor estrategia de limpieza y protección. Esto garantiza una intervención precisa y efectiva.'
             buttonText='Solicitar auditoría de seguridad'
-            buttonHref='/contacto'
-            disclaimer='Consultoría técnica disponible para España, USA y Latinoamérica.'
-            className='!my-0'
+            buttonHref='/auditoria'
+            disclaimer='Consultoría técnica disponible.'
           />
         </div>
       </main>

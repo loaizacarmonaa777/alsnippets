@@ -40,38 +40,38 @@ export default function SeguridadLimpiezaPage() {
             <VerticalCard
               title='Malware y código malicioso'
               description='Archivos infectados, scripts ocultos o código inyectado que alteran el funcionamiento del sitio, redirigen a páginas externas o roban información. Muchas veces pasan desapercibidos hasta que el daño ya es visible.'
-              image="/images/seguridad/vertical.webp"
-              href="/contacto"
+              image="/images/seguridad/malware-codigo-malicioso.webp"
+              //href="/contacto"
             />
             <VerticalCard
               title='Sitio en blacklist'
               description='Cuando Google, navegadores o servicios de hosting detectan actividad maliciosa y bloquean el acceso a tu web, mostrando advertencias de “sitio peligroso”. Esto afecta gravemente la reputación y el posicionamiento SEO.'
-              image="/images/seguridad/vertical.webp"
-              href="/contacto"
+              image="/images/seguridad/sitio-blacklist.webp"
+              //href="/contacto"
             />
             <VerticalCard
               title='Accesos no autorizados'
               description='Intentos de fuerza bruta, credenciales filtradas o usuarios administradores sospechosos que permiten a terceros tomar el control parcial o total del sitio.'
-              image="/images/seguridad/vertical.webp"
-              href="/contacto"
+              image="/images/seguridad/accesos-no-autorizados.webp"
+              //href="/contacto"
             />
             <VerticalCard
               title='Plugins vulnerables'
               description='Extensiones desactualizadas, nulled o mal desarrolladas que contienen brechas de seguridad conocidas, convirtiéndose en la principal puerta de entrada para ataques.'
-              image="/images/seguridad/vertical.webp"
-              href="/contacto"
+              image="/images/seguridad/plugins-vulnerables.webp"
+              //href="/contacto"
             />
             <VerticalCard
               title='Configuraciones inseguras'
               description='Permisos incorrectos (CHMOD mal configurado), archivos sensibles expuestos (wp-config, backups, logs), XML-RPC abierto o bases de datos sin protección adecuada.'
-              image="/images/seguridad/vertical.webp"
-              href="/contacto"
+              image="/images/seguridad/configuraciones-inseguras.webp"
+              //href="/contacto"
             />
             <VerticalCard
               title='Base de datos comprometida'
               description='Inyección de código (SQL injection), creación de usuarios ocultos, spam masivo o contenido malicioso insertado directamente en la base de datos que puede reinfectar el sitio incluso después de una limpieza superficial.'
-              image="/images/seguridad/vertical.webp"
-              href="/contacto"
+              image="/images/seguridad/base-datos-comprometida.webp"
+              //href="/contacto"
             />
           </div>
         </section>
@@ -94,26 +94,30 @@ export default function SeguridadLimpiezaPage() {
             <HorizontalCard
               title='Eliminación de malware y archivos infectados'
               description='Detección y eliminación manual de scripts maliciosos, puertas traseras (backdoors) y código inyectado en archivos y carpetas del sitio.'
-              image="/images/seguridad/horizontal.webp"
-              href="/contacto"
+              image="/images/seguridad/eliminacion-malware.webp"
+              href="/blog/eliminacion-de-malware-y-archivos-infectados"
+              target="_blank"
             />
             <HorizontalCard
               title='Revisión completa de código y BD'
               description='Auditoría técnica de temas, plugins y tablas de la base de datos para localizar usuarios ocultos e inyecciones SQL.'
-              image="/images/seguridad/horizontal.webp"
-              href="/contacto"
+              image="/images/seguridad/revision-codigo-bd.webp"
+              href="/blog/revision-completa-de-codigo-y-bd"
+              target="_blank"
             />
             <HorizontalCard
               title='Restauración segura si es necesario'
               description='Recuperación del sitio desde copias de seguridad limpias y verificadas, asegurando que la restauración no arrastre vulnerabilidades.'
-              image="/images/seguridad/horizontal.webp"
-              href="/contacto"
+              image="/images/seguridad/restauracion-segura.webp"
+              href="/blog/restauracion-segura-si-es-necesario"
+              target="_blank"
             />
             <HorizontalCard
               title='Refuerzo de accesos y permisos'
               description='Endurecimiento de credenciales, configuración de permisos seguros (CHMOD) y cierre de accesos vulnerables.'
-              image="/images/seguridad/horizontal.webp"
-              href="/contacto"
+              image="/images/seguridad/refuerzo-accesos-permisos.webp"
+              href="/blog/refuerzo-de-accesos-y-permisos"
+              target="_blank"
             />
           </div>
         </section>
@@ -135,26 +139,30 @@ export default function SeguridadLimpiezaPage() {
             <HorizontalCard
               title='Endurecimiento de WordPress'
               description='Desactivación de rutas vulnerables, protección de archivos críticos y ajustes estratégicos para reducir superficies de ataque.'
-              image="/images/seguridad/horizontal.webp"
-              href="/contacto"
+              image="/images/seguridad/endurecimiento-wordpress.webp"
+              href="/blog/endurecimiento-de-wordpress"
+              target="_blank"
             />
             <HorizontalCard
               title='Configuración de plugins'
               description='Instalación y configuración profesional de herramientas de seguridad bien optimizadas, evitando conflictos.'
-              image="/images/seguridad/horizontal.webp"
-              href="/contacto"
+              image="/images/seguridad/configuracion-plugins.webp"
+              href="/blog/configuracion-de-plugins"
+              target="_blank"
             />
             <HorizontalCard
               title='Monitoreo básico de actividad'
               description='Supervisión de accesos, intentos de inicio de sesión y cambios relevantes en el sistema para detectar sospechas.'
-              image="/images/seguridad/horizontal.webp"
-              href="/contacto"
+              image="/images/seguridad/monitoreo-actividad.webp"
+              href="/blog/monitoreo-basico-de-actividad"
+              target="_blank"
             />
             <HorizontalCard
               title='Buenas prácticas de actualización'
               description='Gestión controlada de actualizaciones de WordPress, temas y plugins, asegurando compatibilidad y estabilidad.'
-              image="/images/seguridad/horizontal.webp"
-              href="/contacto"
+              image="/images/seguridad/buenas-practicas-actualizacion.webp"
+              href="/blog/buenas-practicas-de-actualizacion"
+              target="_blank"
             />
           </div>
         </section>
@@ -204,9 +212,8 @@ export default function SeguridadLimpiezaPage() {
             title='Auditoría de seguridad para tu sitio web'
             description='Antes de intervenir, realizo una auditoría de seguridad para identificar vulnerabilidades y definir la mejor estrategia de limpieza y protección. Esto garantiza una intervención precisa y efectiva.'
             buttonText='Solicitar auditoría de seguridad'
-            buttonHref='/contacto'
-            disclaimer='Consultoría técnica disponible para España, USA y Latinoamérica.'
-            className="!my-0"
+            buttonHref='/auditoria'
+            disclaimer='Consultoría técnica disponible'
           />
         </div>
         

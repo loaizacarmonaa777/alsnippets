@@ -26,7 +26,7 @@ export default function SobreMiPage () {
         {/* =====================================================
             LAYOUT ZIG-ZAG (Ancho máximo 1200px - Textos originales)
             ===================================================== */}
-        <div className='flex flex-col w-full'>
+        <div className='flex flex-col w-full pt-12'>
           {/* SECCIÓN 1: QUÉ HAGO */}
           <section className='w-full bg-[var(--bg-card)]'>
             <div className='max-w-[1200px] mx-auto flex flex-col md:flex-row items-stretch'>
@@ -209,8 +209,8 @@ export default function SobreMiPage () {
           title='¿Buscas un aliado técnico para tu próximo gran paso?'
           description='Ya sea una auditoría profunda, una migración compleja o el desarrollo de una nueva plataforma, estoy listo para ayudarte a ejecutarlo con precisión.'
           buttonText='Hablemos de tu proyecto'
-          buttonHref='/contacto'
-          disclaimer='Consultoría técnica disponible para España, USA y Latinoamérica.'
+          buttonHref='/auditoria'
+          disclaimer='Consultoría técnica disponible.'
         />
       </main>
     </>

@@ -1,0 +1,100 @@
+---
+title: "Revisión completa de código y base de datos en WordPress"
+description: "Cómo realizo una auditoría técnica profunda de temas, plugins y base de datos para detectar usuarios ocultos e inyecciones maliciosas."
+category: "seguridad"
+author: "Adrián Loaiza"
+date: "2026-03-02"
+coverImage: "/images/blog/revision-completa-de-codigo-y-bd.webp"
+featured: false
+---
+
+## Revisión completa de código y base de datos.
+
+Hay veces en que el sitio parece limpio.
+
+No hay redirecciones.  
+No hay spam visible.
+
+Pero algo sigue mal.
+
+En esos casos, el problema suele estar en el código o en la base de datos.
+
+Y ahí es donde casi nadie mira.
+
+---
+
+### Por qué sucede
+
+Muchos ataques no solo modifican archivos.
+
+También:
+
+- Insertan usuarios administradores ocultos  
+- Inyectan código en tablas  
+- Alteran opciones internas  
+- Manipulan rutas dinámicas  
+
+Google advierte que algunos ataques afectan directamente la estructura interna del sitio .
+
+Si no se revisa la base de datos, la limpieza queda incompleta.
+
+---
+
+### Qué es
+
+Una auditoría completa implica revisar:
+
+- Archivos del tema activo e inactivo  
+- Plugins instalados  
+- Tablas de la base de datos  
+- Usuarios registrados  
+- Opciones cargadas automáticamente  
+
+Busco patrones sospechosos, cadenas ofuscadas e inyecciones SQL.
+
+Sucuri detalla cómo los atacantes suelen esconder código en tablas como `wp_options` .
+
+No todo está en los archivos.
+
+---
+
+### Qué afecta
+
+Si la base de datos está comprometida puede provocar:
+
+- Reinfecciones  
+- Spam dinámico  
+- Alteración de configuraciones  
+- Creación automática de contenido basura  
+
+Y lo peor: el malware puede regenerarse incluso después de borrar archivos.
+
+---
+
+### Posibles soluciones
+
+Cuando abordo auditorías profundas en Alsnippets hago:
+
+- Exportación segura de la base  
+- Revisión manual de tablas críticas  
+- Eliminación de usuarios no autorizados  
+- Limpieza de opciones inyectadas  
+- Revisión completa de temas y plugins  
+
+Después organizo el entorno para que no vuelva a ocurrir y soluciono vulnerabilidades estructurales.
+
+La diferencia está en revisar lo que otros no revisan.
+
+Puedes complementar con mi artículo sobre [comportamientos extraños en WordPress](/mi-web-muestra-comportamientos-extranos).
+
+---
+
+### ¿Tu WordPress tiene problemas reales?
+[Solicitar auditoría WordPress](/auditoria)
+
+---
+
+### Fuentes y referencias
+
+- https://developers.google.com/search/docs/monitor-debug/security/hacked-site
+- https://www.sucuri.net/guides/wordpress-security/

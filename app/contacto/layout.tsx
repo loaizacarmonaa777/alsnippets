@@ -4,7 +4,7 @@ import { Metadata } from 'next'
    METADATA: PÁGINA DE CONTACTO
 ===================================================== */
 export const metadata: Metadata = {
-  title: 'Contacto | Adrián Loaiza - Alsnippets',
+  title: 'Contacto',
   description: 'Escríbeme para hablar sobre tu proyecto, resolver tus dudas y dar el siguiente paso con confianza. Estoy aquí para ayudarte a escalar tu web.',
   
   keywords: [
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ContactPage',
-  name: 'Contacto',
+  name: 'Contacto | Alsnippets',
   description: 'Página oficial de contacto para servicios de desarrollo web y auditoría SEO con Adrián Loaiza.',
   url: 'https://alsnippets.com/contacto',
   mainEntity: {

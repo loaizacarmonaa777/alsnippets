@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from "next/link";
 import Hero from '@/components/home/Hero'
 import Benefits, { BenefitItem } from '@/components/home/Benefits'
 import Authority from '@/components/home/Authority'
@@ -129,6 +130,23 @@ export default function HomePage () {
 
             {/* Grid Beneficios */}
             <Benefits title='' items={BENEFITS_DATA} />
+          </div>
+          {/* CTA Secundario */}
+          <div className='pt-4 text-center'>
+            <Link
+              href='/proyectos/casos-de-exito' target="_blank"
+              className='
+            inline-flex items-center justify-center
+            px-8 py-3 rounded-full
+            text-sm font-bold
+            bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--text-yellow2)]
+            hover:bg-[var(--brand-primary)] hover:text-white hover:border-transparent
+            shadow-sm hover:shadow-md
+            transition-all duration-300
+          '
+            >
+              Conoce mis proyectos
+            </Link>
           </div>
         </section>
 

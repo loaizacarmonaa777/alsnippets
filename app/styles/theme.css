@@ -8,21 +8,7 @@
        ===================================================== */
 
     /* ===== Backgrounds ===== */
-    --bg-body: linear-gradient(
-      to left,
-      #f9faff,
-      #fafaff,
-      #fbfbff,
-      #fbfbff,
-      #fcfcff,
-      #fdfcff,
-      #fefdff,
-      #fffdff,
-      #fffdfe,
-      #fffdfb,
-      #fffef9,
-      #fffff8
-    );
+    --bg-body: radial-gradient(circle,rgba(255, 253, 245, 1) 2%, rgba(247, 255, 245, 1) 51%, rgba(255, 246, 240, 1) 100%);
 
     --bg-primary: #ffffff;
     --bg-secondary: #f7f8fa;

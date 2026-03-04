@@ -44,37 +44,37 @@ export default function SoporteMantenimientoPage () {
             <VerticalCard
               title='Errores críticos'
               description='Errores 400, 500, pantallas blancas y fallos que impiden el funcionamiento normal del sitio.'
-              image='/images/soporte/soporte.webp'
+              image='/images/soporte/errores-criticos.jpg'
               //href='/contacto'
             />
             <VerticalCard
               title='Actualizaciones sin riesgo'
               description='Actualización segura de WordPress, plugins y themes, evitando conflictos y pérdidas de información.'
-              image='/images/soporte/soporte.webp'
+              image='/images/soporte/actualizaciones-sin-riesgo.jpg'
               //href='/contacto'
             />
             <VerticalCard
               title='Lentitud y rendimiento'
               description='Identificación de cuellos de botella que afectan la velocidad y experiencia del usuario.'
-              image='/images/soporte/soporte.webp'
+              image='/images/soporte/lentitud-rendimiento.jpg'
               //href='/servicios/optimizacion-rendimiento'
             />
             <VerticalCard
               title='Configuración del servidor'
               description='Revisión de memoria, tiempos de ejecución, SSL, caché y ajustes clave del hosting.'
-              image='/images/soporte/soporte.webp'
+              image='/images/soporte/configuracion-servidor.jpg'
               //href='/contacto'
             />
             <VerticalCard
               title='Soporte técnico real'
               description='Respuesta clara y directa cuando algo falla, sin tickets eternos ni respuestas genéricas.'
-              image='/images/soporte/soporte.webp'
+              image='/images/soporte/sopoerte-tecnico-real.webp'
               //href='/contacto'
             />
             <VerticalCard
               title='Bases de datos'
               description='Optimización, respaldo y restauración de bases de datos WordPress para garantizar la integridad de los datos.'
-              image='/images/soporte/soporte.webp'
+              image='/images/soporte/bases-datos.jpg'
               //href='/contacto'
             />
           </div>
@@ -126,8 +126,7 @@ export default function SoporteMantenimientoPage () {
             description='Antes de intervenir cualquier sitio, realizo una auditoría técnica para evaluar el estado real de tu WordPress o CMS y definir el mejor camino.'
             buttonText='Solicitar auditoría'
             buttonHref='/auditoria'
-            disclaimer='Consultoría técnica disponible para España, USA y Latinoamérica.'
-            className='!my-0' // Aseguramos que no tenga márgenes externos extra
+            disclaimer='Consultoría técnica disponible.'
           />
         </div>
       </main>

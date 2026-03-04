@@ -11,25 +11,25 @@ const solutionsData = [
     title: "Mi web muestra comportamientos extraños",
     description: "Cuando una web es atacada, los problemas no siempre son visibles, pero el riesgo sigue activo y creciendo.",
     image: "/images/home/sitio-web-hackeado-home.webp",
-    link: "/blog",
+    link: "/blog/mi-web-muestra-comportamientos-extranos",
   },
   {
     title: "Mi web es lenta y está perdiendo visitas",
     description: "Un sitio lento frustra a los usuarios, reduce conversiones y afecta negativamente el posicionamiento en Google.",
     image: "/images/home/sitio-web-lento-home.webp",
-    link: "/blog",
+    link: "/blog/mi-web-es-lenta-y-esta-perdiendo-visitas",
   },
   {
     title: "Tengo miedo de actualizar mi sitio web",
     description: "Actualizar sin control puede parecer sencillo, pero una mala decisión puede dejar el sitio inestable.",
     image: "/images/home/actualizar-sitio-web-home.webp",
-    link: "/blog",
+    link: "/blog/tengo-miedo-de-actualizar-mi-sitio-web",
   },
   {
     title: "Quiero mejorar mi sitio, pero... ¿Cómo le hago?",
     description: "Sin una guía clara, es fácil perder tiempo, dinero y tomar decisiones técnicas equivocadas.",
     image: "/images/home/mejorar-sitio-web-home.webp",
-    link: "/blog",
+    link: "/blog/quiero-mejorar-mi-sitio-pero-como-le-hago",
   },
 ];
 
@@ -58,7 +58,8 @@ export default function Solutions() {
               description={item.description}
               image={item.image}
               href={item.link}
-              linkText="Leer más" // Opcional, por defecto ya es "Leer más"
+              linkText="Leer más" 
+              target="_blank"
             />
           ))}
         </div>
@@ -67,12 +68,13 @@ export default function Solutions() {
       {/* CTA Secundario */}
       <div className="pt-4 text-center">
         <Link
-          href="/consultoria"
+          href="/auditoria" 
+          target="_blank"
           className="
             inline-flex items-center justify-center
             px-8 py-3 rounded-full
             text-sm font-bold
-            bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border-subtle)]
+            bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--text-yellow2)]
             hover:bg-[var(--brand-primary)] hover:text-white hover:border-transparent
             shadow-sm hover:shadow-md
             transition-all duration-300

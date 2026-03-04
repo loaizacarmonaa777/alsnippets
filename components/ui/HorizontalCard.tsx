@@ -9,6 +9,7 @@ interface HorizontalCardProps {
   href?: string;  // El "?" lo hace opcional
   linkText?: string;
   className?: string;
+  target?: string;
 }
 
 export default function HorizontalCard({
@@ -16,8 +17,9 @@ export default function HorizontalCard({
   description,
   image,
   href,
-  linkText = "Leer más",
+  linkText = "¿De qué se trata?",
   className = "",
+  target,
 }: HorizontalCardProps) {
   
   // Extraemos las clases a una variable para reutilizarlas sea un Link o un Div
@@ -87,7 +89,7 @@ export default function HorizontalCard({
   // Si le pasamos un href, renderiza el componente como un enlace real
   if (href) {
     return (
-      <Link href={href} className={cardClasses}>
+      <Link href={href} target={target} rel={target === "_blank" ? "noopener noreferrer" : undefined} className={cardClasses}>
         {CardContent}
       </Link>
     );

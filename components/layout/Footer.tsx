@@ -382,9 +382,9 @@ export default function Footer () {
             Copyright & Legal
             ===================================================== */}
         <div className='mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs opacity-70'>
-          <p>
+          <p className='text-sm'>
             © 2023 - {new Date().getFullYear()} Alsnippets. Todos los derechos
-            reservados.
+            reservados | Un corazón, una mente, Alsnippets.
           </p>
 
           <div className='flex gap-6'>
@@ -392,7 +392,7 @@ export default function Footer () {
               href='/privacidad'
               className='hover:text-[var(--brand-primary)] hover:underline'
             >
-              Privacidad
+              Privacidad 
             </Link>
             <Link
               href='/terminos'

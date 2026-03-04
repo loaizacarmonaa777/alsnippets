@@ -56,38 +56,38 @@ export default function PreciosPage () {
             <VerticalCard
               title='Estado del sitio web'
               description='Evaluamos la deuda técnica actual, la calidad del código y la salud del servidor antes de intervenir.'
-              image='/images/precios/vertical.webp'
+              image='/images/precios/estado-sitio-web.webp'
             />
             <VerticalCard
               title='Nivel de personalización'
               description='No es lo mismo usar plantillas prefabricadas que desarrollar soluciones a medida desde cero.'
-              image='/images/precios/vertical.webp'
+              image='/images/precios/nivel-personalizacion.webp'
             />
             <VerticalCard
               title='Complejidad técnica'
               description='Integraciones con APIs, pasarelas de pago o migraciones complejas requieren un análisis profundo.'
-              image='/images/precios/vertical.webp'
+              image='/images/precios/complejidad-tecnica.webp'
             />
             <VerticalCard
               title='Trabajo manual'
               description='Limpieza exhaustiva de bases de datos, optimización de imágenes o reestructuración de URLs.'
-              image='/images/precios/vertical.webp'
+              image='/images/precios/trabajo-manual.webp'
             />
             <VerticalCard
               title='Riesgos y responsabilidad'
               description='Proyectos en producción con tráfico activo requieren entornos de prueba y protocolos de seguridad estrictos.'
-              image='/images/precios/vertical.webp'
+              image='/images/precios/riesgos-responsabilidad.webp'
             />
             <VerticalCard
               title='Implementación de código personalizado'
               description='Desarrollo de funcionalidades específicas que no están disponibles en plugins o temas estándar.'
-              image='/images/precios/vertical.webp'
+              image='/images/precios/implementacion-codigo-personalizado.webp'
             />
           </div>
         </section>
 
         {/* TRANSPARENCIA */}
-        <section className='max-w-3xl mx-auto'>
+        <section className='border-t border-[var(--border-subtle)] pt-12'>
           <h2>Transparencia desde el inicio</h2>
           <div className='space-y-4 text-center'>
             <p>
@@ -102,7 +102,7 @@ export default function PreciosPage () {
         </section>
 
         {/* OPCIONES */}
-        <section>
+        <section className="border-t border-[var(--border-subtle)] pt-12">
           <div className='mb-12'>
             <h2>Formas de trabajo</h2>
           </div>
@@ -111,12 +111,12 @@ export default function PreciosPage () {
             <HorizontalCard
               title='Servicios a medida'
               description='Ideal para proyectos específicos, mejoras puntuales o desarrollos con requerimientos particulares.'
-              image='/images/precios/horizontal.webp'
+              image='/images/precios/servicios-medida.webp'
             />
             <HorizontalCard
               title='Auditoría WordPress'
               description='El primer paso recomendado para conocer el estado real de tu sitio antes de intervenir.'
-              image='/images/precios/horizontal.webp'
+              image='/images/precios/auditoria-wordpress.webp'
             />
           </div>
         </section>

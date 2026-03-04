@@ -132,18 +132,18 @@ export default function BlogPreview() {
         {/* CTA Final */}
         <div className="mt-12 text-center">
           <Link
-            href="/blog"
+            href="/blog" target="_blank"
             className="
               inline-flex items-center justify-center
               px-8 py-3 rounded-full
               text-sm font-bold
-              bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border-subtle)]
+              bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--text-yellow2)]
               hover:bg-[var(--bg-tertiary)] hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]
               shadow-sm hover:shadow-md
               transition-all duration-300
             "
           >
-            Ver todos los artículos
+            Leer todos los artículos
           </Link>
         </div>
       </div>

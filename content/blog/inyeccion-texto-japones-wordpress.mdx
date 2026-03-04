@@ -1,87 +1,130 @@
 ---
 title: "Inyección de texto japonés en WordPress: el Japanese Keyword Hack"
-description: "Por qué tu WordPress empieza a mostrar texto japonés, enlaces extraños y cómo eliminar este tipo de malware sin romper el sitio."
+description: "Por qué tu WordPress empieza a mostrar texto japonés en Google, qué es el spam SEO japonés y cómo eliminarlo sin romper el sitio."
 category: "virus"
 author: "Adrián Loaiza"
 date: "2025-12-15"
-coverImage: "/images/blog/wordpress-no-es-el-problema-blog-alsnippes.webp"
+coverImage: "/images/blog/inyeccion-texto-japones-wordpress.webp"
 featured: true
 ---
 
-## Cuando WordPress empieza a hablar japonés
+## Inyección de texto japonés en WordPress: el Japanese Keyword Hack.
 
-Uno de los ataques más confusos y peligrosos en WordPress es el **Japanese Keyword Hack (JKH)**.  
-El sitio parece normal para el administrador, pero Google empieza a indexar:
+Tu sitio funciona perfecto.
 
-- Texto japonés
-- Enlaces a sitios de spam
-- Resultados irrelevantes en el buscador
+Entras al panel, navegas, todo carga bien.  
+Pero alguien te dice: “¿Por qué tu web vende zapatillas en japonés?”
 
-Muchas veces el dueño del sitio **no ve nada raro**.
+Buscas tu dominio en Google y aparece esto:
 
----
+- Títulos en caracteres japoneses  
+- Enlaces a tiendas falsas  
+- Miles de páginas que nunca creaste  
 
-## Qué es el Japanese Keyword Hack
+Ese ataque tiene nombre: **Japanese Keyword Hack (JKH)**.
 
-Este ataque modifica:
-- Contenido servido solo a bots
-- Resultados indexados por Google
-- URLs dinámicas inexistentes
-
-El objetivo no es romper tu sitio, sino **usar tu autoridad para posicionar spam**.
-
-Fuentes:
-- https://developers.google.com/search/docs/monitor-debug/security/japanese-keyword-hack
-- https://www.sucuri.net/guides/japanese-keyword-hack/
+Y es uno de los más peligrosos a nivel SEO.
 
 ---
 
-## Cómo actúa realmente
+### Por qué sucede
 
-El malware suele:
-- Inyectar código en archivos PHP legítimos
-- Alterar `.htaccess`
-- Manipular la base de datos
-- Detectar user-agents (Googlebot)
+Este ataque no entra por magia.
 
-Por eso:
-- Tú ves el sitio normal
-- Google ve contenido japonés
+Normalmente ocurre por:
 
----
+- Plugins desactualizados  
+- Temas abandonados  
+- Credenciales débiles  
+- Permisos mal configurados  
 
-## Por qué no se soluciona con un plugin
+Una vez dentro, el atacante no rompe tu web.
 
-Los plugins de seguridad:
-- Detectan archivos conocidos
-- No siempre detectan código ofuscado
-- No revisan lógica condicional avanzada
+Hace algo más inteligente:  
+usa tu autoridad para posicionar spam.
 
-Eliminar solo los síntomas **no elimina la raíz del problema**.
+Google explica este comportamiento en su documentación oficial .
+
+No buscan destruirte.  
+Buscan aprovecharse de tu posicionamiento.
 
 ---
 
-## Cómo se elimina correctamente
+### Qué es
 
-La limpieza real incluye:
-- Auditoría de archivos núcleo
-- Revisión manual de temas y plugins
-- Inspección de `.htaccess`
-- Análisis de redirecciones condicionales
-- Revisión de indexación en Search Console
+El *Japanese Keyword Hack* es una inyección de spam SEO basada en **cloaking**.
 
-Fuente:
-- https://support.google.com/webmasters/answer/9044101
+Funciona así:
+
+- Tú ves tu sitio normal.  
+- Googlebot ve miles de páginas en japonés.  
+
+El malware:
+
+- Detecta el user-agent (por ejemplo, Googlebot)  
+- Sirve contenido diferente según quién visita  
+- Genera URLs dinámicas inexistentes  
+- Manipula la indexación  
+
+Sucuri también analiza este comportamiento en detalle .
+
+Es un ataque diseñado para motores de búsqueda, no para humanos.
 
 ---
 
-## Qué hacer si tu sitio fue afectado
+### Qué afecta
 
-Si Google muestra texto japonés aunque tú no lo veas, **el sitio está comprometido**.
+El impacto es profundo:
 
-Solicitar una auditoría de seguridad permite detectar:
-- Punto de entrada
-- Persistencia del malware
-- Riesgo de reinfección
+- Penalización o desindexación en Google  
+- Pérdida masiva de tráfico orgánico  
+- Advertencias de “sitio hackeado”  
+- Daño a la reputación de marca  
 
+Además, en algunos casos los atacantes agregan sus propios correos a Search Console para ocultar alertas.
+
+Eso ya no es solo malware.  
+Es manipulación directa de tu presencia digital.
+
+---
+
+### Posibles soluciones
+
+Eliminar este hack no es borrar un archivo y listo.
+
+Cuando abordo estos casos, reviso:
+
+- Archivo `.htaccess`  
+- Integridad del core de WordPress  
+- `wp-config.php` e `index.php`  
+- Base de datos  
+- Redirecciones condicionales  
+- Usuarios y propietarios en Search Console  
+- Cómo Google realmente ve el sitio (`site:tudominio.com`)  
+
+Después:
+
+- Reemplazo archivos núcleo por versiones limpias  
+- Elimino código ofuscado  
+- Cambio todas las credenciales  
+- Refuerzo permisos  
+- Organizo limpieza de indexación  
+
+En casos más graves, recomiendo migración de servidor y escaneo completo del entorno.
+
+Porque eliminar síntomas no sirve.
+
+En Alsnippets soluciono este tipo de ataque desde la raíz: identifico el punto de entrada, elimino la persistencia y fortifico el entorno para evitar reinfecciones.
+
+---
+
+### ¿Tu WordPress tiene problemas reales?
 [Solicitar auditoría WordPress](/auditoria)
+
+---
+
+### Fuentes y referencias
+
+- https://developers.google.com/search/docs/monitor-debug/security/japanese-keyword-hack  
+- https://www.sucuri.net/guides/japanese-keyword-hack/  
+- https://support.google.com/webmasters/answer/9044101
