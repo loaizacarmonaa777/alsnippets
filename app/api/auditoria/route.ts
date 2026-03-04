@@ -2,10 +2,11 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
-
 export async function POST(request: Request) {
+  // Inicializamos las variables secretas ADENTRO de la función
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY;
+  
   try {
     const body = await request.json();
     const { 
