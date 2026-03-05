@@ -5,6 +5,8 @@ import './globals.css'
 import MainNav from '@/components/navigation/MainNav'
 import Footer from '@/components/layout/Footer'
 import CookieConsent from '@/components/ui/CookieConsent'
+import { ThemeProvider } from '@/components/providers/ThemeProvider' // Importamos el ThemeProvider para manejar el tema oscuro y claro
+import Tracking from '@/components/Tracking' // Importamos el componente de Tracking GA4 y Meta para incluirlo en el layout global
 
 // Configuración de INTER (Texto cuerpo)
 const inter = Inter({
@@ -31,30 +33,25 @@ export const metadata: Metadata = {
 
 export default function RootLayout ({
   children
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
-    <html lang='es'>
-      <body
-        className={`
-          ${inter.variable} 
-          ${outfit.variable} 
-          antialiased
-          bg-[var(--bg-body)] 
-          text-[var(--text-secondary)]
-        `}
-      >
-        {/* Navegación global */}
-        <MainNav />
+    <html lang='es' suppressHydrationWarning>
+      <body>
+        <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
+          <Tracking /> {/* <--- ANALÍTICAS GA4 Y META */}
+          {/* Navegación global */}
+          <MainNav />
 
-        {children}
+          {children}
 
-        {/* Footer global */}
-        <Footer />
+          {/* Footer global */}
+          <Footer />
 
-        {/* Banner Cookie */}
-        <CookieConsent />
+          {/* Banner Cookie */}
+          <CookieConsent />
+        </ThemeProvider>
       </body>
     </html>
   )

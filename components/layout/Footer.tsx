@@ -1,4 +1,8 @@
+'use client'
+
 import Link from 'next/link'
+import { useTheme } from 'next-themes'
+import { useEffect, useState } from 'react'
 import SocialIcon from '@/components/icons/SocialIcon'
 import { SOCIAL_LINKS } from '@/components/icons/social.config'
 import MailIcon from '@/components/icons/MailIcon'
@@ -14,6 +18,12 @@ import FormNewsletter from '@/components/forms/FormNewsletter'
    ===================================================== */
 
 export default function Footer () {
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
   return (
     <footer
       className='relative w-full mt-0 pt-16 pb-8'
@@ -33,22 +43,34 @@ export default function Footer () {
         <div className='grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16'>
           {/* COLUMNA 1 — Branding & contacto */}
           <div className='flex flex-col items-center md:items-start space-y-6 text-base md:text-sm'>
-            {/* Logo */}
-            <img
-              src='/brand/logo-dark-eslogan-es.svg'
-              alt='Alsnippets'
-              className='h-16 w-auto'
-            />
+            {/* LOGO DINÁMICO CONTROLADO POR EL ESTADO DE REACT */}
+            <div className='h-24 flex items-center'>
+              {mounted ? (
+                <img
+                  // Aquí le decimos: "Si el tema es oscuro, usa este logo. Si no, usa el otro"
+                  src={
+                    theme === 'dark'
+                      ? '/brand/logo-dark-eslogan-es.svg'
+                      : '/brand/logo-light-eslogan-es.svg'
+                  }
+                  alt='Alsnippets'
+                  className='h-16 w-auto transition-opacity duration-300'
+                />
+              ) : (
+                // Un pequeño esqueleto de carga mientras el navegador detecta el tema
+                <div className="h-24 w-48 bg-white/5 animate-pulse rounded-md" />
+              )}
+            </div>
 
             {/* Datos de contacto */}
             {/* Nota: Al quitar clases de color específicas, heredan --text-white2 del padre */}
-            <ul className='space-y-4 w-full'>
+            <ul className='text-base space-y-4 w-full'>
               <li>
                 <a
                   href='mailto:contact@alsnippets.com'
                   className='flex items-center justify-center md:justify-start gap-3 group hover:text-[var(--brand-primary)] transition-colors'
                 >
-                  <MailIcon className='w-5 h-5' />
+                  <MailIcon className='w-9 h-9' />
                   <span className='group-hover:translate-x-1 transition-transform'>
                     contact@alsnippets.com
                   </span>
@@ -64,7 +86,7 @@ export default function Footer () {
                   rel='noopener noreferrer'
                   className='flex items-center justify-center md:justify-start gap-3 group hover:text-[var(--brand-primary)] transition-colors'
                 >
-                  <WhatsAppIcon className='w-5 h-5' />
+                  <WhatsAppIcon className='w-9 h-9' />
                   <span className='group-hover:translate-x-1 transition-transform'>
                     (+57 324 645 4061)
                   </span>
@@ -76,7 +98,7 @@ export default function Footer () {
                   href='https://alsnippets.com'
                   className='flex items-center justify-center md:justify-start gap-3 group hover:text-[var(--brand-primary)] transition-colors'
                 >
-                  <WebIcon className='w-5 h-5' />
+                  <WebIcon className='w-9 h-9' />
                   <span className='group-hover:translate-x-1 transition-transform'>
                     alsnippets.com
                   </span>
@@ -84,7 +106,7 @@ export default function Footer () {
               </li>
 
               <li className='flex items-start justify-center md:justify-start gap-3'>
-                <PinIcon className='w-5 h-5 mt-1 text-[var(--brand-primary)]' />
+                <PinIcon className='w-9 h-9 mt-1 text-[var(--brand-primary)]' />
                 <span className='leading-tight'>
                   Carrera 50A Santander, Santa Bárbara
                   <br />
@@ -99,22 +121,36 @@ export default function Footer () {
             <div className='pt-4 flex flex-col items-center md:items-start gap-4 w-full'>
               {/* Theme Buttons */}
               <div className='flex gap-3'>
-                <button
-                  type='button'
-                  data-theme='light'
-                  aria-label='Activar modo claro'
-                  className='p-2 rounded-full hover:bg-white/10 hover:text-[var(--brand-primary)] transition-all'
-                >
-                  <SunIcon className='w-6 h-6' />
-                </button>
-                <button
-                  type='button'
-                  data-theme='dark'
-                  aria-label='Activar modo oscuro'
-                  className='p-2 rounded-full hover:bg-white/10 hover:text-[var(--brand-primary)] transition-all'
-                >
-                  <MoonIcon className='w-6 h-6' />
-                </button>
+                {/* Solo renderizamos los botones si el componente ya se montó (evita errores de SSR) */}
+                {mounted && (
+                  <>
+                    <button
+                      type='button'
+                      onClick={() => setTheme('light')}
+                      aria-label='Activar modo claro'
+                      className={`p-2 rounded-full transition-all ${
+                        theme === 'light'
+                          ? 'bg-white/10 text-[var(--brand-primary)]'
+                          : 'hover:bg-white/10 hover:text-[var(--brand-primary)] text-[var(--text-muted)]'
+                      }`}
+                    >
+                      <SunIcon className='w-6 h-6' />
+                    </button>
+
+                    <button
+                      type='button'
+                      onClick={() => setTheme('dark')}
+                      aria-label='Activar modo oscuro'
+                      className={`p-2 rounded-full transition-all ${
+                        theme === 'dark'
+                          ? 'bg-white/10 text-[var(--brand-primary)]'
+                          : 'hover:bg-white/10 hover:text-[var(--brand-primary)] text-[var(--text-muted)]'
+                      }`}
+                    >
+                      <MoonIcon className='w-6 h-6' />
+                    </button>
+                  </>
+                )}
               </div>
 
               {/* Redes Sociales */}
@@ -353,7 +389,7 @@ export default function Footer () {
               href='/privacidad'
               className='hover:text-[var(--brand-primary)] hover:underline'
             >
-              Privacidad 
+              Privacidad
             </Link>
             <Link
               href='/terminos'

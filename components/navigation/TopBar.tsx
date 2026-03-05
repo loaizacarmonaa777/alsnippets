@@ -1,9 +1,10 @@
 "use client";
 
-import { Moon, Sun, Sparkles } from "lucide-react";
+// IMPORTO EL COMPONENTE INTELIGENTE QUE CREAMOS
+import ThemeSwitcher from "./ThemeSwitcher";
 
 /* =====================================================
-   TopBar — Desktop only (VERSIÓN CORREGIDA)
+   TopBar — Desktop only
    ===================================================== */
 
 export default function TopBar() {
@@ -13,7 +14,7 @@ export default function TopBar() {
 
         {/* =====================================================
             TEXTO PROMOCIONAL (MARQUEE)
-           ===================================================== */}
+            ===================================================== */}
         <div className="relative flex-1 overflow-hidden pr-12 mask-linear-fade">
           
           <div className="flex w-max animate-marquee whitespace-nowrap text-xs font-medium text-[var(--text-muted)] tracking-wide">
@@ -32,7 +33,7 @@ export default function TopBar() {
 
         {/* =====================================================
             ACCIONES DERECHA
-           ===================================================== */}
+            ===================================================== */}
         <div className="flex items-center gap-4 pl-6">
           
           {/* Selector de Idioma */}
@@ -51,32 +52,9 @@ export default function TopBar() {
           {/* Separador vertical */}
           <div className="w-px h-4 bg-[var(--border-subtle)]" />
 
-          {/* Botones de Tema */}
+          {/* AQUI INYECTAMOS EL COMPONENTE MAGICO */}
           <div className="flex items-center gap-1">
-            
-            {/* Theme: Dark */}
-            <button
-              className="button-topbar"
-              aria-label="Modo oscuro"
-            >
-              <Moon size={15} strokeWidth={2} />
-            </button>
-
-            {/* Theme: Light */}
-            <button
-              className="button-topbar"
-              aria-label="Modo claro"
-            >
-              <Sun size={15} strokeWidth={2} />
-            </button>
-
-            {/* Theme: Custom */}
-            <button
-              className="button-topbar"
-              aria-label="Modo personalizado"
-            >
-              <Sparkles size={15} strokeWidth={2} />
-            </button>
+            <ThemeSwitcher />
           </div>
 
         </div>

@@ -1,48 +1,187 @@
-import { messages } from "@/i18n/messages";
-import Typewriter from "@/components/Typewriter";
-import BugCounter from "@/components/BugCounter";
-import ProgressBar from "@/components/ProgressBar";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
+import React from 'react'
+import Link from "next/link";
+import Hero from '@/components/home/Hero'
+import Benefits, { BenefitItem } from '@/components/home/Benefits'
+import Authority from '@/components/home/Authority'
+import Solutions from '@/components/home/Solutions'
+import ProjectsPreview from '@/components/home/ProjectsPreview'
+import BlogPreview from '@/components/home/BlogPreview'
+import StackLogos from '@/components/shared/StackLogos'
+import CTA from '@/components/home/CTA'
 
-export function generateStaticParams() {
-  return [{ lang: "es" }, { lang: "en" }];
-}
-
-type Props = {
-  params: {
-    lang: "es" | "en";
-  };
-};
-
-export default function Home({ params }: Props) {
-  const { lang } = params;
-  const content = messages[lang];
-
-  if (!content) {
-    return null;
+/* =====================================================
+   DATA: Configuración de Beneficios (Static Data)
+   ===================================================== */
+const BENEFITS_DATA: BenefitItem[] = [
+  {
+    title: 'Análisis y Protección contra ataques',
+    image: '/images/home/card-proteccion-contra-ataques-home.webp',
+    description: 'La falta de protección expone tu sitio a riesgos.',
+    chips: [
+      'Malware',
+      'Virus',
+      'Backdoors',
+      'Fuerza bruta',
+      'Robo de datos',
+      'Accesos no autorizados',
+      'Sitio comprometido'
+    ]
+  },
+  {
+    title: 'Actualizaciones controladas',
+    image: '/images/home/card-actualizaciones-controladas-home.webp',
+    description: 'Actualizar sin control impacta más de lo que imaginas.',
+    chips: [
+      'Incompatibilidad',
+      'Errores críticos',
+      'Pantalla blanca',
+      'Fallos de plugins',
+      'Conflictos versión',
+      'Errores PHP',
+      'Caídas del sitio'
+    ]
+  },
+  {
+    title: 'Copias de seguridad confiables',
+    image: '/images/home/card-copias-seguridad-home.webp',
+    description:
+      'Sin copias funcionales, cualquier error puede convertirse en un desastre.',
+    chips: [
+      'Pérdidas',
+      'Backups rotos',
+      'Fallos de restauración',
+      'Datos irrecuperables',
+      'Cambios perdidos',
+      'Caídas'
+    ]
+  },
+  {
+    title: 'Optimización de velocidad y carga',
+    image: '/images/home/card-optimizacion-velocidad-home.webp',
+    description:
+      'No identificar los cuellos de botella afecta rendimiento y experiencia.',
+    chips: [
+      'Carga lenta',
+      'CLS elevado',
+      'LCP deficiente',
+      'TTFB alto',
+      'Scripts bloqueantes',
+      'Imágenes pesadas',
+      'Mala experiencia móvil'
+    ]
+  },
+  {
+    title: 'Acompañamiento en todo el proceso',
+    image: '/images/home/card-acompanamiento-proceso-home.webp',
+    description:
+      'Conmigo cada decisión técnica tiene respaldo, criterio y seguimiento.',
+    chips: [
+      'Decisiones técnicas',
+      'Dudas constantes',
+      'Cambios urgentes',
+      'Soporte humano',
+      'Comunicación directa',
+      'Respuesta rápida',
+      'Tranquilidad operativa'
+    ]
+  },
+  {
+    title: 'Los errores son parte del proceso',
+    image: '/images/home/card-errores-proceso-home.webp',
+    description:
+      'WordPress no es solo no-code: se necesita experiencia para resolver.',
+    chips: [
+      'Errores 404',
+      'Errores 500',
+      'Conflictos',
+      'Fallos en servidor',
+      'Fallos del Layout',
+      'Bugs inesperados',
+      'Diagnóstico técnico'
+    ]
   }
+]
 
+/* =====================================================
+   Home Page
+   ===================================================== */
+export default function HomePage () {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-black text-green-400 font-mono px-6">
-      <div className="max-w-xl text-center space-y-6">
-        {content.codeComment && (
-          <p className="text-sm opacity-70">
-            <Typewriter text={content.codeComment} />
-          </p>
-        )}
+    <>
+      {/* 1. HERO (Full Width) */}
+      <section>
+        <Hero />
+      </section>
 
-        <h1 className="text-2xl md:text-3xl font-bold">
-          {content.title}
-        </h1>
+      {/* 2. CONTENIDO PRINCIPAL */}
+      <main>
+        {/* SECCIÓN 1: TU WORDPRESS ESTABLE */}
+        <section className='w-full py-10 md:py-16 px-4'>
+          <div className='container mx-auto max-w-[1200px] space-y-16'>
+            {/* Header Texto */}
+            <div className='text-center max-w-2xl mx-auto space-y-4'>
+              <h2>Tu WordPress estable, seguro y rápido</h2>
+              <p className='text-lg text-[var(--text-secondary)] opacity-90 leading-relaxed'>
+                La tecnología no es infalible. Mi trabajo es anticipar
+                problemas, reducir riesgos y responder de forma clara cuando
+                algo ocurre.
+              </p>
+            </div>
 
-        <p className="text-base md:text-lg opacity-80">
-          {content.subtitle}
-        </p>
+            {/* Grid Beneficios */}
+            <Benefits title='' items={BENEFITS_DATA} />
+          </div>
+          {/* CTA Secundario */}
+          <div className='pt-4 text-center'>
+            <Link
+              href='/proyectos/casos-de-exito' target="_blank"
+              className='
+            inline-flex items-center justify-center
+            px-8 py-3 rounded-full
+            text-sm font-bold
+            bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--text-yellow2)]
+            hover:bg-[var(--brand-primary)] hover:text-white hover:border-transparent
+            shadow-sm hover:shadow-md
+            transition-all duration-300
+          '
+            >
+              Conoce mis proyectos
+            </Link>
+          </div>
+        </section>
 
-        <BugCounter to={982} />
-        <ProgressBar max={75} />
-        <LanguageSwitcher />
-      </div>
-    </main>
-  );
+        {/* SECCIÓN 2: TRABAJO DIRECTO SIN INTERMEDIARIOS */}
+        <section>
+          <Authority />
+        </section>
+
+        {/* SECCIÓN 3: QUE PROBLEMAS TIENE TU WORDPRESS */}
+        <section>
+          <Solutions />
+        </section>
+
+        {/* SECCIÓN 4: PROYECTOS Y CREACIONES */}
+        <section className='my-0'>
+          <ProjectsPreview />
+        </section>
+
+        {/* =========================
+          SECCIÓN 5: STACK LOGOS
+          ========================= */}
+        <section className='my-0'>
+          <StackLogos />
+        </section>
+
+        {/* SECCIÓN 6: BLOG */}
+        <section className='my-0'>
+          <BlogPreview />
+        </section>
+
+        {/* SECCIÓN 7: CTA FINAL */}
+        <div className='my-0'>
+          <CTA />
+        </div>
+      </main>
+    </>
+  )
 }

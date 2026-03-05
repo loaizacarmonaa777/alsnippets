@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { Moon, Sun, Sparkles } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 
 /* =====================================================
    ThemeSwitcher (Versión Simplificada y Estable)
@@ -51,20 +51,6 @@ export default function ThemeSwitcher() {
         `}
       >
         <Moon size={20} strokeWidth={2} />
-      </button>
-
-      {/* =========================
-          Theme: System / Custom
-         ========================= */}
-      <button
-        onClick={() => setTheme("system")}
-        aria-label="Modo sistema"
-        className={`
-          button-topbar
-          ${theme === 'system' ? 'text-[var(--brand-primary)] bg-[var(--brand-primary-hover)]' : ''}
-        `}
-      >
-        <Sparkles size={20} strokeWidth={2} />
       </button>
 
     </div>
