@@ -1,0 +1,98 @@
+---
+title: "Safe WordPress Restoration from Clean Backups"
+description: "How I perform a secure site recovery from verified backups without carrying over hidden vulnerabilities."
+category: "security"
+lang: "en"
+author: "Adrián Loaiza"
+date: "2026-03-02"
+image: "/images/blog/restauracion-segura-si-es-necesario.webp"
+coverImage: "/images/blog/restauracion-segura-si-es-necesario.webp"
+featured: false
+---
+
+## Safe Restoration if Necessary.
+
+Sometimes the best solution is not cleaning.
+
+It is restoring.
+
+But restoring incorrectly can bring the problem back to the exact same point.
+
+I have seen sites get re-infected because the backup was already compromised.
+
+---
+
+### Why it happens
+
+It happens because:
+
+- The exact start of the infection is unknown
+- Automatic copies already include malware
+- The backup state is not verified
+
+Restoring without validation is like copying a virus onto another drive.
+
+WordPress recommends verifying integrity before recovering.
+
+
+
+---
+
+### What it is
+
+Restoring safely involves:
+
+- Identifying the last clean point
+- Analyzing files before uploading them
+- Verifying the database
+- Confirming the absence of backdoors
+
+It's not simply "clicking restore."
+
+It's validating first.
+
+---
+
+### What it affects
+
+An incorrect restoration can:
+
+- Reinstall malware
+- Reopen vulnerabilities
+- Damage site integrity
+- Lead to the loss of recent data
+
+And the cycle starts all over again.
+
+
+
+---
+
+### Possible solutions
+
+When I handle restorations at Alsnippets, I do:
+
+- Identification of the infection date
+- Scanning the backup before uploading it
+- Restoration in an isolated environment
+- Post-restoration manual validation
+- Immediate security reinforcement
+
+Then I organize access, solve vulnerabilities, and produce a stable version.
+
+Restoring is not going backward.  
+It is rebuilding correctly.
+
+I also recommend reviewing [Access and Permissions Reinforcement](/en/refuerzo-accesos-permisos).
+
+---
+
+### Does your WordPress have real problems?
+[Request WordPress Audit](/en/auditoria)
+
+---
+
+### Sources and references
+
+- https://wordpress.org/documentation/article/faq-my-site-was-hacked/
+- https://www.sucuri.net/guides/wordpress-security/

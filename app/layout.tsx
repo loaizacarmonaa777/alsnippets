@@ -1,56 +1,38 @@
+// app/layout.tsx (Infraestructura Global)
 import type { Metadata } from 'next'
-// 1. Importamos Outfit y mantenemos Inter
 import { Inter, Outfit } from 'next/font/google'
 import './globals.css'
-import MainNav from '@/components/navigation/MainNav'
-import Footer from '@/components/layout/Footer'
 import CookieConsent from '@/components/ui/CookieConsent'
-import { ThemeProvider } from '@/components/providers/ThemeProvider' // Importamos el ThemeProvider para manejar el tema oscuro y claro
-import Tracking from '@/components/Tracking' // Importamos el componente de Tracking GA4 y Meta para incluirlo en el layout global
+import { ThemeProvider } from '@/components/providers/ThemeProvider'
+import { AuthProvider } from '@/components/providers/AuthProvider'
+import Tracking from '@/components/Tracking'
 
-// Configuración de INTER (Texto cuerpo)
 const inter = Inter({
   variable: '--font-inter',
   subsets: ['latin'],
   display: 'swap'
 })
 
-// Configuración de OUTFIT (Títulos)
 const outfit = Outfit({
-  variable: '--font-heading', // Le ponemos este nombre para usarlo fácil en CSS
+  variable: '--font-heading',
   subsets: ['latin'],
   display: 'swap'
 })
 
-export const metadata: Metadata = {
-  title: {
-    template: '%s | Alsnippets',
-    default: 'Alsnippets | Soporte y Mantenimiento WordPress'
-  },
-  description:
-    'Soporte técnico WordPress, seguridad, rendimiento y mantenimiento. Soluciones claras y auditoría profesional.'
-}
-
-export default function RootLayout ({
-  children
+export default async function RootLayout({
+  children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <html lang='es' suppressHydrationWarning>
-      <body>
+    <html suppressHydrationWarning>
+      <body className={`${inter.variable} ${outfit.variable} antialiased`}>
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
-          <Tracking /> {/* <--- ANALÍTICAS GA4 Y META */}
-          {/* Navegación global */}
-          <MainNav />
-
-          {children}
-
-          {/* Footer global */}
-          <Footer />
-
-          {/* Banner Cookie */}
-          <CookieConsent />
+          <AuthProvider>
+            <Tracking lang="es" />
+            {children}
+            <CookieConsent />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

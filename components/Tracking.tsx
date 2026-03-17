@@ -1,16 +1,33 @@
-// components/Tracking.tsx
+'use client'
+
 import Script from 'next/script'
 
-export default function Tracking () {
-  // 1. Pon aquí tu código GTM que sale en tu captura
-  const GTM_ID = 'GTM-NMM22HG'
+interface TrackingProps {
+  lang: string // Recibimos el idioma para informar a las plataformas
+}
 
-  // 2. Pon aquí tu ID de Meta Pixel (te explico cómo sacarlo abajo)
+export default function Tracking ({ lang }: TrackingProps) {
+  // CONFIGURACIÓN DE IDs (Cámbialos por tus IDs reales)
+  const GTM_ID = 'GTM-NMM22HG'
   const META_PIXEL_ID = '1828608694503506'
 
   return (
     <>
       {/* ---------------- GOOGLE TAG MANAGER ---------------- */}
+      {/* PROTOCOLO ALSNIPPETS: Inyectamos el idioma en el dataLayer antes del script principal */}
+      <Script
+        id='gtm-datalayer'
+        strategy='beforeInteractive'
+      >
+        {`
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            'language': '${lang}',
+            'event': 'language_set'
+          });
+        `}
+      </Script>
+
       <Script
         id='gtm-script'
         strategy='afterInteractive'
@@ -20,7 +37,7 @@ export default function Tracking () {
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
             j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer', 'GTM-NMM22HG');
+            })(window,document,'script','dataLayer', '${GTM_ID}');
           `
         }}
       />
@@ -39,8 +56,9 @@ export default function Tracking () {
             t.src=v;s=b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '1828608694503506');
-            fbq('track', 'PageView');
+            fbq('init', '${META_PIXEL_ID}');
+            // PROTOCOLO ALSNIPPETS: Enviamos el idioma en el PageView para segmentación en Meta Ads
+            fbq('track', 'PageView', { language: '${lang}' });
           `
         }}
       />

@@ -1,0 +1,23 @@
+{
+  "head": "Choose the service you need",
+  "sub": "Select the area where I can help you today.",
+  "next": "Next",
+  "serv": {
+    "sop": {
+      "t": "Technical Support",
+      "d": "Maintenance, malware removal, optimization, or errors."
+    },
+    "seo": {
+      "t": "SEO Positioning",
+      "d": "SEO Audit, keyword optimization, and visibility."
+    },
+    "web": {
+      "t": "Create website",
+      "d": "Full design and development of pages or online stores."
+    },
+    "hrs": {
+      "t": "Hourly Pack",
+      "d": "No-Code development or custom programming (Code)."
+    }
+  }
+}

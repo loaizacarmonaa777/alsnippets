@@ -1,0 +1,120 @@
+{
+  "meta": {
+    "title": "Seguridad y Limpieza WordPress | Adrián Loaiza - Alsnippets",
+    "description": "Servicios profesionales de seguridad y limpieza de WordPress. Eliminación de malware, protección contra hackeos, hardening y auditorías de seguridad técnica. Recuperación de sitios hackeados.",
+    "keywords": [
+      "seguridad wordpress",
+      "limpieza malware",
+      "sitio hackeado wordpress",
+      "protección web",
+      "firewall wordpress",
+      "hardening wordpress",
+      "adrian loaiza",
+      "alsnippets"
+    ],
+    "og_title": "Seguridad y Limpieza WordPress | Adrián Loaiza",
+    "og_description": "Recupero y protejo tu sitio web. Eliminación de malware, hardening de seguridad y blindaje profesional para WordPress.",
+    "og_alt": "Seguridad y Limpieza WordPress - Alsnippets",
+    "twitter_title": "Seguridad y Limpieza WordPress | Adrián Loaiza",
+    "twitter_description": "Servicios profesionales de seguridad y limpieza de WordPress. Eliminación de malware y protección contra hackeos."
+  },
+  "page": {
+    "hero": {
+      "title": "Seguridad y Limpieza Profesional para WordPress",
+      "subtitle": "Protección, hardening y recuperación de sitios hackeados"
+    },
+    "threats": {
+      "title": "Amenazas que enfrenta tu WordPress",
+      "items": [
+        {
+          "title": "Malware y código malicioso",
+          "description": "Inyecciones de código que comprometen la integridad de tu sitio, roban información o redirigen a tus usuarios a páginas maliciosas.",
+          "image": "/images/seguridad/malware-codigo-malicioso.webp"
+        },
+        {
+          "title": "Plugins vulnerables",
+          "description": "Extensiones desactualizadas o con fallos de seguridad que crean puertas de entrada para atacantes.",
+          "image": "/images/seguridad/plugins-vulnerables.webp"
+        },
+        {
+          "title": "Ataques de fuerza bruta",
+          "description": "Intentos masivos de adivinar contraseñas para acceder a tu panel de administración.",
+          "image": "/images/seguridad/accesos-no-autorizados.webp"
+        },
+        {
+          "title": "Backdoors y puertas traseras",
+          "description": "Archivos ocultos que permiten a los atacantes volver a entrar incluso después de una limpieza.",
+          "image": "/images/seguridad/backdoors-puertas-traseras.webp"
+        },
+        {
+          "title": "Base de datos comprometida",
+          "description": "Inyecciones SQL que extraen o modifican información sensible de tus usuarios y clientes.",
+          "image": "/images/seguridad/base-datos-comprometida.webp"
+        },
+        {
+          "title": "Sitio en listas negras",
+          "description": "Google y otros buscadores pueden marcar tu sitio como peligroso, ahuyentando visitantes y afectando tu SEO.",
+          "image": "/images/seguridad/sitio-blacklist.webp"
+        }
+      ]
+    },
+    "cleanup": {
+      "title": "Proceso de limpieza y recuperación",
+      "description": "Eliminamos cualquier rastro de malware y restauramos la integridad de tu sitio",
+      "items": [
+        {
+          "title": "Eliminación de malware",
+          "description": "Limpieza profunda de archivos infectados y código malicioso",
+          "image": "/images/seguridad/eliminacion-malware.webp",
+          "slug": "eliminacion-de-malware-y-archivos-infectados"
+        },
+        {
+          "title": "Revisión completa de código",
+          "description": "Auditoría de archivos y base de datos en busca de puertas traseras",
+          "image": "/images/seguridad/revision-codigo-bd.webp",
+          "slug": "revision-completa-de-codigo-y-bd"
+        },
+        {
+          "title": "Restauración segura",
+          "description": "Recuperación de backups limpios o reconstrucción de archivos críticos",
+          "image": "/images/seguridad/restauracion-segura.webp",
+          "slug": "restauracion-segura-si-es-necesario"
+        }
+      ]
+    },
+    "prevention": {
+      "title": "Hardening y protección preventiva",
+      "items": [
+        {
+          "title": "Endurecimiento de WordPress",
+          "description": "Configuración avanzada para blindar tu instalación contra ataques comunes",
+          "image": "/images/seguridad/endurecimiento-wordpress.webp",
+          "slug": "endurecimiento-de-wordpress"
+        },
+        {
+          "title": "Refuerzo de accesos",
+          "description": "Implementación de autenticación de dos factores y políticas de contraseñas seguras",
+          "image": "/images/seguridad/refuerzo-accesos-permisos.webp",
+          "slug": "refuerzo-de-accesos-y-permisos"
+        },
+        {
+          "title": "Monitoreo continuo",
+          "description": "Vigilancia proactiva para detectar actividades sospechosas antes de que sea tarde",
+          "image": "/images/seguridad/monitoreo-actividad.webp",
+          "slug": "monitoreo-basico-de-actividad"
+        }
+      ]
+    },
+    "access": {
+      "title": "¿Tu sitio ha sido hackeado?",
+      "p1": "Si sospechas que tu WordPress está comprometido, necesito acceder para diagnosticar y limpiar. Todos los datos son estrictamente confidenciales y el acceso se elimina al finalizar el servicio.",
+      "confidential": "Tu información está segura conmigo. Confidencialidad profesional garantizada."
+    },
+    "cta": {
+      "title": "¿Necesitas proteger o recuperar tu sitio?",
+      "description": "Solicita una auditoría de seguridad gratuita y recibe un diagnóstico completo de tu WordPress.",
+      "button": "Solicitar auditoría",
+      "disclaimer": "Sin compromiso · Respuesta en menos de 24h"
+    }
+  }
+}

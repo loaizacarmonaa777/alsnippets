@@ -1,0 +1,162 @@
+---
+title: "WordPress Backdoors: The Hidden Door that Keeps Hacks Alive"
+description: "What a WordPress backdoor is, how it works, why it allows reinfections, and how to eliminate it without breaking your site."
+category: "virus"
+lang: "en"
+author: "Adrián Loaiza"
+date: "2026-03-02"
+image: "/images/blog/backdoors-wordpress.webp"
+coverImage: "/images/blog/backdoors-wordpress.webp"
+featured: false
+---
+
+## WordPress Backdoors: The Hidden Door that Keeps Hacks Alive
+
+Imagine a door left ajar.  
+From the outside, everything looks closed.
+
+But inside, someone can enter whenever they please.
+
+That is exactly what a **WordPress backdoor** is.
+
+Your site might look clean.  
+The visible malware may have been removed.  
+But if the backdoor is still active, the attacker still has access.
+
+---
+
+## What is a WordPress backdoor
+
+A **backdoor** is a piece of malicious code that allows access to the server without going through the normal WordPress login.
+
+It is not the main attack itself.  
+It is the mechanism that keeps it alive.
+
+It usually hides in:
+
+- Modified Core files
+- Seemingly legitimate Plugins
+- Active or inactive Themes
+- Files with names similar to the originals
+- Uploads folders with hidden PHP code
+
+WordPress explains how infections often persist when the entry point is not eliminated.
+
+Removing the symptom does not remove the door.
+
+---
+
+## How it actually works
+
+A backdoor often uses techniques such as:
+
+- `eval()` with obfuscated code
+- `base64_decode`
+- `gzinflate`
+- Dynamic variables
+- Remote loading of external scripts
+
+Some allow executing commands from a secret URL.  
+Others create invisible administrator users.  
+Some simply wait for instructions from an external server.
+
+Sucuri documents multiple common variants in WordPress.
+
+The danger isn't just the access.  
+It is the **persistence**.
+
+---
+
+## Why plugins don't always detect it
+
+Many security plugins:
+
+- Search for known signatures
+- Detect basic patterns
+- Scan visible files
+
+But a well-designed backdoor:
+
+- Camouflages itself within legitimate files
+- Splits into multiple fragments
+- Uses advanced conditional logic
+- Only activates under certain conditions
+
+This is why some sites are "cleaned" only to be reinfected weeks later.
+
+The door was never closed.
+
+---
+
+## What are the consequences
+
+An active backdoor allows for:
+
+- Constant reinfections  
+- SEO Spam injection  
+- Malicious redirects  
+- Data theft  
+- Hosting suspension  
+
+Furthermore, each reinfection is usually deeper than the last.
+
+What starts as spam can end in a total server compromise.
+
+---
+
+## How I handle it at Alsnippets
+
+When I work on a backdoor case, I don't start by deleting random files.
+
+I approach the problem like this:
+
+1. I compare the Core with official versions.
+2. I manually review `.htaccess`.
+3. I analyze both active and inactive themes.
+4. I search for critical functions (`eval`, `base64`, `assert`, etc.).
+5. I check for hidden administrator users.
+6. I verify scheduled tasks (cron jobs).
+7. I change all credentials (WordPress, FTP, Database, Hosting).
+
+After cleaning:
+
+- I reinforce permissions.
+- I remove unnecessary plugins.
+- I organize a more secure environment.
+- I produce a real closure of the entry point.
+
+At Alsnippets, I don't just delete malware.  
+I solve the persistence that keeps it active.
+
+Because if the door remains ajar, the attacker doesn't need to force their way back in.
+
+---
+
+## Signs that you might have a backdoor
+
+- The site reinfects after being cleaned.
+- Unknown administrator users appear.
+- There are PHP files in the uploads folder.
+- The hosting detects recurring suspicious activity.
+- Google shows intermittent warnings.
+
+If any of this happens, it is not a coincidence.
+
+---
+
+## Does your WordPress have real problems?
+
+A backdoor is not always visible, but it always leaves a trail.
+
+If your site has been hacked more than once or presents strange behaviors, there is likely an active backdoor.
+
+[Request WordPress Audit](/en/auditoria)
+
+---
+
+### Sources and references
+
+https://wordpress.org/documentation/article/faq-my-site-was-hacked/
+https://www.sucuri.net/guides/wordpress-backdoor/
+https://developers.google.com/search/docs/monitor-debug/security/hacked-site
+https://www.wordfence.com/docs/how-to-clean-a-hacked-wordpress-site/

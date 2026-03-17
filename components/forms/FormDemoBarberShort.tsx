@@ -1,43 +1,72 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Turnstile } from '@marsidev/react-turnstile'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ShieldCheck, Eye, EyeOff, Lock, User, Phone } from 'lucide-react'
 
-interface FormDemoBarberShortProps {
-  onLoginSuccess: (name: string, phone: string) => void;
+const PHONE_RULES: Record<string, { min: number; max: number; msg: string }> = {
+  '+57': { min: 10, max: 10, msg: '10 dígitos' },
+  '+34': { min: 9, max: 9, msg: '9 dígitos' },
+  '+1': { min: 10, max: 10, msg: '10 dígitos' },
+  default: { min: 7, max: 15, msg: '7-15 dígitos' }
 }
 
-export default function FormDemoBarberShort({ onLoginSuccess }: FormDemoBarberShortProps) {
+export default function FormDemoBarberShort ({
+  onLoginSuccess,
+  lang,
+  dict
+}: any) {
+  const t = dict
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
+  const [codigoPais, setCodigoPais] = useState('+57')
   const [password, setPassword] = useState('')
   const [acceptTerms, setAcceptTerms] = useState(false)
-  
-  // Nuevos estados
+
+  const [nameTocado, setNameTocado] = useState(false)
+  const [phoneError, setPhoneError] = useState('')
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [turnstileToken, setTurnstileToken] = useState<string>('')
-  const [isFormValid, setIsFormValid] = useState(false)
-  const [showPassword, setShowPassword] = useState(false) // <--- Estado para mostrar/ocultar clave
+  const [showPassword, setShowPassword] = useState(false)
 
-  // Validación en tiempo real para habilitar el botón
-  useEffect(() => {
-    const isValid = name.trim() !== '' && phone.trim() !== '' && password === 'barbershort' && acceptTerms && turnstileToken !== ''
-    setIsFormValid(isValid)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [name, phone, password, acceptTerms, turnstileToken])
+  const isNameValid =
+    name
+      .trim()
+      .split(/\s+/)
+      .filter(w => w.length > 0).length >= 2
+  const currentRule = PHONE_RULES[codigoPais] || PHONE_RULES.default
+  const isPhoneValid =
+    phone.length >= currentRule.min && phone.length <= currentRule.max
+  const isFormValid =
+    isNameValid &&
+    isPhoneValid &&
+    password === 'barbershort' &&
+    acceptTerms &&
+    turnstileToken !== ''
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.replace(/\D/g, '')
+    if (val.length <= currentRule.max) {
+      setPhone(val)
+      setPhoneError(
+        val.length > 0 && val.length < currentRule.min
+          ? `Faltan números (${currentRule.msg})`
+          : ''
+      )
+    }
+  }
+
+  // Función de mensaje WhtatsApp
+  const handleWhatsAppHelp = () => {
+    const msg = encodeURIComponent(t.whatsapp.help_msg)
+    window.open(`https://wa.me/573246454061?text=${msg}`, '_blank')
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    // Validaciones extra de seguridad por si acaso
-    if (!isFormValid) {
-      if (password !== 'barbershort') setError('Contraseña incorrecta. Recuerda usar la contraseña demo.')
-      else if (!acceptTerms) setError('Debes aceptar los términos.')
-      else setError('Por favor, completa todos los campos correctamente.')
-      return
-    }
-
+    if (!isFormValid) return
     setError('')
     setIsSubmitting(true)
 
@@ -45,150 +74,428 @@ export default function FormDemoBarberShort({ onLoginSuccess }: FormDemoBarberSh
       const response = await fetch('/api/barber-demo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, phone, turnstileToken })
+        body: JSON.stringify({
+          name,
+          phone: `${codigoPais}${phone}`,
+          turnstileToken,
+          lang
+        })
       })
-
-      const data = await response.json()
-
-      if (response.ok && data.success) {
-        // Si el correo se envió con éxito, ejecutamos tu prop para que avance a la demo
-        onLoginSuccess(name, phone)
-      } else {
-        setError(data.error || 'Hubo un error de conexión.')
+      if (response.ok) onLoginSuccess(name, phone)
+      else {
+        setError(t.validation.err_conn)
         if (typeof window.turnstile !== 'undefined') window.turnstile.reset()
       }
     } catch (err) {
-      setError('Error de red. Revisa tu conexión.')
+      setError(t.validation.err_net)
     } finally {
       setIsSubmitting(false)
     }
   }
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white/10 dark:bg-black/20 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl p-6 md:p-8 transition-all duration-300">
-      <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold text-white drop-shadow-md">Iniciar Sesión</h3>
-        <p className="text-white/80 text-sm mt-2">Ingresa a la plataforma de reservas</p>
+    <div className='w-full max-w-md mx-auto bg-[#0a0a0b]/80 backdrop-blur-2xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.50)] rounded-xl p-8 relative overflow-hidden'>
+      {/* Luz ambiental decorativa */}
+      <div className='absolute -top-24 -right-24 w-48 h-48 bg-[var(--bg-brand)]/10 blur-[100px] rounded-full' />
+
+      <div className='text-center mb-10 relative'>
+        <h3 className='text-3xl font-light text-[var(--text-white-6)] uppercase tracking-[0.2em]'>
+          {t.head}
+        </h3>
+        <div className='flex items-center justify-center gap-2 mt-2'>
+          <div className='h-[1px] w-8 bg-gradient-to-r from-transparent to-[var(--bg-brand)]' />
+          <span className='text-[var(--bg-brand)] text-[10px] font-bold tracking-widest uppercase'>
+            {t.sub}
+          </span>
+          <div className='h-[1px] w-8 bg-gradient-to-l from-transparent to-[var(--bg-brand)]' />
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Campo: Nombre */}
-        <div className="space-y-1">
-          <label className="text-white/90 text-sm font-medium ml-1">Nombre completo</label>
-          <input
-            type="text"
-            placeholder="Pon tu nombre aquí"
-            value={name}
-            disabled={isSubmitting}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full bg-white/20 border border-white/30 text-white placeholder-white/50 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:bg-white/30 transition-all disabled:opacity-50"
-          />
-        </div>
+      {/* === SECCIÓN FORMULARIO === */}
+      <form onSubmit={handleSubmit} className='space-y-6 relative'>
+        {/* SECCIÓN: NOMBRE */}
+        <div className='space-y-2 group'>
+          <label className='text-[var(--text-white-4)] text-[10px] font-bold uppercase tracking-[0.2em] ml-1 flex items-center gap-2 transition-colors duration-300 group-focus-within:text-[var(--text-white-5)]'>
+            {t.placeholders.label_name}
+          </label>
 
-        {/* Campo: Teléfono */}
-        <div className="space-y-1">
-          <label className="text-white/90 text-sm font-medium ml-1">Teléfono (WhatsApp)</label>
-          <input
-            type="tel"
-            placeholder="Ej: +34 600 000 000"
-            value={phone}
-            disabled={isSubmitting}
-            onChange={(e) => setPhone(e.target.value)}
-            className="w-full bg-white/20 border border-white/30 text-white placeholder-white/50 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:bg-white/30 transition-all disabled:opacity-50"
-          />
-        </div>
-
-        {/* Campo: Contraseña (Con botón para mostrar/ocultar) */}
-        <div className="space-y-1">
-          <label className="text-white/90 text-sm font-medium ml-1">Contraseña</label>
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"} // <--- Magia del toggle
-              placeholder="escribe aquí: barbershort"     // <--- Nuevo placeholder
-              value={password}
-              disabled={isSubmitting}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-white/20 border border-white/30 text-white placeholder-white/50 rounded-xl px-4 py-3 pr-12 outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:bg-white/30 transition-all disabled:opacity-50"
-            />
-            
-            {/* Botón del Ojo */}
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              disabled={isSubmitting}
-              className="absolute inset-y-0 right-0 pr-4 flex items-center text-white/50 hover:text-white transition-colors disabled:opacity-50"
+          <div className='relative flex items-center'>
+            {/* Icono animado con Framer Motion */}
+            <motion.div
+              initial={{ opacity: 0.6, scale: 0.9 }}
+              whileHover={{ scale: 1.1 }}
+              animate={
+                nameTocado && isNameValid
+                  ? { scale: [1, 1.2, 1], color: '#22c55e' }
+                  : {}
+              }
+              className='absolute left-4 z-10'
             >
-              {showPassword ? (
-                // Icono: Ojo cerrado (Ocultar)
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
-                </svg>
-              ) : (
-                // Icono: Ojo abierto (Mostrar)
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              )}
+              <User
+                size={18}
+                strokeWidth={1.5}
+                className={`transition-colors duration-300 ${
+                  nameTocado && !isNameValid
+                    ? 'text-red-500'
+                    : nameTocado && isNameValid
+                    ? 'text-green-500'
+                    : 'text-[var(--text-white-5)]'
+                }`}
+              />
+            </motion.div>
+
+            <input
+              type='text'
+              placeholder={t.placeholders.ph_name}
+              value={name}
+              onBlur={() => setNameTocado(true)}
+              onChange={e => setName(e.target.value)}
+              className={`
+                w-full bg-white/[0.03] text-[var(--text-white-1)] placeholder-white/20 
+                rounded-xl px-12 py-4 text-sm outline-none border transition-all duration-500
+                ${
+                  nameTocado && !isNameValid
+                    ? 'border-red-500/50 bg-red-500/5 shadow-[0_0_20px_rgba(239,68,68,0.1)]'
+                    : nameTocado && isNameValid
+                    ? 'border-green-500/50 bg-green-500/5 shadow-[0_0_25px_rgba(34,197,94,0.15)]'
+                    : 'border-[var(--border-white-4)] focus:border-[var(--border-white-5)] focus:bg-white/[0.06] focus:shadow-[0_0_30px_rgba(201,163,78,0.1)]'
+                }
+              `}
+            />
+          </div>
+
+          {/* Mensaje de error animado */}
+          <AnimatePresence>
+            {nameTocado && !isNameValid && (
+              <motion.p
+                initial={{ opacity: 0, height: 0, y: -10 }}
+                animate={{ opacity: 1, height: 'auto', y: 0 }}
+                exit={{ opacity: 0, height: 0, y: -10 }}
+                className='text-red-500 text-[10px] font-bold mt-1 ml-1 flex items-center gap-1'
+              >
+                <span className='w-1 h-1 bg-red-500 rounded-full animate-ping' />
+                {t.validation.err_name}
+              </motion.p>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* SECCIÓN: TELÉFONO */}
+        <div className='space-y-2 group'>
+          <label className='text-[var(--text-white-4)] text-[10px] font-bold uppercase tracking-[0.2em] ml-1 flex items-center gap-2 transition-colors duration-300 group-focus-within:text-[var(--text-white-5)]'>
+            {t.placeholders.label_phone}
+          </label>
+
+          <div className='flex gap-2 relative'>
+            {/* SELECTOR DE PAÍS VIP */}
+            <select
+              value={codigoPais}
+              onChange={e => setCodigoPais(e.target.value)}
+              className='bg-white/[0.03] text-[var(--text-white-2)] border border-[var(--border-white-4)] rounded-xl px-3 text-xs outline-none focus:border-[var(--border-white-5)] focus:bg-white/[0.08] transition-all cursor-pointer appearance-none'
+              style={{ minWidth: '85px' }}
+            >
+              <option value='+57' className='bg-[#161618]'>
+                🇨🇴 +57
+              </option>
+              <option value='+34' className='bg-[#161618]'>
+                🇪🇸 +34
+              </option>
+              <option value='+1' className='bg-[#161618]'>
+                🇺🇸 +1
+              </option>
+            </select>
+
+            <div className='relative flex flex-grow items-center'>
+              {/* ICONO PHONE ANIMADO (DENTRO DEL INPUT) */}
+              <motion.div
+                initial={{ opacity: 0.6, scale: 0.9 }}
+                whileHover={{ scale: 1.1 }}
+                animate={
+                  isPhoneValid && !phoneError
+                    ? { scale: [1, 1.2, 1], color: '#22c55e' }
+                    : {}
+                }
+                className='absolute left-4 z-10 pointer-events-none'
+              >
+                <Phone
+                  size={18}
+                  strokeWidth={1.5}
+                  className={`transition-colors duration-300 ${
+                    phoneError
+                      ? 'text-red-500'
+                      : isPhoneValid
+                      ? 'text-green-500'
+                      : 'text-[var(--text-white-5)]'
+                  }`}
+                />
+              </motion.div>
+
+              <input
+                type='tel'
+                placeholder={t.placeholders.ph_phone}
+                value={phone}
+                onChange={handlePhoneChange}
+                className={`
+                  w-full bg-white/[0.03] text-[var(--text-white-1)] placeholder-white/20 
+                  rounded-xl px-12 py-4 text-sm outline-none border transition-all duration-500
+                  ${
+                    phoneError
+                      ? 'border-red-500/50 bg-red-500/5 shadow-[0_0_20px_rgba(239,68,68,0.1)]'
+                      : isPhoneValid
+                      ? 'border-green-500/50 bg-green-500/5 shadow-[0_0_25px_rgba(34,197,94,0.15)]'
+                      : 'border-[var(--border-white-4)] focus:border-[var(--border-white-5)] focus:bg-white/[0.06] focus:shadow-[0_0_30px_rgba(201,163,78,0.1)]'
+                  }
+                `}
+              />
+            </div>
+          </div>
+
+          {/* MENSAJE DE ERROR ANIMADO */}
+          <AnimatePresence>
+            {phoneError && (
+              <motion.p
+                initial={{ opacity: 0, height: 0, y: -10 }}
+                animate={{ opacity: 1, height: 'auto', y: 0 }}
+                exit={{ opacity: 0, height: 0, y: -10 }}
+                className='text-red-500 text-[10px] font-bold mt-1 ml-1 flex items-center gap-1'
+              >
+                <span className='w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse' />
+                {phoneError}
+              </motion.p>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* SECCIÓN: CONTRASEÑA */}
+        <div className='space-y-2 group'>
+          <label className='text-[var(--text-white-4)] text-[10px] font-bold uppercase tracking-[0.2em] ml-1 flex items-center gap-2 transition-colors duration-300 group-focus-within:text-[var(--text-white-5)]'>
+            {t.placeholders.label_pass}
+          </label>
+
+          <div className='relative flex items-center'>
+            {/* Icono Lock animado (Izquierda interna) */}
+            <motion.div
+              initial={{ opacity: 0.6 }}
+              animate={
+                password === 'barbershort'
+                  ? { color: '#22c55e', scale: 1.1 }
+                  : { color: '#c9a34e', scale: 1 }
+              }
+              className='absolute left-4 z-10 pointer-events-none'
+            >
+              <Lock
+                size={18}
+                strokeWidth={1.5}
+                className='transition-colors duration-300'
+              />
+            </motion.div>
+
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder={t.placeholders.ph_pass}
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              className={`
+                w-full bg-white/[0.03] text-[var(--text-white-1)] placeholder-white/20 
+                rounded-xl px-12 py-4 text-sm outline-none border transition-all duration-500
+                ${
+                  password === 'barbershort'
+                    ? 'border-green-500/50 bg-green-500/5 shadow-[0_0_25px_rgba(34,197,94,0.15)]'
+                    : 'border-[var(--border-white-4)] focus:border-[var(--border-white-5)] focus:bg-white/[0.06] focus:shadow-[0_0_30px_rgba(201,163,78,0.1)]'
+                }
+              `}
+            />
+
+            {/* Botón del Ojo animado (Derecha interna) */}
+            <button
+              type='button'
+              onClick={() => setShowPassword(!showPassword)}
+              className='absolute right-4 z-10 text-white/20 hover:text-[var(--text-white-5)] transition-all duration-300 p-1'
+            >
+              <AnimatePresence mode='wait' initial={false}>
+                <motion.div
+                  key={showPassword ? 'eye-off' : 'eye-on'}
+                  initial={{ opacity: 0, scale: 0.5, rotate: -45 }}
+                  animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                  exit={{ opacity: 0, scale: 0.5, rotate: 45 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {showPassword ? (
+                    <EyeOff size={20} strokeWidth={1.5} />
+                  ) : (
+                    <Eye size={20} strokeWidth={1.5} />
+                  )}
+                </motion.div>
+              </AnimatePresence>
             </button>
           </div>
-          <p className="text-[var(--brand-primary)] text-xs font-semibold ml-1 mt-1 drop-shadow-sm">
-            Escribe esta contraseña demo: barbershort
-          </p>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.6 }}
+            className='text-[var(--text-white-1)] text-[10px] font-medium ml-1 mt-1 tracking-wide italic flex items-center gap-1.5'
+          >
+            <span className='w-1 h-1 bg-[var(--text-white-5)] rounded-full animate-pulse' />
+            {t.placeholders.hint_pass}
+          </motion.p>
         </div>
 
-        {/* Checkbox: Términos y Condiciones */}
-        <div className="flex items-start space-x-3 mt-4">
-          <input
-            type="checkbox"
-            id="terms"
-            checked={acceptTerms}
-            disabled={isSubmitting}
-            onChange={(e) => setAcceptTerms(e.target.checked)}
-            className="mt-1 w-4 h-4 rounded border-white/30 bg-white/20 text-[var(--brand-primary)] focus:ring-[var(--brand-primary)] focus:ring-offset-0 disabled:opacity-50"
-          />
-          <label htmlFor="terms" className="text-white/80 text-sm cursor-pointer leading-tight">
-            Acepto los términos y condiciones para recibir la confirmación de mi cita vía WhatsApp/Email al finalizar.
+        {/* SECCIÓN: TÉRMINOS */}
+        <div
+          className='flex items-start space-x-3 py-2 group cursor-pointer select-none'
+          onClick={() => setAcceptTerms(!acceptTerms)}
+        >
+          <div className='relative flex items-center justify-center'>
+            <motion.div
+              animate={acceptTerms ? { scale: [1, 1.2, 1] } : { scale: 1 }}
+              className={`mt-0.5 w-4.5 h-4.5 rounded border transition-all duration-300 flex items-center justify-center ${
+                acceptTerms
+                  ? 'bg-[var(--text-white-5)] border-[var(--border-white-5)] shadow-[0_0_10px_rgba(201,163,78,0.3)]'
+                  : 'border-[var(--border-white-4)] bg-white/5 group-hover:border-[var(--border-white-3)]'
+              }`}
+            >
+              <AnimatePresence>
+                {acceptTerms && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                  >
+                    <ShieldCheck
+                      size={13}
+                      className='text-[#0a0a0b]'
+                      strokeWidth={3}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          </div>
+
+          <label className='text-[var(--text-white-4)] text-[10px] leading-relaxed cursor-pointer group-hover:text-[var(--text-white-2)] transition-colors duration-300 font-medium'>
+            {t.legales.terms}
           </label>
         </div>
 
-        {/* Cloudflare Turnstile */}
-        <div className="flex justify-center my-2 pb-4 overflow-hidden [&_iframe]:!border-none [&_iframe]:!rounded-none">
-          <Turnstile 
-            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!} 
-            onSuccess={token => setTurnstileToken(token)}
-            options={{ theme: 'dark', size: 'flexible' }} 
+        {/* SECCIÓN: CLOUDFLARE TURNSTILE */}
+        <div className='flex justify-center py-2 min-h-[65px] opacity-80 hover:opacity-100 transition-opacity duration-500'>
+          <Turnstile
+            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+            onSuccess={setTurnstileToken}
+            options={{
+              theme: 'dark',
+              size: 'flexible'
+            }}
           />
         </div>
 
-        {/* Mensaje de Error */}
-        {error && (
-          <div className="bg-red-500/20 border border-red-500/50 text-red-100 text-sm p-3 rounded-lg text-center backdrop-blur-sm animate-pulse">
-            {error}
-          </div>
-        )}
-
-        {/* Botón Ingresar */}
-        <button
-          type="submit"
-          disabled={!isFormValid || isSubmitting}
-          className={`w-full font-bold py-4 rounded-xl shadow-lg transition-all duration-300 flex justify-center items-center ${
-            (!isFormValid || isSubmitting) 
-            ? 'bg-gray-500/50 text-white/50 cursor-not-allowed' 
-            : 'bg-[var(--brand-primary)] hover:bg-[var(--brand-secondary)] text-white hover:shadow-xl'
-          }`}
-        >
-          {isSubmitting ? (
-            <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-          ) : (
-            'INGRESAR A BARBER SHORT'
+        {/* SECCIÓN: MENSAJE DE ERROR VIP */}
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ height: 0, opacity: 0, y: 10 }}
+              animate={{ height: 'auto', opacity: 1, y: 0 }}
+              exit={{ height: 0, opacity: 0, y: 10 }}
+              className='overflow-hidden'
+            >
+              <div className='bg-red-500/5 border border-red-500/20 text-red-200/80 text-[10px] font-bold uppercase tracking-wider p-4 rounded-xl text-center backdrop-blur-md shadow-lg flex items-center justify-center gap-2'>
+                <span className='w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse' />
+                {error}
+              </div>
+            </motion.div>
           )}
-        </button>
+        </AnimatePresence>
 
-        {/* Enlaces Ficticios */}
-        <div className="flex justify-between items-center text-sm text-white/70 mt-6 pt-4 border-t border-white/10">
-          <span className="cursor-not-allowed hover:text-white transition-colors">¿Has olvidado tu contraseña?</span>
-          <span className="cursor-not-allowed hover:text-white transition-colors">Crear usuario</span>
+        {/* SECCIÓN: BOTÓN INGRESAR */}
+        <div className='relative pt-4'>
+          <motion.button
+            whileHover={
+              isFormValid
+                ? {
+                    scale: 1.01,
+                    y: -2,
+                    boxShadow: '0 15px 35px -5px rgba(201, 163, 78, 0.4)'
+                  }
+                : {}
+            }
+            whileTap={isFormValid ? { scale: 0.98, y: 0 } : {}}
+            type='submit'
+            disabled={!isFormValid || isSubmitting}
+            className={`
+              relative w-full overflow-hidden font-black py-5 rounded-xl 
+              tracking-[0.2em] uppercase text-[11px] 
+              transition-all duration-500 flex justify-center items-center
+              ${
+                !isFormValid || isSubmitting
+                  ? 'bg-white/[0.1] text-[var(--text-white-4)] border border-white/40 cursor-not-allowed opacity-50'
+                  : 'bg-[var(--text-white-5)] text-black border border-[var(--border-white-5)] cursor-pointer'
+              }
+            `}
+          >
+            {/* Capa de Brillo Shimmer (solo cuando el formulario es válido) */}
+            {isFormValid && !isSubmitting && (
+              <motion.div
+                initial={{ x: '-100%' }}
+                animate={{ x: '100%' }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 2.5,
+                  ease: 'linear'
+                }}
+                className='absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -skew-x-12 w-1/2'
+              />
+            )}
+
+            {/* Contenido del Botón */}
+            <span className='relative z-10 flex items-center gap-2'>
+              {isSubmitting ? (
+                <div className='flex items-center gap-3'>
+                  <div className='w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin' />
+                  <span className='animate-pulse tracking-widest'>
+                    {t.validation.processing || '...'}
+                  </span>
+                </div>
+              ) : (
+                <>
+                  {t.buttons.enter}
+                  {isFormValid && (
+                    <motion.span
+                      initial={{ opacity: 0, x: -5 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className='ml-1'
+                    >
+                      →
+                    </motion.span>
+                  )}
+                </>
+              )}
+            </span>
+          </motion.button>
+
+          {/* Glow decorativo inferior */}
+          {isFormValid && !isSubmitting && (
+            <div className='absolute -bottom-2 left-1/2 -translate-x-1/2 w-4/5 h-8 bg-[var(--text-white-5)]/10 blur-2xl -z-10' />
+          )}
+        </div>
+
+        {/* ENLACES INFERIORES VIP (DERECHA E IZQUIERDA) */}
+        <div className='flex justify-between items-center px-2 mt-8 pt-6 border-t border-white/20'>
+          <motion.button
+            whileHover={{ color: 'var(--text-white-6)', x: 2 }}
+            type='button'
+            onClick={handleWhatsAppHelp}
+            className='text-[9px] font-bold text-[var(--text-white-5)] uppercase tracking-[0.1em] transition-all'
+          >
+            {t.buttons.forgot}
+          </motion.button>
+
+          <motion.button
+            whileHover={{ color: 'var(--text-white-2)', scale: 1.05 }}
+            type='button'
+            className='text-[9px] font-bold text-[var(--text-white-5)] uppercase tracking-[0.1em] border-b border-[var(--text-white-5)]/30 pb-0.5 transition-all cursor-not-allowed'
+          >
+            {t.buttons.login}
+          </motion.button>
         </div>
       </form>
     </div>

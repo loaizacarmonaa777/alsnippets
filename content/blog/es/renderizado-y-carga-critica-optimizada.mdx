@@ -1,0 +1,158 @@
+---
+title: "Renderizado y carga crítica optimizada en WordPress"
+description: "Cómo optimizo el critical rendering path, elimino recursos bloqueantes y priorizo contenido visible para mejorar percepción de velocidad."
+category: "optimizacion"
+lang: "es"
+author: "Adrián Loaiza"
+date: "2026-03-03"
+image: "/images/blog/renderizado-y-carga-critica-optimizada.webp"
+coverImage: "/images/blog/renderizado-y-carga-critica-optimizada.webp"
+featured: false
+---
+
+## Renderizado y carga crítica optimizada.
+
+Un sitio puede pesar poco.
+
+Puede tener buen hosting.
+
+Puede tener caché.
+
+Y aun así sentirse lento.
+
+¿Por qué?
+
+Porque el problema no siempre es cuánto pesa.
+
+Es cómo se renderiza.
+
+El navegador sigue un proceso específico para construir la página.  
+Si interrumpimos ese proceso, rompemos la experiencia.
+
+---
+
+### De qué se trata
+
+Optimizar renderizado significa intervenir en el *critical rendering path*.
+
+Es el proceso que el navegador usa para:
+
+- Leer HTML  
+- Construir el DOM  
+- Interpretar CSS  
+- Ejecutar JavaScript  
+- Pintar la pantalla  
+
+Si un recurso bloquea ese flujo, el usuario espera.
+
+Y cuando espera demasiado, se va.
+
+---
+
+### Por qué sucede
+
+Sucede porque:
+
+- CSS no crítico bloquea el renderizado  
+- JavaScript se ejecuta antes de tiempo  
+- Se cargan librerías innecesarias  
+- No se prioriza contenido visible  
+- Se usan temas mal optimizados  
+
+Muchos sitios cargan todo al mismo tiempo.
+
+Y eso genera cuello de botella.
+
+El navegador no es mágico.
+
+Sigue reglas claras.
+
+---
+
+### Qué es
+
+Optimizar carga crítica implica:
+
+- Extraer y priorizar CSS crítico  
+- Diferir JavaScript no esencial  
+- Eliminar recursos bloqueantes  
+- Optimizar orden de carga  
+- Reducir dependencias tempranas  
+
+En Alsnippets produzco una estructura donde el contenido principal aparece primero.
+
+No espero a que termine todo.
+
+Primero lo importante.
+
+Después lo decorativo.
+
+Google explica este proceso en  
+https://web.dev/critical-rendering-path/
+
+---
+
+### Qué afecta
+
+Cuando el renderizado no está optimizado ocurre:
+
+- LCP alto  
+- Pantalla en blanco inicial  
+- Interacciones bloqueadas  
+- Sensación de lentitud  
+
+Y aunque técnicamente el sitio cargue “rápido”, la percepción es negativa.
+
+Además, los motores de búsqueda evalúan señales de experiencia.
+
+Y los modelos generativos procesan mejor estructuras limpias y jerarquizadas.
+
+No es solo UX.
+
+Es interpretación estructural.
+
+---
+
+### Posibles soluciones
+
+Cuando abordo renderizado en Alsnippets hago:
+
+- Análisis del waterfall real  
+- Identificación de recursos bloqueantes  
+- Implementación de carga diferida  
+- Priorización de contenido visible  
+- Pruebas en dispositivos reales  
+
+Después organizo el flujo de carga para que el navegador trabaje sin interrupciones.
+
+La meta no es solo mejorar métricas.
+
+Es mejorar percepción.
+
+Puedes complementar con  
+[optimización estructural de recursos](/optimizacion-estructural-recursos-wordpress)
+
+---
+
+### Tips
+
+- Lo primero que ve el usuario debe cargar primero  
+- Evita librerías si no son esenciales  
+- Diferir JS suele ser más importante que minificarlo  
+- Menos animaciones pesadas = mejor estabilidad  
+
+La velocidad no es solo técnica.
+
+Es psicológica.
+
+---
+
+### ¿Tu WordPress tiene problemas reales?
+[Solicitar auditoría WordPress](/auditoria)
+
+---
+
+### Fuentes y referencias
+
+- https://web.dev/critical-rendering-path/
+- https://developers.google.com/search/docs/appearance/page-experience

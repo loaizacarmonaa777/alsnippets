@@ -1,0 +1,97 @@
+---
+title: "WordPress Hardening: Reducing the Attack Surface"
+description: "How I implement strategic adjustments in WordPress to close vulnerable routes and protect critical files after a cleanup."
+category: "security"
+lang: "en"
+author: "Adrián Loaiza"
+date: "2026-03-02"
+image: "/images/blog/endurecimiento-de-wordpress.webp"
+coverImage: "/images/blog/endurecimiento-de-wordpress.webp"
+featured: false
+---
+
+## WordPress Hardening.
+
+After cleaning a site, many believe the job is done.
+
+I don't.
+
+Cleaning is only half the process.  
+The other half is preventing it from happening again.
+
+Because if the attack surface isn't reduced, the risk remains there, silent.
+
+---
+
+### Why it happens
+
+WordPress is powerful, but by default, it leaves open routes that can be exploited if they are not correctly adjusted.
+
+It happens when:
+
+- Basic configurations are kept without reinforcement
+- Sensitive files are not protected
+- Administrative access is left exposed
+- Authentication attempts are not limited
+
+WordPress recommends applying additional security measures after an infection.
+
+Security isn't automatic. It is built.
+
+---
+
+### What it is
+
+Hardening WordPress means applying strategic adjustments such as:
+
+- Disabling file editing from the dashboard
+- Protecting `wp-config.php`
+- Restricting access to `/wp-admin/`
+- Limiting PHP execution in uploads
+- Correcting file permissions (CHMOD)
+
+It's not about filling the site with plugins.  
+It's about closing unnecessary doors.
+
+---
+
+### What it affects
+
+If the environment is not hardened:
+
+- An attacker can reuse previous vulnerabilities
+- The risk of brute force attacks increases
+- Code injection becomes easier
+- General stability is weakened
+
+A clean site without reinforcement is an easy target.
+
+---
+
+### Possible solutions
+
+When I tackle hardening at Alsnippets, I do:
+
+- Manual adjustments to critical files
+- Strategic access configuration
+- Full permissions review
+- Protection against improper script execution
+
+Then I organize the environment to have fewer exposed points and solve structural risks.
+
+I don't complicate the system.  
+I make it more solid.
+
+You can also check my guide on [Access and Permissions Reinforcement](/en/refuerzo-accesos-permisos).
+
+---
+
+### Does your WordPress have real problems?
+[Request WordPress Audit](/en/auditoria)
+
+---
+
+### Sources and references
+
+- https://wordpress.org/support/article/hardening-wordpress/
+- https://www.sucuri.net/guides/wordpress-security/

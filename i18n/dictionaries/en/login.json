@@ -1,0 +1,10 @@
+{
+  "title": "Specialist Access",
+  "sub": "Log in to access advanced audit tools.",
+  "label_email": "Email address",
+  "label_pass": "Password",
+  "btn_enter": "Unlock Suite",
+  "error": "Unauthorized credentials.",
+  "forgot": "Forgot your password?",
+  "register_note": "Access restricted to Alsnippets personnel."
+}

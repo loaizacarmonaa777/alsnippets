@@ -1,185 +1,98 @@
 import React from 'react'
-import Link from "next/link";
+import Link from 'next/link'
 import Hero from '@/components/home/Hero'
-import Benefits, { BenefitItem } from '@/components/home/Benefits'
+import Benefits from '@/components/home/Benefits'
 import Authority from '@/components/home/Authority'
 import Solutions from '@/components/home/Solutions'
 import ProjectsPreview from '@/components/home/ProjectsPreview'
 import BlogPreview from '@/components/home/BlogPreview'
 import StackLogos from '@/components/shared/StackLogos'
 import CTA from '@/components/home/CTA'
+import { getDictionary } from '@/i18n/get-dictionary'
 
 /* =====================================================
-   DATA: Configuración de Beneficios (Static Data)
+   Home Page (Server Component) - PROTOCOLO ALSNIPPETS
    ===================================================== */
-const BENEFITS_DATA: BenefitItem[] = [
-  {
-    title: 'Análisis y Protección contra ataques',
-    image: '/images/home/card-proteccion-contra-ataques-home.webp',
-    description: 'La falta de protección expone tu sitio a riesgos.',
-    chips: [
-      'Malware',
-      'Virus',
-      'Backdoors',
-      'Fuerza bruta',
-      'Robo de datos',
-      'Accesos no autorizados',
-      'Sitio comprometido'
-    ]
-  },
-  {
-    title: 'Actualizaciones controladas',
-    image: '/images/home/card-actualizaciones-controladas-home.webp',
-    description: 'Actualizar sin control impacta más de lo que imaginas.',
-    chips: [
-      'Incompatibilidad',
-      'Errores críticos',
-      'Pantalla blanca',
-      'Fallos de plugins',
-      'Conflictos versión',
-      'Errores PHP',
-      'Caídas del sitio'
-    ]
-  },
-  {
-    title: 'Copias de seguridad confiables',
-    image: '/images/home/card-copias-seguridad-home.webp',
-    description:
-      'Sin copias funcionales, cualquier error puede convertirse en un desastre.',
-    chips: [
-      'Pérdidas',
-      'Backups rotos',
-      'Fallos de restauración',
-      'Datos irrecuperables',
-      'Cambios perdidos',
-      'Caídas'
-    ]
-  },
-  {
-    title: 'Optimización de velocidad y carga',
-    image: '/images/home/card-optimizacion-velocidad-home.webp',
-    description:
-      'No identificar los cuellos de botella afecta rendimiento y experiencia.',
-    chips: [
-      'Carga lenta',
-      'CLS elevado',
-      'LCP deficiente',
-      'TTFB alto',
-      'Scripts bloqueantes',
-      'Imágenes pesadas',
-      'Mala experiencia móvil'
-    ]
-  },
-  {
-    title: 'Acompañamiento en todo el proceso',
-    image: '/images/home/card-acompanamiento-proceso-home.webp',
-    description:
-      'Conmigo cada decisión técnica tiene respaldo, criterio y seguimiento.',
-    chips: [
-      'Decisiones técnicas',
-      'Dudas constantes',
-      'Cambios urgentes',
-      'Soporte humano',
-      'Comunicación directa',
-      'Respuesta rápida',
-      'Tranquilidad operativa'
-    ]
-  },
-  {
-    title: 'Los errores son parte del proceso',
-    image: '/images/home/card-errores-proceso-home.webp',
-    description:
-      'WordPress no es solo no-code: se necesita experiencia para resolver.',
-    chips: [
-      'Errores 404',
-      'Errores 500',
-      'Conflictos',
-      'Fallos en servidor',
-      'Fallos del Layout',
-      'Bugs inesperados',
-      'Diagnóstico técnico'
-    ]
-  }
-]
+export default async function HomePage ({
+  params
+}: {
+  params: Promise<{ lang: string }>
+}) {
+  const { lang } = await params
+  const dict: any = await getDictionary(lang as 'es' | 'en')
 
-/* =====================================================
-   Home Page
-   ===================================================== */
-export default function HomePage () {
+  // Extraemos la sección de beneficios del nuevo JSON
+  const benefits = dict.home_benefits
+
   return (
     <>
-      {/* 1. HERO (Full Width) */}
+      {/* 1. HERO */}
       <section>
-        <Hero />
+        <Hero lang={lang} />
       </section>
 
       {/* 2. CONTENIDO PRINCIPAL */}
       <main>
-        {/* SECCIÓN 1: TU WORDPRESS ESTABLE */}
-        <section className='w-full py-10 md:py-16 px-4'>
+        {/* =========== 
+             SECCIÓN 1: WORDPRESS ESTABLE 
+             (Carga datos de home.json) 
+            ============*/}
+
+        <section className='w-full py-10 md:py-16 px-4 my-0'>
           <div className='container mx-auto max-w-[1200px] space-y-16'>
-            {/* Header Texto */}
             <div className='text-center max-w-2xl mx-auto space-y-4'>
-              <h2>Tu WordPress estable, seguro y rápido</h2>
-              <p className='text-lg text-[var(--text-secondary)] opacity-90 leading-relaxed'>
-                La tecnología no es infalible. Mi trabajo es anticipar
-                problemas, reducir riesgos y responder de forma clara cuando
-                algo ocurre.
+              <h2 className='text-[var(--text-1)]'>
+                {dict.home.stable_section.title}
+              </h2>
+              <p className='text-lg text-[var(--text-2)] opacity-90 leading-relaxed'>
+                {dict.home.stable_section.description}
               </p>
             </div>
 
-            {/* Grid Beneficios */}
-            <Benefits title='' items={BENEFITS_DATA} />
+            {/* Pasamos los items completos (con chips e imágenes) al componente */}
+            <Benefits title='' items={benefits} lang={lang} />
           </div>
-          {/* CTA Secundario */}
+
           <div className='pt-4 text-center'>
             <Link
-              href='/proyectos/casos-de-exito' target="_blank"
-              className='
-            inline-flex items-center justify-center
-            px-8 py-3 rounded-full
-            text-sm font-bold
-            bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--text-yellow2)]
-            hover:bg-[var(--brand-primary)] hover:text-white hover:border-transparent
-            shadow-sm hover:shadow-md
-            transition-all duration-300
-          '
+              href={`/${lang}/proyectos/casos-de-exito`} // link
+              target='_blank' // pestaña nueva
+              rel='noopener noreferrer' // seguridad
+              className='inline-flex items-center justify-center px-8 py-3 rounded-full text-sm font-bold bg-[var(--bg-1)] text-[var(--text-1)] border border-[var(--border-brand)] hover:bg-[var(--bg-brand)] hover:text-[var(--text-inverse)] hover:border-transparent shadow-[var(--shadow-1)] hover:shadow-[var(--shadow-2)] transition-all duration-300'
             >
-              Conoce mis proyectos
+              {dict.home.stable_section.cta}
             </Link>
           </div>
         </section>
 
-        {/* SECCIÓN 2: TRABAJO DIRECTO SIN INTERMEDIARIOS */}
+        {/* SECCIÓN 2: AUTHORITY */}
         <section>
-          <Authority />
+          <Authority lang={lang} />
         </section>
 
-        {/* SECCIÓN 3: QUE PROBLEMAS TIENE TU WORDPRESS */}
+        {/* SECCIÓN 3: SOLUTIONS */}
         <section>
-          <Solutions />
+          <Solutions lang={lang} />
         </section>
 
-        {/* SECCIÓN 4: PROYECTOS Y CREACIONES */}
+        {/* SECCIÓN 4: PROJECTS */}
         <section className='my-0'>
-          <ProjectsPreview />
+          <ProjectsPreview lang={lang} />
         </section>
 
-        {/* =========================
-          SECCIÓN 5: STACK LOGOS
-          ========================= */}
+        {/* SECCIÓN 5: STACK LOGOS */}
         <section className='my-0'>
-          <StackLogos />
+          <StackLogos lang={lang} />
         </section>
 
         {/* SECCIÓN 6: BLOG */}
         <section className='my-0'>
-          <BlogPreview />
+          <BlogPreview lang={lang} />
         </section>
 
         {/* SECCIÓN 7: CTA FINAL */}
         <div className='my-0'>
-          <CTA />
+          <CTA lang={lang} />
         </div>
       </main>
     </>

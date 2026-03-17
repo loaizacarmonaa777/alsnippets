@@ -1,8 +1,7 @@
-// components/cotizador/CotizadorApp.tsx
 'use client'
 
 import React, { useState } from 'react'
-import { Turnstile } from '@marsidev/react-turnstile' // <--- IMPORTANTE
+import { Turnstile } from '@marsidev/react-turnstile'
 
 import Step1Datos from './Step1Datos'
 import Step2Servicios from './Step2Servicios'
@@ -13,6 +12,9 @@ import Step3Horas from './Step3Horas'
 import Step4Resumen from './Step4Resumen'
 import { PRICES, Currency } from './utils/pricingLogic'
 
+/* =====================================================
+    TIPOS Y ESTADO INICIAL
+   ===================================================== */
 export type ServicioPrincipal =
   | 'Soporte'
   | 'SEO'
@@ -60,58 +62,65 @@ const INITIAL_DATA: CotizadorData = {
   precioTotal: 0
 }
 
-export default function CotizadorApp () {
+interface CotizadorAppProps {
+  lang: string
+  dict: any // Recibido desde la página padre
+}
+
+export default function CotizadorApp ({ lang, dict }: CotizadorAppProps) {
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState<CotizadorData>(INITIAL_DATA)
-
-  // Estados de carga y seguridad
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [turnstileToken, setTurnstileToken] = useState<string>('')
   const [apiError, setApiError] = useState<string>('')
 
+  // Acceso al diccionario de sistema (mensajes de error/espera)
+  const s = dict?.cotizador?.page?.system || {}
+
+  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''
+
+  /* =====================================================
+      MANEJADORES DE FLUJO
+     ===================================================== */
   const updateFormData = (newData: Partial<CotizadorData>) => {
     setFormData(prev => ({ ...prev, ...newData }))
   }
 
   const nextStep = () => {
-    setApiError('') // Limpiar errores al cambiar de paso
+    setApiError('')
     setStep(prev => prev + 1)
   }
-
   const prevStep = () => {
     setApiError('')
     setStep(prev => prev - 1)
   }
 
-  // FUNCIÓN MAESTRA DE ENVÍO REAL
   const handleFinalize = async () => {
     if (!turnstileToken) {
-      setApiError(
-        'Por favor, espera a que se complete la validación de seguridad (Cloudflare).'
-      )
+      setApiError(s.waitSecurity)
       return
     }
 
     setIsSubmitting(true)
     setApiError('')
 
-    // --- MAGIA: CALCULAMOS EL PRECIO ANTES DE ENVIARLO AL CORREO ---
+    // --- CÁLCULO DE PRECIOS ---
     const p = PRICES[formData.moneda as Currency] || PRICES['USD']
     let total = 0
 
     switch (formData.servicioPrincipal) {
       case 'Crear Web':
         total += p.webBase
-        if (formData.necesitaWooCommerce === 'Sí') total += p.wooCommerce
-        if (formData.tieneBranding === 'No') total += p.branding
+        if (formData.necesitaWooCommerce === 'Sí') total += p.ecommerce
+        if (formData.tieneBranding === 'No') total += p.brandingBase
         break
       case 'Soporte':
         if (formData.necesidadesSoporte.includes('Soporte Global')) {
           total += p.soporteGlobal
         } else if (formData.plataformaSoporte === 'Otro') {
-          total += p.soporteModulo * 1.5
+          total += p.mantenimiento * 1.5
         } else {
-          total += formData.necesidadesSoporte.length * p.soporteModulo
+          total += formData.necesidadesSoporte.length * p.mantenimiento
         }
         break
       case 'Por Horas':
@@ -119,7 +128,7 @@ export default function CotizadorApp () {
         total += rate * formData.cantidadHoras
         break
       case 'SEO':
-        total += p.seo
+        total += p.seoAuditoria
         break
     }
 
@@ -131,35 +140,29 @@ export default function CotizadorApp () {
         minimumFractionDigits: formData.moneda === 'COP' ? 0 : 2
       }
     ).format(total)
-    // --------------------------------------------------------------
 
     try {
       const response = await fetch('/api/cotizador', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // Añadimos el "totalFormateado" al paquete que viaja al backend
         body: JSON.stringify({
           formData,
           turnstileToken,
-          totalFormateado: formattedTotal
+          totalFormateado: formattedTotal,
+          lang
         })
       })
 
       const data = await response.json()
 
       if (response.ok && data.success) {
-        setStep(4) // ÉXITO: Pasamos a ver el PDF
+        setStep(4)
       } else {
-        setApiError(
-          data.error ||
-            'Hubo un error al generar tu cotización. Intenta nuevamente.'
-        )
+        setApiError(data.error || s.errorGen)
         if (typeof window.turnstile !== 'undefined') window.turnstile.reset()
       }
     } catch (error) {
-      setApiError(
-        'Error de red. Verifica tu conexión a internet e intenta nuevamente.'
-      )
+      setApiError(s.errorNet)
     } finally {
       setIsSubmitting(false)
     }
@@ -168,11 +171,11 @@ export default function CotizadorApp () {
   const totalSteps = 4
 
   return (
-    <div className='w-full bg-white/70 dark:bg-[#121212]/70 backdrop-blur-xl border border-white/40 dark:border-white/10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300'>
+    <div className='w-full bg-[var(--bg-1)] border border-[var(--border-1)] rounded-3xl shadow-[var(--shadow-2)] overflow-hidden transition-all duration-300'>
       {/* Barra de Progreso */}
-      <div className='w-full bg-[var(--bg-tertiary)] h-2'>
+      <div className='w-full bg-[var(--bg-3)] h-2'>
         <div
-          className='bg-[var(--brand-primary)] h-2 transition-all duration-500 ease-out'
+          className='bg-[var(--bg-brand)] h-2 transition-all duration-500 ease-out'
           style={{ width: `${(step / totalSteps) * 100}%` }}
         />
       </div>
@@ -185,82 +188,88 @@ export default function CotizadorApp () {
           </div>
         )}
 
-        {/* ==== STEP 1 ==== */}
+        {/* RENDERIZADO DE PASOS - Se inyecta el diccionario correspondiente a cada hijo */}
         {step === 1 && (
           <Step1Datos
             formData={formData}
             updateFormData={updateFormData}
             onNext={nextStep}
+            lang={lang}
+            dict={dict.cotizador_step1}
           />
         )}
-
-        {/* ==== STEP 2 ==== */}
         {step === 2 && (
           <Step2Servicios
             formData={formData}
             updateFormData={updateFormData}
             onNext={nextStep}
             onPrev={prevStep}
+            lang={lang}
+            dict={dict.cotizador_step2}
           />
         )}
 
-        {/* ==== STEP 3 ==== */}
-
-        {/* Renderizamos Turnstile globalmente en el Paso 3, encima de las ramas */}
         {step === 3 && (
-          <div className='flex justify-center mb-6 [&_iframe]:!border-none [&_iframe]:!rounded-none rounded-xl overflow-hidden'>
-            <Turnstile
-              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
-              onSuccess={token => setTurnstileToken(token)}
-              options={{ theme: 'auto', size: 'flexible' }}
-            />
-          </div>
+          <>
+            <div className='flex justify-center mb-6 overflow-hidden'>
+              <Turnstile
+                siteKey={siteKey}
+                onSuccess={token => setTurnstileToken(token)}
+                options={{ theme: 'auto', size: 'flexible' }}
+              />
+            </div>
+            {formData.servicioPrincipal === 'Soporte' && (
+              <Step3Soporte
+                formData={formData}
+                updateFormData={updateFormData}
+                onPrev={prevStep}
+                onFinalize={handleFinalize}
+                isSubmitting={isSubmitting}
+                lang={lang}
+                dict={dict.cotizador_step3_soporte}
+              />
+            )}
+            {formData.servicioPrincipal === 'SEO' && (
+              <Step3SEO
+                formData={formData}
+                updateFormData={updateFormData}
+                onPrev={prevStep}
+                onFinalize={handleFinalize}
+                isSubmitting={isSubmitting}
+                lang={lang}
+                dict={dict.cotizador_step3_seo}
+              />
+            )}
+            {formData.servicioPrincipal === 'Crear Web' && (
+              <Step3CrearWeb
+                formData={formData}
+                updateFormData={updateFormData}
+                onPrev={prevStep}
+                onFinalize={handleFinalize}
+                isSubmitting={isSubmitting}
+                lang={lang}
+                dict={dict.cotizador_step3_web}
+              />
+            )}
+            {formData.servicioPrincipal === 'Por Horas' && (
+              <Step3Horas
+                formData={formData}
+                updateFormData={updateFormData}
+                onPrev={prevStep}
+                onFinalize={handleFinalize}
+                isSubmitting={isSubmitting}
+                lang={lang}
+                dict={dict.cotizador_step3_horas}
+              />
+            )}
+          </>
         )}
 
-        {step === 3 && formData.servicioPrincipal === 'Soporte' && (
-          <Step3Soporte
-            formData={formData}
-            updateFormData={updateFormData}
-            onPrev={prevStep}
-            onFinalize={handleFinalize}
-            isSubmitting={isSubmitting}
-          />
-        )}
-
-        {step === 3 && formData.servicioPrincipal === 'SEO' && (
-          <Step3SEO
-            formData={formData}
-            updateFormData={updateFormData}
-            onPrev={prevStep}
-            onFinalize={handleFinalize}
-            isSubmitting={isSubmitting}
-          />
-        )}
-
-        {step === 3 && formData.servicioPrincipal === 'Crear Web' && (
-          <Step3CrearWeb
-            formData={formData}
-            updateFormData={updateFormData}
-            onPrev={prevStep}
-            onFinalize={handleFinalize}
-            isSubmitting={isSubmitting}
-          />
-        )}
-
-        {step === 3 && formData.servicioPrincipal === 'Por Horas' && (
-          <Step3Horas
-            formData={formData}
-            updateFormData={updateFormData}
-            onPrev={prevStep}
-            onFinalize={handleFinalize}
-            isSubmitting={isSubmitting}
-          />
-        )}
-
-        {/* ==== STEP 4: RESULTADO FINAL Y PDF ==== */}
         {step === 4 && (
           <Step4Resumen
             formData={formData}
+            lang={lang}
+            dict={dict.cotizador_step4}
             onReset={() => {
               setFormData(INITIAL_DATA)
               setStep(1)

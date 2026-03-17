@@ -1,65 +1,81 @@
-"use client";
+'use client'
+import Link from 'next/link'
 
-// IMPORTO EL COMPONENTE INTELIGENTE QUE CREAMOS
-import ThemeSwitcher from "./ThemeSwitcher";
+interface TopBarProps {
+  lang: string
+}
 
-/* =====================================================
-   TopBar — Desktop only
-   ===================================================== */
+export default function TopBar ({ lang }: TopBarProps) {
+  // PROTOCOLO ALSNIPPETS: Objeto de traducción local para Componentes de UI
+  const translations = {
+    es: {
+      promoText:
+        'Auditorías gratuitas por tiempo limitado · ALSNIPPETS EXPERT ·',
+      buttonText: 'PROMO',
+      whatsappUrl:
+        'https://wa.me/573246454061?text=%C2%A1Hola%20Adri%C3%A1n!.%20Quiero%20una%20asesor%C3%ADa%20gratuita%2C%20Cont%C3%A1ctame.'
+    },
+    en: {
+      promoText: 'Limited time free audits · ALSNIPPETS EXPERT ·',
+      buttonText: 'OFFER',
+      whatsappUrl:
+        'https://wa.me/573246454061?text=Hi%20Adrian!%20I%20want%20a%20free%20consultancy%2C%20contact%20me.'
+    }
+  }
 
-export default function TopBar() {
+  const t = translations[lang as 'es' | 'en'] || translations.es
+
   return (
-    <div className="hidden md:block relative z-40 bg-[var(--bg-secondary)] border-b border-[var(--border-subtle)] overflow-hidden">
-      <div className="max-w-6xl mx-auto px-6 h-10 flex items-center justify-between">
+    <div className='relative z-[110] bg-[var(--bg-2)] border-b border-[var(--border-1)] h-10 overflow-hidden flex items-center'>
+      <div className='max-w-[1200px] w-full mx-auto flex items-center justify-between h-full px-4 md:px-6'>
+        {/* CONTENEDOR DE TEXTO (70% en mobile, flexible en desktop) */}
+        <div className='relative w-[70%] md:flex-1 overflow-hidden h-full flex items-center'>
+          <div className='flex animate-marquee whitespace-nowrap text-[9px] md:text-[10px] uppercase font-bold text-[var(--text-3)] tracking-[0.1em] md:tracking-[0.2em]'>
+            {/* BLOQUE 1: Texto repetido para llenar el espacio */}
+            <div className='flex items-center'>
+              <span className='mx-4'>{t.promoText}</span>
+              <span className='mx-4'>{t.promoText}</span>
+            </div>
 
-        {/* =====================================================
-            TEXTO PROMOCIONAL (MARQUEE)
-            ===================================================== */}
-        <div className="relative flex-1 overflow-hidden pr-12 mask-linear-fade">
-          
-          <div className="flex w-max animate-marquee whitespace-nowrap text-xs font-medium text-[var(--text-muted)] tracking-wide">
-            <span className="mr-8">
-              En marzo las auditorías son gratuitas · En marzo las auditorías son gratuitas · En marzo las auditorías son gratuitas ·
-            </span>
-            <span className="mr-8">
-              En marzo las auditorías son gratuitas · En marzo las auditorías son gratuitas · En marzo las auditorías son gratuitas ·
-            </span>
+            {/* BLOQUE 2: Copia exacta para el bucle infinito al 50% */}
+            <div className='flex items-center' aria-hidden='true'>
+              <span className='mx-4'>{t.promoText}</span>
+              <span className='mx-4'>{t.promoText}</span>
+            </div>
           </div>
 
-          {/* Fades laterales para suavizar el texto */}
-          <div className="pointer-events-none absolute left-0 top-0 h-full w-[40px] bg-gradient-to-r from-[var(--bg-secondary)] to-transparent" />
-          <div className="pointer-events-none absolute right-0 top-0 h-full w-[40px] bg-gradient-to-l from-[var(--bg-secondary)] to-transparent" />
+          {/* Fades laterales para el texto */}
+          <div className='pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-[var(--bg-2)] to-transparent z-10' />
+          <div className='pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-[var(--bg-2)] to-transparent z-10' />
         </div>
 
-        {/* =====================================================
-            ACCIONES DERECHA
-            ===================================================== */}
-        <div className="flex items-center gap-4 pl-6">
-          
-          {/* Selector de Idioma */}
-          <button
-            className="
-              text-xs font-bold px-2 py-1 rounded
-              text-[var(--text-primary)]
-              hover:bg-[var(--brand-primary-hover)]
-              hover:text-[var(--brand-primary)]
-              transition-colors duration-200
-            "
+        {/* CONTENEDOR DEL BOTÓN (25-30% en mobile) */}
+        <div className='w-[30%] md:w-auto md:flex-none h-full flex items-center justify-end'>
+          <Link
+            href={t.whatsappUrl}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='group relative flex items-center justify-center w-full md:px-6 h-full overflow-hidden transition-all duration-300'
           >
-            ES
-          </button>
+            {/* Fondo animado */}
+            <div className='absolute inset-0 animate-gradient-cta opacity-90 group-hover:opacity-100 transition-opacity' />
 
-          {/* Separador vertical */}
-          <div className="w-px h-4 bg-[var(--border-subtle)]" />
+            {/* Punto de notificación parpadeante sutil */}
+            <span className='relative z-10 flex h-2 w-2 mr-1.5'>
+              <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75'></span>
+              <span className='relative inline-flex rounded-full h-2 w-2 bg-white'></span>
+            </span>
 
-          {/* AQUI INYECTAMOS EL COMPONENTE MAGICO */}
-          <div className="flex items-center gap-1">
-            <ThemeSwitcher />
-          </div>
+            {/* Texto del botón localizado */}
+            <span className='relative z-10 text-[10px] md:text-[12px] font-medium uppercase tracking-widest text-white whitespace-nowrap'>
+              {t.buttonText}
+            </span>
 
+            {/* Brillo animado */}
+            <div className='absolute inset-0 animate-glow-ltr opacity-30 mix-blend-overlay' />
+          </Link>
         </div>
-
       </div>
     </div>
-  );
+  )
 }

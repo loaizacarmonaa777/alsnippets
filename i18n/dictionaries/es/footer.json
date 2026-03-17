@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "title_prefix": "Alsnippets -",
+    "description": "Desarrollo WordPress profesional, optimización de velocidad y seguridad. Un corazón, una mente, Alsnippets.",
+    "og_title": "Alsnippets Expert",
+    "og_description": "Servicios expertos de WordPress y soluciones digitales de alto rendimiento."
+  },
+  "page": {
+    "waMsg": "Hola Adrián! Te contacto desde el sitio web respecto a...",
+    "sunAria": "Activar modo claro",
+    "moonAria": "Activar modo oscuro",
+    "quickLinks": "Enlaces de interés",
+    "about": "Sobre mí",
+    "pricing": "Precios",
+    "support": "Soporte",
+    "security": "Seguridad",
+    "optimization": "Optimización",
+    "creations": "Creaciones",
+    "qr": "QR personal",
+    "newsletter": "Suscríbete al boletín",
+    "trust": "Trabajo WordPress profesional.",
+    "experience": "✔️ +6 años de experiencia",
+    "realOptimization": "✔️ Optimización real",
+    "humanSupport": "✔️ Soporte humano directo",
+    "payments": "Formas de pago",
+    "rights": "© 2023 - {year} Alsnippets. Todos los derechos reservados | Un corazón, una mente, Alsnippets.",
+    "privacy": "Privacidad",
+    "terms": "Términos",
+    "refunds": "Devoluciones",
+    "successStories": "Casos de Éxito",
+    "blog": "Blog",
+    "suiteText": "Suite Text",
+    "barberShort": "Barber Short",
+    "faq": "FAQ",
+    "audit": "Auditoría",
+    "contact": "Contacto",
+    "locationStreet": "Carrera 50A Santander, Santa Bárbara",
+    "locationRegion": "Antioquia - Colombia"
+  }
+}

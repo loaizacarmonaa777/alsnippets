@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "title": "Términos y Condiciones",
+    "description": "El uso de este sitio web implica la aceptación de los siguientes términos y condiciones."
+  },
+  "page": {
+    "hero_title": "Términos y condiciones",
+    "hero_subtitle": "El uso de este sitio web implica la aceptación de los siguientes términos y condiciones.",
+    "sections": [
+      {
+        "title": "Uso del sitio",
+        "content": "El contenido de Alsnippets es informativo y profesional. No se permite el uso indebido del sitio, ni la reproducción no autorizada de sus contenidos."
+      },
+      {
+        "title": "Servicios",
+        "content": "Los servicios ofrecidos están sujetos a evaluación previa. Ningún servicio se considera contratado hasta que exista un acuerdo explícito entre ambas partes."
+      },
+      {
+        "title": "Responsabilidad",
+        "content": "Alsnippets no se hace responsable por daños derivados del uso indebido del sitio o por decisiones tomadas sin asesoría directa."
+      }
+    ],
+    "footer_note": "Estos términos pueden actualizarse sin previo aviso."
+  }
+}

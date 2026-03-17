@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "title": "Política de devoluciones",
+    "description": "Conoce mis condiciones de reembolso y el alcance de los servicios que ofrezco. Transparencia y claridad en cada paso."
+  },
+  "page": {
+    "hero": {
+      "title": "Política de devoluciones",
+      "subtitle": "Condiciones de reembolso y alcance de los servicios ofrecidos por Alsnippets."
+    },
+    "intro": "Esta política regula las condiciones de reembolso para los servicios ofrecidos por Alsnippets.",
+    "sections": {
+      "audits": {
+        "title": "Auditorías",
+        "p1": "Las auditorías WordPress son servicios de diagnóstico profesional. Una vez iniciado el análisis, no se realizan devoluciones.",
+        "p2": "Si el cliente decide contratar el trabajo posterior, el costo de la auditoría se descuenta del servicio final."
+      },
+      "consulting": {
+        "title": "Consultorías",
+        "p1": "Las consultorías gratuitas no generan obligación de pago ni derecho a reembolso."
+      },
+      "services": {
+        "title": "Servicios contratados",
+        "p1": "Las condiciones de pago y reembolso para servicios personalizados se definirán de forma específica en cada acuerdo."
+      }
+    }
+  }
+}

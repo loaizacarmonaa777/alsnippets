@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "title": "Barber Short Demo",
+    "description": "In this demo, you will be able to make a reservation, choose your favorite barber, add extra services, and book your appointment.",
+    "keywords": [
+      "Barbershop software",
+      "Barbershop booking platform",
+      "Barbershop management app",
+      "Barbershop online payments",
+      "Web development for barbers",
+      "Barber Short App",
+      "Alsnippets projects"
+    ],
+    "og_title": "Barber Short Demo",
+    "og_description": "Digitize your barbershop with Barber Short: automated bookings, service management, and online payments.",
+    "og_alt": "Barber Short - Web Booking Platform for Barbershops or Beauty Salons. By Alsnippets",
+    "twitter_title": "Barber Short | Platform for Barbershops",
+    "twitter_description": "Web platform for barbershops: bookings, service management, and online payments."
+  },
+  "page": {
+    "hero": {
+      "title": "Barber Short Demo",
+      "subtitle": "In this demo, you can make a reservation, choose your favorite barber, add more services, and book your appointment."
+    }
+  },
+  "schema": {
+    "description": "Web platform focused on bookings, service management, and online payments for the barbershop industry."
+  }
+}

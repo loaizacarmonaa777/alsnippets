@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "title": "Contacto",
+    "description": "Escríbeme para hablar sobre tu proyecto, resolver tus dudas y dar el siguiente paso con confianza. Estoy aquí para ayudarte a escalar tu web.",
+    "keywords": [
+      "Contactar desarrollador web",
+      "Presupuesto página web",
+      "Contratar experto WordPress",
+      "Consultoría SEO contacto",
+      "Desarrollo web a medida",
+      "Adrián Loaiza contacto",
+      "Alsnippets soporte"
+    ],
+    "og_title": "Hablemos de tu proyecto | Adrián Loaiza",
+    "og_description": "¿Tienes una idea en mente o necesitas auditar tu web actual? Escríbeme sin compromiso y analicemos cómo puedo ayudarte.",
+    "twitter_title": "Contacto | Alsnippets",
+    "twitter_description": "Escríbeme para hablar sobre tu proyecto y dar el siguiente paso con confianza."
+  },
+  "schema": {
+    "name": "Contacto | Alsnippets",
+    "description": "Página oficial de contacto para servicios de desarrollo web y auditoría SEO con Adrián Loaiza."
+  },
+  "page": {
+    "hero": {
+      "title_line1": "Hablemos de",
+      "title_highlight": "tu proyecto.",
+      "description": "Escríbeme y conversemos con calma sobre tu sitio, tus dudas actuales y el siguiente paso real que necesitas dar para avanzar."
+    },
+    "info": {
+      "email_label": "Email",
+      "whatsapp_label": "WhatsApp",
+      "location_label": "Ubicación",
+      "location_value": "Santa Bárbara, Antioquia – Colombia",
+      "view_location": "Ver ubicación",
+      "map_button_text": "Ver en Google Maps"
+    },
+    "social_section": {
+      "title": "Encuéntrame también en"
+    },
+    "faq_section": {
+      "title": "Preguntas frecuentes",
+      "description": "Estas son algunas de las dudas más comunes antes de iniciar un trabajo conmigo. La idea es que tengas claridad, confianza y expectativas reales.",
+      "items": [
+        {
+          "q": "¿Trabajas como freelance o como empresa?",
+          "a": "Trabajo como freelance profesional. Esto me permite involucrarme directamente en cada proyecto, sin intermediarios ni delegaciones. Tú hablas directamente conmigo en todo el proceso."
+        },
+        {
+          "q": "¿Por qué tus servicios no son los más baratos?",
+          "a": "Porque no ofrezco soluciones genéricas ni trabajos automatizados. Mi enfoque es preventivo, técnico y responsable. Invierto tiempo real en analizar, proponer y ejecutar correctamente."
+        },
+        {
+          "q": "¿Cómo sé que no desaparecerás a mitad del proyecto?",
+          "a": "Trabajo con un número limitado de proyectos al mismo tiempo y mantengo comunicación clara desde el inicio. No sobrecargo mi agenda ni delego tu proyecto a terceros."
+        },
+        {
+          "q": "¿Con qué tipo de clientes trabajas?",
+          "a": "Trabajo con personas y empresas que valoran la estabilidad, la seguridad y el trabajo bien hecho. No acepto proyectos donde se busque solo “lo más barato”."
+        },
+        {
+          "q": "¿Necesitas accesos a mi sitio web?",
+          "a": "Para auditorías y trabajos técnicos, sí. Los accesos son necesarios para revisar el estado real del sitio. Todo se maneja con confidencialidad y buenas prácticas."
+        },
+        {
+          "q": "¿Trabajas solo con WordPress?",
+          "a": "Mi especialidad principal es WordPress, pero también trabajo con tecnologías modernas y desarrollo a medida cuando el proyecto lo requiere."
+        },
+        {
+          "q": "¿Ofreces soporte después del trabajo?",
+          "a": "Sí. Dependiendo del servicio, ofrezco acompañamiento, mantenimiento o soporte continuo. No entrego un proyecto y desaparezco."
+        },
+        {
+          "q": "¿Trabajas con clientes fuera de Colombia?",
+          "a": "Sí. Trabajo de forma remota con clientes en distintos países. La comunicación se adapta al medio y horario acordado."
+        },
+        {
+          "q": "¿Cuánto tiempo toma una auditoría o intervención?",
+          "a": "Depende del estado y tamaño del sitio. Antes de iniciar, explico el alcance, tiempos estimados y próximos pasos para que no haya sorpresas."
+        },
+        {
+          "q": "¿Qué pasa si mi problema no se puede resolver?",
+          "a": "Soy honesto desde el inicio. Si algo no es viable o no vale la pena hacerlo, lo digo claramente. Prefiero transparencia a promesas irreales."
+        }
+      ]
+    }
+  }
+}

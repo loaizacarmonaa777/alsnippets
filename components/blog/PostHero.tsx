@@ -8,6 +8,7 @@ type PostHeroProps = {
   author?: string;
   date: string;  
   image?: string | null;
+  lang?: string; 
 };
 
 export default function PostHero({
@@ -17,56 +18,52 @@ export default function PostHero({
   author,
   date,
   image,
+  lang = "es",
 }: PostHeroProps) {
+  // 👇 NORMALIZAMOS EL LANG (por si acaso se usa en el futuro)
+  const normalizedLang = lang.replace(/^\//, '');
+  
   return (
     <header className="space-y-8 mb-12 text-left w-full">
       
-      {/* =====================================================
-          META Y TÍTULO
-          ===================================================== */}
       <div className="space-y-4 max-w-4xl">
-        <span className="inline-block px-4 py-1.5 bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] text-xs font-bold rounded-full uppercase tracking-wider">
+        <span className="inline-block px-4 py-1.5 bg-[var(--bg-brand)]/10 text-[var(--text-brand)] text-xs font-bold rounded-full uppercase tracking-wider">
           {category}
         </span>
 
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-[var(--text-primary)] leading-tight !my-0 tracking-tight">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-[var(--text-1)] leading-tight !my-0 tracking-tight">
           {title}
         </h1>
 
         {description && (
-          <p className="text-lg md:text-xl text-[var(--text-secondary)] opacity-90 leading-relaxed max-w-3xl">
+          <p className="text-lg md:text-xl text-[var(--text-2)] opacity-90 leading-relaxed max-w-3xl">
             {description}
           </p>
         )}
 
-        {/* Autor y Fecha en Dorado */}
         <div className="flex items-center gap-4 text-sm font-bold pt-2">
           {author && (
-            <span className="flex items-center gap-1.5 text-[var(--brand-primary)] drop-shadow-sm">
+            <span className="flex items-center gap-1.5 text-[var(--text-brand)] drop-shadow-sm">
               <User className="w-4 h-4" /> {author}
             </span>
           )}
           
-          {/* El punto separador lo dejamos sutil para no recargar */}
-          {author && <span className="w-1 h-1 rounded-full bg-[var(--border-subtle)]"></span>}
+          {author && <span className="w-1 h-1 rounded-full bg-[var(--border-1)]"></span>}
           
-          <span className="flex items-center gap-1.5 text-[var(--brand-primary)] drop-shadow-sm">
+          <span className="flex items-center gap-1.5 text-[var(--text-brand)] drop-shadow-sm">
             <Calendar className="w-4 h-4" /> {date}
           </span>
         </div>
       </div>
 
-      {/* =====================================================
-          IMAGEN DESTACADA
-          ===================================================== */}
       {image && (
-        <div className="relative w-full aspect-[21/9] md:aspect-[2/1] rounded-3xl overflow-hidden shadow-xl bg-[var(--bg-tertiary)] border border-[var(--border-subtle)]">
+        <div className="relative w-full aspect-[21/9] md:aspect-[2/1] rounded-3xl overflow-hidden shadow-[var(--shadow-2)] bg-[var(--bg-3)] border border-[var(--border-1)]">
           <Image 
             src={image} 
             alt={`Portada de ${title}`}
             fill
             priority
-            className="object-cover"
+            className="object-cover transition-all duration-700"
             sizes="(max-width: 1200px) 100vw, 1200px"
           />
         </div>

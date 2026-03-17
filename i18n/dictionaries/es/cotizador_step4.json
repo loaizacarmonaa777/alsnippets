@@ -1,0 +1,41 @@
+{
+  "head": "Cotización Estimada",
+  "prepared": "Cotización preparada para",
+  "serv": "Servicio",
+  "invest": "Inversión Aproximada",
+  "audit": "*Sujeto a auditoría técnica final",
+  "btnWA": "Enviar a WhatsApp",
+  "btnPDF": "Descargar Propuesta PDF",
+  "btnReset": "Nueva Cotización",
+  "safety": "Tus datos están protegidos. El envío por WhatsApp inicia nuestra conversación directa.",
+  "waContact": "Me gustaría agendar una breve llamada para revisar los detalles técnicos.",
+  "labels": {
+    "webBase": "Desarrollo Web Estructural",
+    "webEcom": "+ Módulo E-commerce y Pagos",
+    "webBrand": "+ Identidad Visual y Branding",
+    "sopGlobal": "Soporte Global Integral",
+    "sopCustom": "Soporte Técnico Custom",
+    "hrsTitle": "Bolsa de",
+    "hrsUnit": "horas",
+    "seoTitle": "Auditoría SEO y Estrategia Inicial",
+    "hosting": "Gestión de Hosting y Servidor",
+    "dominio": "Gestión de Dominio y DNS",
+    "textos": "Arquitectura de Contenidos y Copy",
+    "techSurcharge": "Ajuste por Tecnología"
+  },
+  "pdf": {
+    "title": "Propuesta Técnica de Servicios",
+    "date": "Fecha de emisión",
+    "prepared": "Cliente",
+    "consultant": "Especialista Alsnippets",
+    "breakdown": "Resumen de la Inversión",
+    "included": "Presupuestado",
+    "clausulesTitle": "Cláusulas de Transparencia Técnica",
+    "c1": "Este presupuesto se basa en estándares de la tecnología seleccionada ({tech}).",
+    "c2": "Sitios con deuda técnica, código legacy o plugins mal gestionados pueden requerir horas adicionales de limpieza.",
+    "c3": "El costo del servidor/hosting está sujeto a las tarifas del proveedor recomendado (SiteGround).",
+    "footer1": "Alsnippets - Soluciones Técnicas de Alto Rendimiento.",
+    "footer2": "Propuesta válida por 15 días desde su emisión."
+  },
+  "waMsg": "¡Hola Adrián! 👋 Acabo de generar una cotización en Alsnippets.\n\n*Cliente:* {name}\n*Tecnología:* {tech}\n*Inversión:* {total}"
+}

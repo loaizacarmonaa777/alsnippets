@@ -1,0 +1,98 @@
+{
+  "steps": ["Barbero", "Servicios", "Fecha y Hora", "Confirmación"],
+  "step1": {
+    "greeting": "¡Hola, {name}!",
+    "instruction": "Elige el profesional que cuidará tu estilo hoy:",
+    "specialist": "Especialista"
+  },
+  "step2": {
+    "title": "1. Configura tu estilo",
+    "face_type": "Arquitectura del Rostro",
+    "glasses": "¿Utilizas lentes?",
+    "haircut": "Selección de Corte",
+    "beard": "Estilo de Barba",
+    "extras": "Servicios Premium",
+    "select": "Seleccionar...",
+    "face_options": ["Ovalado", "Cuadrado", "Redondo"],
+    "yes_no": ["Sí", "No"],
+    "haircut_options": {
+      "classic": "Corte Clásico",
+      "fade": "Fade / Degradado",
+      "taper": "Taper Fade",
+      "buzz": "Buzz Cut",
+      "mullet": "Mullet",
+      "mohawk": "Mohawk",
+      "pompadour": "Pompadour",
+      "long": "Corte Largo",
+      "topknot": "Top Knot",
+      "undercut": "Undercut"
+    },
+    "beard_options": {
+      "none": "Sin barba",
+      "basic": "Perfilado básico",
+      "vip": "Arreglo VIP",
+      "pointed": "Punta Fina",
+      "square": "Punta Cuadrada",
+      "marked": "Marcado",
+      "stubble": "Sombreado",
+      "goatee": "Candado",
+      "viking": "Vikinga",
+      "anchor": "Ancla"
+    },
+    "extra_items": {
+      "cejas": "Cejas",
+      "limpieza": "Limpieza Facial",
+      "masaje": "Masaje Capilar",
+      "lavado": "Lavado Premium",
+      "pigmentacion": "Pigmentación"
+    }
+  },
+  "step3": {
+    "title": "2. Reserva tu espacio",
+    "time_note": "Sesión estimada de {time} min para tus servicios.",
+    "days_title": "Agenda disponible",
+    "hours_title": "Horarios para el {date}",
+    "today": "Hoy",
+    "tomorrow": "Mañana"
+  },
+  "step4": {
+    "title": "3. Finalizar Reserva",
+    "subtitle": "Selecciona el método de pago para completar la demostración.",
+    "payment_methods": {
+      "card": "Tarjeta Global (Visa, MC, Amex)",
+      "transfer": "Transferencia / Zelle",
+      "apple": "Apple Pay / Google Pay"
+    }
+  },
+  "step5": {
+    "title": "¡Reserva Confirmada!",
+    "body": "El pago simulado se ha procesado con éxito.",
+    "instruction": "Hemos preparado los detalles en tu WhatsApp. Envía el mensaje automático para asegurar tu lugar en nuestra agenda.",
+    "restart": "Nueva Reserva"
+  },
+  "summary": {
+    "client": "Cliente",
+    "barber": "Especialista",
+    "corte": "Servicio",
+    "barba": "Barba",
+    "cejas": "Cejas",
+    "limpieza": "Limpieza",
+    "masaje": "Masaje",
+    "date_time": "Cita",
+    "payment": "Pago via",
+    "total_time": "Tiempo total",
+    "total_pay": "Inversión Total",
+    "pending": "Pendiente",
+    "none": "No aplica",
+    "not_selected": "Sin seleccionar"
+  },
+  "buttons": {
+    "back_barber": "Volver a barbero",
+    "continue_date": "Continuar a Fecha →",
+    "back_services": "← Volver a servicios",
+    "go_payment": "Ir a Pago →",
+    "back_date": "← Modificar Fecha",
+    "pay_confirm": "Pagar y Confirmar",
+    "processing": "Procesando sesión..."
+  }
+}

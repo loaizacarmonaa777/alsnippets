@@ -1,0 +1,120 @@
+{
+  "meta": {
+    "title": "WordPress Security & Cleanup | Adrián Loaiza - Alsnippets",
+    "description": "Professional WordPress security and cleanup services. Malware removal, hack recovery, hardening, and technical security audits.",
+    "keywords": [
+      "wordpress security",
+      "malware removal",
+      "hacked wordpress site",
+      "web protection",
+      "wordpress firewall",
+      "wordpress hardening",
+      "adrian loaiza",
+      "alsnippets"
+    ],
+    "og_title": "WordPress Security & Cleanup | Adrián Loaiza",
+    "og_description": "I recover and protect your website. Malware removal, security hardening, and professional WordPress protection.",
+    "og_alt": "WordPress Security & Cleanup - Alsnippets",
+    "twitter_title": "WordPress Security & Cleanup | Adrián Loaiza",
+    "twitter_description": "Professional WordPress security services. Malware removal and hack protection."
+  },
+  "page": {
+    "hero": {
+      "title": "Professional WordPress Security & Cleanup",
+      "subtitle": "Protection, hardening, and hacked site recovery"
+    },
+    "threats": {
+      "title": "Threats your WordPress faces",
+      "items": [
+        {
+          "title": "Malware & Malicious Code",
+          "description": "Code injections that compromise your site's integrity, steal information, or redirect users to malicious pages.",
+          "image": "/images/seguridad/malware-codigo-malicioso.webp"
+        },
+        {
+          "title": "Vulnerable Plugins",
+          "description": "Outdated extensions or plugins with security flaws that create entry points for attackers.",
+          "image": "/images/seguridad/plugins-vulnerables.webp"
+        },
+        {
+          "title": "Brute Force Attacks",
+          "description": "Massive attempts to guess passwords and access your admin panel.",
+          "image": "/images/seguridad/accesos-no-autorizados.webp"
+        },
+        {
+          "title": "Backdoors",
+          "description": "Hidden files that allow attackers to re-enter even after cleanup.",
+          "image": "/images/seguridad/backdoors-puertas-traseras.webp"
+        },
+        {
+          "title": "Compromised Database",
+          "description": "SQL injections that extract or modify sensitive user and customer information.",
+          "image": "/images/seguridad/base-datos-comprometida.webp"
+        },
+        {
+          "title": "Blacklisted Site",
+          "description": "Google and other search engines may mark your site as dangerous, scaring visitors and affecting SEO.",
+          "image": "/images/seguridad/sitio-blacklist.webp"
+        }
+      ]
+    },
+    "cleanup": {
+      "title": "Cleanup & Recovery Process",
+      "description": "We remove all malware traces and restore your site's integrity",
+      "items": [
+        {
+          "title": "Malware Removal",
+          "description": "Deep cleaning of infected files and malicious code",
+          "image": "/images/seguridad/eliminacion-malware.webp",
+          "slug": "eliminacion-de-malware-y-archivos-infectados"
+        },
+        {
+          "title": "Complete Code Review",
+          "description": "Audit of files and database searching for backdoors",
+          "image": "/images/seguridad/revision-codigo-bd.webp",
+          "slug": "revision-completa-de-codigo-y-bd"
+        },
+        {
+          "title": "Secure Restoration",
+          "description": "Recovery from clean backups or reconstruction of critical files",
+          "image": "/images/seguridad/restauracion-segura.webp",
+          "slug": "restauracion-segura-si-es-necesario"
+        }
+      ]
+    },
+    "prevention": {
+      "title": "Hardening & Preventive Protection",
+      "items": [
+        {
+          "title": "WordPress Hardening",
+          "description": "Advanced configuration to shield your installation against common attacks",
+          "image": "/images/seguridad/endurecimiento-wordpress.webp",
+          "slug": "endurecimiento-de-wordpress"
+        },
+        {
+          "title": "Access Reinforcement",
+          "description": "Implementation of two-factor authentication and strong password policies",
+          "image": "/images/seguridad/refuerzo-accesos-permisos.webp",
+          "slug": "refuerzo-de-accesos-y-permisos"
+        },
+        {
+          "title": "Continuous Monitoring",
+          "description": "Proactive surveillance to detect suspicious activity before it's too late",
+          "image": "/images/seguridad/monitoreo-actividad.webp",
+          "slug": "monitoreo-basico-de-actividad"
+        }
+      ]
+    },
+    "access": {
+      "title": "Has your site been hacked?",
+      "p1": "If you suspect your WordPress is compromised, I need access to diagnose and clean. All data is strictly confidential and access is removed upon service completion.",
+      "confidential": "Your information is safe with me. Professional confidentiality guaranteed."
+    },
+    "cta": {
+      "title": "Need to protect or recover your site?",
+      "description": "Request a free security audit and receive a complete WordPress diagnosis.",
+      "button": "Request audit",
+      "disclaimer": "No obligation · Response within 24h"
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "steps": ["Barber", "Services", "Date and Time", "Confirmation"],
+  "step1": {
+    "greeting": "Hello, {name}!",
+    "instruction": "Choose the professional who will take care of your style today:",
+    "specialist": "Specialist"
+  },
+  "step2": {
+    "title": "1. Set up your style",
+    "face_type": "Face Structure",
+    "glasses": "Do you wear glasses?",
+    "haircut": "Haircut Selection",
+    "beard": "Beard Style",
+    "extras": "Premium Services",
+    "select": "Select...",
+    "face_options": ["Oval", "Square", "Round"],
+    "yes_no": ["Yes", "No"],
+    "haircut_options": {
+      "classic": "Classic Cut",
+      "fade": "Fade / Taper",
+      "taper": "Taper Fade",
+      "buzz": "Buzz Cut",
+      "mullet": "Mullet",
+      "mohawk": "Mohawk",
+      "pompadour": "Pompadour",
+      "long": "Long Cut",
+      "topknot": "Top Knot",
+      "undercut": "Undercut"
+    },
+    "beard_options": {
+      "none": "No beard",
+      "basic": "Basic trim",
+      "vip": "VIP Grooming",
+      "pointed": "Pointed",
+      "square": "Square Tip",
+      "marked": "Defined",
+      "stubble": "Stubble",
+      "goatee": "Goatee",
+      "viking": "Viking",
+      "anchor": "Anchor"
+    },
+    "extra_items": {
+      "cejas": "Eyebrows",
+      "limpieza": "Facial Cleansing",
+      "masaje": "Scalp Massage",
+      "lavado": "Premium Wash",
+      "pigmentacion": "Pigmentation"
+    }
+  },
+  "step3": {
+    "title": "2. Reserve your slot",
+    "time_note": "Estimated session of {time} min for your services.",
+    "days_title": "Available schedule",
+    "hours_title": "Time slots for {date}",
+    "today": "Today",
+    "tomorrow": "Tomorrow"
+  },
+  "step4": {
+    "title": "3. Complete Reservation",
+    "subtitle": "Select the payment method to complete the demonstration.",
+    "payment_methods": {
+      "card": "Global Card (Visa, MC, Amex)",
+      "transfer": "Transfer / Zelle",
+      "apple": "Apple Pay / Google Pay"
+    }
+  },
+  "step5": {
+    "title": "Reservation Confirmed!",
+    "body": "The simulated payment has been processed successfully.",
+    "instruction": "We have prepared the details in your WhatsApp. Send the automatic message to secure your spot in our schedule.",
+    "restart": "New Reservation"
+  },
+  "summary": {
+    "client": "Client",
+    "barber": "Specialist",
+    "corte": "Service",
+    "barba": "Beard",
+    "cejas": "Eyebrows",
+    "limpieza": "Cleaning",
+    "masaje": "Massage",
+    "date_time": "Appointment",
+    "payment": "Payment via",
+    "total_time": "Total time",
+    "total_pay": "Total Investment",
+    "pending": "Pending",
+    "none": "Not applicable",
+    "not_selected": "Not selected"
+  },
+  "buttons": {
+    "back_barber": "Back to barber",
+    "continue_date": "Continue to Date →",
+    "back_services": "← Back to services",
+    "go_payment": "Go to Payment →",
+    "back_date": "← Modify Date",
+    "pay_confirm": "Pay and Confirm",
+    "processing": "Processing session..."
+  }
+}

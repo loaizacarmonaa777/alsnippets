@@ -1,0 +1,36 @@
+{
+  "head": "Iniciar Sesión",
+  "sub": "Ingresa a la plataforma de reservas",
+  "placeholders": {
+    "label_name": "Nombre completo",
+    "ph_name": "Pon tu nombre aquí",
+    "label_phone": "Teléfono (WhatsApp)",
+    "ph_phone": "Ej: 600 000 000",
+    "label_pass": "Contraseña",
+    "ph_pass": "escribe aquí: barbershort",
+    "hint_pass": "Escribe esta contraseña demo: barbershort"
+  },
+  "validation": {
+    "err_name": "Escribe tu nombre y apellido",
+    "err_tel_missing": "Faltan números",
+    "err_pass": "Contraseña incorrecta. Recuerda usar la contraseña demo.",
+    "err_terms": "Debes aceptar los términos.",
+    "err_fields": "Por favor, completa todos los campos correctamente.",
+    "err_conn": "Hubo un error de conexión.",
+    "err_net": "Error de red. Revisa tu conexión."
+  },
+  "legales": {
+    "terms": "Acepto los términos y condiciones para recibir la confirmación de mi cita vía WhatsApp/Email al finalizar."
+  },
+  "buttons": {
+    "enter": "INGRESAR A BARBER SHORT",
+    "eye_hide": "Ocultar contraseña",
+    "eye_show": "Mostrar contraseña",
+    "forgot": "¿Olvidaste tu contraseña?",
+    "login": "Iniciar Sesión",
+    "create": "Crear usuario"
+  },
+  "whatsapp": {
+    "help_msg": "Hola Adrián, he probado la demo y quiero Barber Short en mi barbería."
+  }
+}

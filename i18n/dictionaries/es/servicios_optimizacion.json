@@ -1,0 +1,133 @@
+{
+  "meta": {
+    "title": "Optimización y Rendimiento WordPress",
+    "description": "Servicio profesional de WPO. Optimizo la velocidad de carga, Core Web Vitals y estabilidad de tu WordPress para mejorar el SEO y la experiencia de usuario.",
+    "keywords": [
+      "optimización wordpress",
+      "wpo wordpress",
+      "acelerar web",
+      "core web vitals",
+      "velocidad de carga",
+      "consultor wpo",
+      "adrian loaiza",
+      "alsnippets",
+      "snippets"
+    ],
+    "og_title": "Optimización de Velocidad y Rendimiento | Alsnippets",
+    "og_description": "¿Tu web carga lenta? Auditoría y optimización técnica para que tu WordPress vuele. Mejora tu posicionamiento hoy mismo.",
+    "og_alt": "Optimización WPO WordPress",
+    "twitter_title": "Optimización WPO WordPress | Alsnippets",
+    "twitter_description": "Acelera tu sitio web. Servicios de optimización de rendimiento y velocidad para WordPress."
+  },
+  "page": {
+    "hero": {
+      "title": "Optimización y Rendimiento WordPress",
+      "subtitle": "Un sitio lento pierde visitas, conversiones y posicionamiento. Optimizo tu WordPress para que cargue rápido, sea estable y ofrezca una mejor experiencia al usuario."
+    },
+    "problems": {
+      "title": "Problemas de rendimiento más frecuentes",
+      "items": [
+        {
+          "title": "Carga lenta del sitio",
+          "description": "Tiempos de respuesta elevados que afectan la experiencia del usuario, aumentan la tasa de rebote y perjudican el posicionamiento en buscadores.",
+          "image": "/images/optimizacion/carga-lenta-sitio.webp"
+        },
+        {
+          "title": "Imágenes sin optimizar",
+          "description": "Archivos demasiado pesados, sin compresión o sin formatos modernos (WebP/AVIF), que ralentizan la carga en móviles y conexiones lentas.",
+          "image": "/images/optimizacion/imagenes-sin-optimizar.webp"
+        },
+        {
+          "title": "Exceso de plugins",
+          "description": "Extensiones innecesarias, duplicadas o mal desarrolladas que consumen recursos del servidor y generan conflictos internos.",
+          "image": "/images/optimizacion/exceso-plugins.webp"
+        },
+        {
+          "title": "Base de datos saturada",
+          "description": "Revisiones acumuladas, transients expirados, tablas huérfanas y registros innecesarios que incrementan las consultas y reducen la velocidad del sitio.",
+          "image": "/images/optimizacion/base-datos-saturada.webp"
+        },
+        {
+          "title": "Hosting mal configurado",
+          "description": "Servidores sin sistemas de caché activos, versiones antiguas de PHP, límites de memoria bajos o infraestructura compartida de bajo rendimiento.",
+          "image": "/images/optimizacion/hosting-mal-configurado.webp"
+        },
+        {
+          "title": "Falta de sistema de caché",
+          "description": "Ausencia de caché de página, minificación de archivos CSS/JS o carga diferida (lazy load), lo que obliga al servidor a generar cada página desde cero.",
+          "image": "/images/optimizacion/falta-sistema-cache-optimizacion.webp"
+        }
+      ]
+    },
+    "tech": {
+      "title": "Optimización técnica del sitio",
+      "description": "La optimización va mucho más allá de instalar un plugin. Analizo el sitio completo y aplico mejoras reales a nivel técnico.",
+      "items": [
+        {
+          "title": "Optimización estructural de recursos",
+          "description": "Reorganización de imágenes, scripts y estilos para mejorar los tiempos de carga.",
+          "image": "/images/optimizacion/optimizacion-estructural-recursos.webp",
+          "slug": "optimizacion-estructural-de-recursos"
+        },
+        {
+          "title": "Caché multinivel",
+          "description": "Configuración coordinada entre servidor y aplicación para reducir carga innecesaria.",
+          "image": "/images/optimizacion/implementacion-estrategica-cache-multinivel.webp",
+          "slug": "implementacion-estrategica-de-cache-multinivel"
+        },
+        {
+          "title": "Depuración de base de datos",
+          "description": "Optimización de tablas, consultas e índices para mejorar el rendimiento interno.",
+          "image": "/images/optimizacion/depuracion-avanzada-base-datos.webp",
+          "slug": "depuracion-avanzada-de-base-de-datos"
+        },
+        {
+          "title": "Auditoría de dependencias",
+          "description": "Evaluación del impacto real de plugins y recursos externos.",
+          "image": "/images/optimizacion/auditoria-tecnica-dependencias.webp",
+          "slug": "auditoria-tecnica-de-dependencias"
+        }
+      ]
+    },
+    "engineering": {
+      "title": "Ingeniería de rendimiento avanzada",
+      "items": [
+        {
+          "title": "Arquitectura de rendimiento",
+          "description": "Diseño orientado a minimizar bloqueos y priorizar recursos críticos.",
+          "image": "/images/optimizacion/arquitectura-de-rendimiento.webp",
+          "slug": "arquitectura-de-rendimiento-web"
+        },
+        {
+          "title": "Optimización del servidor",
+          "description": "Reduzco TTFB y latencia mediante configuración avanzada de servidor.",
+          "image": "/images/optimizacion/optimizacion-del-servidor.webp",
+          "slug": "optimizacion-del-servidor-y-tiempos-de-respuesta"
+        },
+        {
+          "title": "Renderizado optimizado",
+          "description": "Priorizo el contenido visible mediante la optimización del critical rendering path.",
+          "image": "/images/optimizacion/renderizado-y-carga.webp",
+          "slug": "renderizado-y-carga-critica-optimizada"
+        },
+        {
+          "title": "Estabilidad visual",
+          "description": "Elimino saltos de diseño (CLS) y retrasos en interacción (FID).",
+          "image": "/images/optimizacion/estabilidad-visual.webp",
+          "slug": "estabilidad-visual-y-experiencia-interactiva"
+        }
+      ]
+    },
+    "access": {
+      "title": "Acceso al sitio web",
+      "p1": "Para realizar una optimización real, es necesario acceder al panel de WordPress y hosting.",
+      "confidential": "Información manejada con estricta confidencialidad."
+    },
+    "cta": {
+      "title": "¿Tu web necesita volar?",
+      "description": "Solicita una auditoría técnica para identificar qué está frenando tu crecimiento y cómo solucionarlo definitivamente.",
+      "button": "Solicitar auditoría técnica",
+      "disclaimer": "Consultoría técnica disponible."
+    }
+  }
+}

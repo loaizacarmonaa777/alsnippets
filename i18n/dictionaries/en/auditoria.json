@@ -1,0 +1,75 @@
+{
+  "meta": {
+    "title": "Professional WordPress Audit & Consulting",
+    "description": "Professional WordPress audit and consulting. Working remotely for projects in Colombia, Latin America, Spain, USA, Canada, and other countries.",
+    "keywords": ["WordPress Audit", "WordPress Consulting", "WordPress Security", "WPO Optimization"],
+    "og_title": "Professional WordPress Audit & Consulting | Adrián Loaiza",
+    "og_description": "Ensure the performance, security, and scalability of your website with a deep technical audit.",
+    "og_alt": "WordPress Audit and Consulting by Adrián Loaiza",
+    "twitter_title": "WordPress Audit & Consulting | Alsnippets",
+    "twitter_description": "Deep diagnosis, security, and performance for your web. 100% remote and professional work."
+  },
+  "schema": {
+    "serviceType": "WordPress Audit and Consulting",
+    "name": "Technical WordPress Audit & Consulting",
+    "description": "Advanced diagnostic service, speed optimization (WPO), malware cleanup, and technical architecture consulting.",
+    "areaServed": [
+      { "@type": "Country", "name": "Colombia" },
+      { "@type": "Country", "name": "Spain" },
+      { "@type": "Country", "name": "United States" },
+      { "@type": "Country", "name": "Canada" },
+      { "@type": "Continent", "name": "Latin America" }
+    ],
+    "catalogName": "WordPress Services",
+    "offers": [
+      "Performance Optimization (WPO)",
+      "Security Audit & Malware Removal",
+      "Remote Technical Support & Guidance"
+    ]
+  },
+  "page": {
+    "hero": {
+      "title": "WordPress Audit",
+      "subtitle": "Identify technical problems, reduce risks, and scale your website with professional and remote guidance."
+    },
+    "intro": {
+      "title": "Prevention is better than cure",
+      "description": "Technology is not infallible. My job is to anticipate problems, reduce risks, and respond with judgment when something happens. I offer remote service for Colombia, Latin America, Spain, USA, Canada, and more."
+    },
+    "guarantee": {
+      "title": "Responsible work, no overload or abandonment",
+      "description": "I work with a limited number of projects. I prefer to properly fulfill each commitment, maintain clear communication, and accompany each project from start to finish without delegating to third parties."
+    },
+    "options": {
+      "main_title": "Which option do you need?",
+      "common": {
+        "refund_link": "See Refund Policy"
+      },
+      "audit": {
+        "title": "Technical Audit",
+        "description": "Deep review of the real state of your website to detect vulnerabilities, bottlenecks, and improvement opportunities (WPO).",
+        "items": [
+          "Core, hosting, and domain review.",
+          "Security and performance analysis.",
+          "Requires access to the technical environment."
+        ],
+        "note": "* The audit cost is discounted from the final service if you decide to perform the technical work with me."
+      },
+      "consulting": {
+        "title": "Strategic Consulting",
+        "description": "1-on-1 orientation and diagnosis session where we solve specific doubts, evaluate ideas, and define the architecture or path to follow.",
+        "items": [
+          "First session free (60 mins).",
+          "Video call (Meet / Teams / Zoom).",
+          "No access sharing required."
+        ],
+        "note": "Subsequent sessions have a cost based on time dedication and the scope of the requirement."
+      }
+    },
+    "form_section": {
+      "title_1": "Let's start",
+      "title_highlight": "today.",
+      "description": "Fill out this form with the details of what you need. I will respond as soon as possible to coordinate our first contact."
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "title": "Tus Datos",
+  "desc": "Para enviarte la cotización detallada, necesito saber con quién hablo.",
+  "name": "Nombre completo",
+  "email": "Correo electrónico",
+  "wa": "WhatsApp (Ej: +34...)",
+  "waHint": "Añade el prefijo (ej: +34, +57) que corresponda a tu país.",
+  "country": "País",
+  "next": "Siguiente"
+}

@@ -1,0 +1,16 @@
+{
+  "head": "Crear sitio web",
+  "sub": "Conozcamos los cimientos de tu nuevo proyecto.",
+  "yes": "Sí",
+  "no": "No",
+  "q1": { "t": "¿Tienes un Dominio web?", "d": "El nombre único de tu empresa (ej: tuempresa.com)." },
+  "q2": { "t": "¿Cuentas con Hosting?", "d": "El servidor donde se guardan los archivos de tu web." },
+  "q3": { "t": "¿Tienes Branding definido?", "d": "Logotipo, tipografías y paleta de colores corporativos." },
+  "q4": { "t": "¿Estructura y Textos listos?", "d": "Saber qué páginas necesitas y tener los textos redactados." },
+  "q5": { "t": "¿Vas a vender online?", "d": "Catálogo, carrito de compras y pasarelas de pago." },
+  "descT": "Descripción del proyecto (Opcional)",
+  "descP": "Cuéntame brevemente de qué trata tu negocio...",
+  "descPh": "Ej: Soy un despacho de abogados y necesito...",
+  "btn": "Generar mi Cotización",
+  "wait": "Procesando..."
+}

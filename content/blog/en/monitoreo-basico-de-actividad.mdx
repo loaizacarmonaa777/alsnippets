@@ -1,0 +1,99 @@
+---
+title: "Basic Activity Monitoring in WordPress"
+description: "How I monitor access and important changes in WordPress to detect suspicious behavior before the problem grows."
+category: "security"
+lang: "en"
+author: "Adrián Loaiza"
+date: "2026-03-02"
+image: "/images/blog/monitoreo-basico-de-actividad.webp"
+coverImage: "/images/blog/monitoreo-basico-de-actividad.webp"
+featured: false
+---
+
+## Basic Activity Monitoring.
+
+Most attacks don't happen in a split second.
+
+They leave signals.
+
+Repeated login attempts.  
+Unexpected changes.  
+New users.
+
+The problem is that almost nobody looks at them.
+
+---
+
+### Why it happens
+
+It happens because:
+
+- There is no active event log  
+- Server logs are not reviewed  
+- Failed login attempts are ignored  
+- File changes are not monitored  
+
+Google recommends monitoring suspicious activity after a cleanup.
+
+Prevention starts with observation.
+
+
+
+---
+
+### What it is
+
+Monitoring means:
+
+- Recording login attempts  
+- Detecting changes in critical files  
+- Supervising user creation  
+- Watching for unusual resource consumption  
+
+It’s not paranoid surveillance.  
+It’s basic control.
+
+---
+
+### What it affects
+
+Without monitoring:
+
+- The attacker can return without you noticing  
+- Reinfections go unnoticed  
+- Reaction time is lost  
+- Damage scales before detection  
+
+The sooner you detect something, the easier it is to fix.
+
+---
+
+### Possible solutions
+
+When I implement monitoring at Alsnippets, I do:
+
+- Activation of activity logs  
+- Configuration of relevant alerts  
+- Periodic review of access logs  
+- Supervision of critical changes  
+
+
+
+Then I organize the system so that any anomaly is visible and solve risks before they grow.
+
+It's not about living in fear.  
+It's about staying alert.
+
+You can also review my guide on [Security plugin configuration](/en/configuracion-plugins-seguridad-wordpress).
+
+---
+
+### Does your WordPress have real problems?
+[Request WordPress Audit](/en/auditoria)
+
+---
+
+### Sources and references
+
+- https://developers.google.com/search/docs/monitor-debug/security/hacked-site
+- https://wordpress.org/support/article/hardening-wordpress/

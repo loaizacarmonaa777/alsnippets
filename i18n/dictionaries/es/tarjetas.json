@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "title_prefix": "Tarjeta Digital -",
+    "description": "Contacto profesional y redes sociales de {name}. Guarda mi información directamente en tu agenda.",
+    "og_title": "Tarjeta Digital de",
+    "og_description": "Haz clic para ver mi perfil profesional y guardar mi contacto."
+  },
+  "page": {
+    "error_title": "Tarjeta no encontrada",
+    "error_desc": "El perfil digital que buscas no existe o ha sido desactivado.",
+    "cta_branding": "Crear mi Tarjeta Digital con Alsnippets",
+    "vcard_note": "Contacto profesional vía Alsnippets"
+  }
+}

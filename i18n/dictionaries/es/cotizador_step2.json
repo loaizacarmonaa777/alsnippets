@@ -1,0 +1,23 @@
+{
+  "head": "Elige el servicio que necesitas",
+  "sub": "Selecciona el área en la que te puedo ayudar hoy.",
+  "next": "Siguiente",
+  "serv": {
+    "sop": {
+      "t": "Soporte Técnico",
+      "d": "Mantenimiento, limpieza de malware, optimización o errores."
+    },
+    "seo": {
+      "t": "Posicionamiento SEO",
+      "d": "Auditoría SEO, optimización de palabras clave y visibilidad."
+    },
+    "web": {
+      "t": "Crear sitio web",
+      "d": "Diseño y desarrollo completo de páginas o tiendas online."
+    },
+    "hrs": {
+      "t": "Bolsa de Horas",
+      "d": "Desarrollo No-Code o programación a medida (Code)."
+    }
+  }
+}

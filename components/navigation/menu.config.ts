@@ -1,48 +1,107 @@
+export interface NavItem {
+  label: {
+    es: string
+    en: string
+  }
+  href?: string
+  key: string
+  children?: NavItem[]
+  isButton?: boolean
+  isPriority?: boolean
+}
+
 /* =====================================================
-   Configuración central del menú
-   - Evita duplicación
-   - Facilita i18n y animaciones
+   CONFIGURACIÓN DE NAVEGACIÓN (Bilingüe)
+   Nota: Los 'href' se definen sin el prefijo /[lang]
+   ya que los componentes Nav los inyectan dinámicamente.
    ===================================================== */
 
-export const NAV_ITEMS = [
-  { label: "Inicio", href: "/" },
-  { label: "Sobre mí", href: "/sobre-mi" },
-
+export const NAV_ITEMS: NavItem[] = [
   {
-    label: "Servicios",
-    key: "servicios",
+    label: { es: 'Sobre mí', en: 'About me' },
+    href: '/sobre-mi',
+    key: 'sobre-mi'
+  },
+  {
+    label: { es: 'Servicios', en: 'Services' },
+    key: 'servicios',
     children: [
       {
-        label: "Soporte y mantenimiento WordPress",
-        href: "/servicios/soporte-mantenimiento-wordpress",
+        label: {
+          es: 'Soporte y Mantenimiento WordPress',
+          en: 'WordPress Support & Maintenance'
+        },
+        href: '/servicios/soporte-mantenimiento-wordpress',
+        key: 'soporte'
       },
       {
-        label: "Seguridad y limpieza WordPress",
-        href: "/servicios/seguridad-limpieza",
+        label: {
+          es: 'Seguridad y Limpieza WordPress',
+          en: 'WordPress Security & Malware Removal'
+        },
+        href: '/servicios/seguridad-limpieza',
+        key: 'seguridad'
       },
       {
-        label: "Optimización y rendimiento",
-        href: "/servicios/optimizacion-rendimiento",
+        label: {
+          es: 'Optimización y Rendimiento',
+          en: 'Speed & Performance Optimization'
+        },
+        href: '/servicios/optimizacion-rendimiento',
+        key: 'optimizacion'
       },
       {
-        label: "SEO & GEO",
-        href: "/servicios/seo-geo",
-      },
-    ],
+        label: { es: 'SEO & GEO', en: 'SEO & GEO' },
+        href: '/servicios/seo-geo',
+        key: 'seo'
+      }
+    ]
   },
-
   {
-    label: "Proyectos",
-    key: "proyectos",
+    label: { es: 'Proyectos', en: 'Projects' },
+    key: 'proyectos',
     children: [
-      { label: "Suite Text", href: "/proyectos/suite-text" },
-      { label: "Barber Short", href: "/proyectos/barber-short" },
-      { label: "Casos de éxito", href: "/proyectos/casos-de-exito" },
-      { label: "Mis creaciones", href: "/proyectos/mis-creaciones" },
-    ],
+      {
+        label: { es: 'Suite Text', en: 'Suite Text' },
+        href: '/proyectos/suite-text',
+        key: 'suite'
+      },
+      {
+        label: { es: 'Barber Short', en: 'Barber Short' },
+        href: '/proyectos/barber-short',
+        key: 'barber'
+      },
+      {
+        label: { es: 'Casos de Éxito', en: 'Success Stories' },
+        href: '/proyectos/casos-de-exito',
+        key: 'casos'
+      },
+      {
+        label: { es: 'Mis Creaciones', en: 'My Creations' },
+        href: '/proyectos/mis-creaciones',
+        key: 'creaciones'
+      }
+    ]
   },
-
-  { label: "Precios", href: "/precios" },
-  { label: "Blog", href: "/blog" },
-  { label: "Contacto", href: "/contacto" },
-];
+  {
+    label: { es: 'Precios', en: 'Pricing' },
+    href: '/precios',
+    key: 'precios'
+  },
+  {
+    label: { es: 'Blog', en: 'Blog' },
+    href: '/blog',
+    key: 'blog'
+  },
+  {
+    label: { es: 'Contacto', en: 'Contact' },
+    href: '/contacto',
+    key: 'contacto'
+  },
+  {
+    label: { es: 'Auditoría', en: 'Audit' },
+    href: '/auditoria',
+    key: 'auditoria',
+    isPriority: true
+  },
+]

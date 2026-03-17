@@ -1,0 +1,61 @@
+{
+  "meta": {
+    "title": "Precios y Servicios - Alsnippets",
+    "description": "Calcula el presupuesto de tu proyecto WordPress, SEO o desarrollo a medida de forma inmediata.",
+    "keywords": "precios wordpress, cotizador web, soporte tecnico tarifas, consultoria seo precio",
+    "og_title": "Cotizador Digital Alsnippets",
+    "og_description": "Obtén una estimación precisa para tu proyecto digital en segundos.",
+    "twitter_title": "Tarifas y Servicios | Alsnippets",
+    "twitter_description": "Transparencia total en precios de desarrollo y soporte."
+  },
+  "schema": {
+    "name": "Página de Precios Alsnippets",
+    "description": "Servicios profesionales de desarrollo web y consultoría técnica."
+  },
+  "page": {
+    "hero": {
+      "title": "Inversión y Tarifas",
+      "subtitle": "Transparencia total. Calcula el valor de tu proyecto de forma inmediata y profesional."
+    },
+    "calculator": {
+      "title": "Cotizador Inteligente",
+      "description": "Selecciona tus necesidades y obtén una inversión estimada basada en perfiles técnicos reales."
+    },
+    "philosophy": {
+      "title": "Mi Filosofía de Trabajo",
+      "description": "No solo escribo código, construyo soluciones escalables que impulsan negocios.",
+      "cards": [
+        { "title": "Calidad Código", "description": "Limpio, documentado y optimizado.", "image": "/images/icons/code.svg" },
+        { "title": "Soporte Humano", "description": "Trato directo sin intermediarios.", "image": "/images/icons/human.svg" },
+        { "title": "Resultados", "description": "Foco total en la conversión y velocidad.", "image": "/images/icons/results.svg" }
+      ]
+    },
+    "transparency": {
+      "title": "Transparencia en cada proceso",
+      "p1": "Los precios mostrados son estimaciones basadas en requerimientos estándar.",
+      "p2": "Cada proyecto es único y el valor final se confirma tras una breve auditoría técnica."
+    },
+    "methods": {
+      "title": "Otras formas de trabajar",
+      "custom": {
+        "title": "Proyecto a medida",
+        "description": "Si tu proyecto no encaja en la calculadora, diseñamos una propuesta desde cero."
+      },
+      "audit": {
+        "title": "Auditoría Previa",
+        "description": "Análisis profundo de seguridad y rendimiento antes de iniciar cualquier cambio."
+      }
+    },
+    "cta": {
+      "title": "¿Necesitas algo muy específico?",
+      "description": "Si tienes un requerimiento técnico complejo, hablemos directamente.",
+      "button": "Solicitar Auditoría",
+      "disclaimer": "*Respuesta garantizada en menos de 24 horas laborables."
+    },
+    "system": {
+      "waitSecurity": "Por favor, espera a que se complete la validación de seguridad (Cloudflare).",
+      "errorGen": "Hubo un error al generar tu cotización. Intenta nuevamente.",
+      "errorNet": "Error de red. Verifica tu conexión a internet e intenta nuevamente."
+    }
+  }
+}

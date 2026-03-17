@@ -1,0 +1,10 @@
+{
+  "title": "Your Details",
+  "desc": "To send you the detailed quote, I need to know who I'm talking to.",
+  "name": "Full Name",
+  "email": "Email address",
+  "wa": "WhatsApp (Ex: +1...)",
+  "waHint": "Add the prefix (ex: +1, +44) that corresponds to your country.",
+  "country": "Country",
+  "next": "Next"
+}

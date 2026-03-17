@@ -1,0 +1,16 @@
+{
+  "footer": {
+    "connect": "CONECTA CON ALSNIPPETS",
+    "rights": "TODOS LOS DERECHOS RESERVADOS"
+  },
+  "buttons": {
+    "send": "Enviar",
+    "account": "Cuenta",
+    "home_link": "Ir al inicio"
+  },
+  "meta": {
+    "brand": "Alsnippets",
+    "title": "Alsnippets | Soporte y Mantenimiento WordPress",
+    "description": "Soporte técnico WordPress, seguridad, rendimiento y mantenimiento. Soluciones claras y auditoría profesional."
+  }
+}

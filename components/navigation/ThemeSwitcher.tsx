@@ -1,58 +1,67 @@
-"use client";
+'use client'
 
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-import { Moon, Sun } from "lucide-react";
+import { useTheme } from 'next-themes'
+import { useEffect, useState } from 'react'
+import { Moon, Sun } from 'lucide-react'
+import { motion } from 'framer-motion'
 
-/* =====================================================
-   ThemeSwitcher (Versión Simplificada y Estable)
-   - Funciona en Desktop y Mobile
-   - Sin cuadros negros ni SVGs rotos
-   ===================================================== */
+interface ThemeSwitcherProps {
+  lang?: string
+}
 
-export default function ThemeSwitcher() {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+export default function ThemeSwitcher({ lang = 'es' }: ThemeSwitcherProps) {
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
 
-  /* Evitar hydration mismatch */
+  // PROTOCOLO ALSNIPPETS: Objeto de traducción local (Lógica Sensible)
+  const t = {
+    es: { label: 'Cambiar tema' },
+    en: { label: 'Toggle theme' }
+  }[lang as 'es' | 'en'] || { label: 'Cambiar tema' };
+
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    setMounted(true)
+  }, [])
 
-  if (!mounted) return null;
+  if (!mounted) {
+    return <div className='w-[68px] h-8 rounded-full bg-[var(--bg-2)] opacity-20' />
+  }
+
+  const isDark = theme === 'dark'
 
   return (
-    <div className="flex items-center gap-3">
-      
-      {/* =========================
-          Theme: Light
-         ========================= */}
+    <div className="flex items-center">
       <button
-        onClick={() => setTheme("light")}
-        aria-label="Modo claro"
-        className={`
-          button-topbar
-          ${theme === 'light' ? 'text-[var(--brand-primary)] bg-[var(--brand-primary-hover)]' : ''}
-        `}
+        type="button"
+        onClick={() => setTheme(isDark ? 'light' : 'dark')}
+        aria-label={t.label}
+        className="relative flex h-8 w-[68px] items-center rounded-full bg-[var(--bg-3)] p-1 transition-colors duration-300 border border-[var(--border-1)] hover:border-[var(--border-brand)]"
       >
-        {/* Icono directo, sin wrapper complejo */}
-        <Sun size={20} strokeWidth={2} />
-      </button>
+        {/* Iconos de fondo (Estaticos) */}
+        <div className="flex w-full justify-around text-[var(--text-3)]">
+          <Sun size={14} strokeWidth={2.5} />
+          <Moon size={14} strokeWidth={2.5} />
+        </div>
 
-      {/* =========================
-          Theme: Dark
-         ========================= */}
-      <button
-        onClick={() => setTheme("dark")}
-        aria-label="Modo oscuro"
-        className={`
-          button-topbar
-          ${theme === 'dark' ? 'text-[var(--brand-primary)] bg-[var(--brand-primary-hover)]' : ''}
-        `}
-      >
-        <Moon size={20} strokeWidth={2} />
+        {/* Píldora deslizante (Blindaje Visual Framer Motion) */}
+        <motion.div
+          className="absolute z-10 flex h-6 w-7 items-center justify-center rounded-full bg-[var(--bg-1)] shadow-sm border border-[var(--border-1)]"
+          animate={{
+            x: isDark ? 34 : 0,
+          }}
+          transition={{
+            type: 'spring',
+            stiffness: 500,
+            damping: 30
+          }}
+        >
+          {isDark ? (
+            <Moon size={14} strokeWidth={2.5} className="text-[var(--text-brand)]" />
+          ) : (
+            <Sun size={14} strokeWidth={2.5} className="text-[var(--text-brand)]" />
+          )}
+        </motion.div>
       </button>
-
     </div>
-  );
+  )
 }

@@ -1,0 +1,37 @@
+{
+  "head": "Technical Support",
+  "sub": "Which technology is your website built with?",
+  "other": "Other",
+  "servFor": "Services for",
+  "servSub": "Select the areas where you need help (you can choose several):",
+  "otherT": "Support for Other CMS / Custom",
+  "otherD": "As a Full-Stack developer, I also work with custom-built sites (React, pure PHP, Node) or less common CMS. Please briefly describe your platform.",
+  "otherPh": "E.g.: My site is custom-made in Laravel...",
+  "btn": "Generate my Quote",
+  "wait": "Processing...",
+  "cms_services": {
+    "wordpress": [
+      { "id": "Mantenimiento y Seguridad", "title": "Maintenance & Security", "desc": "Core/PHP updates, malware removal, white screen (WSoD) and backups." },
+      { "id": "Soporte Global", "title": "Full Global Support", "desc": "I take care of everything. A complete package covering performance, design, and security." }
+    ],
+    "shopify": [
+      { "id": "Soporte Global", "title": "Full Global Support", "desc": "Complete package to shield your Shopify store." }
+    ],
+    "prestashop": [
+      { "id": "Mantenimiento y Seguridad", "title": "Maintenance & Security", "desc": "Updates, malware removal, backups, and vulnerability checks." },
+      { "id": "Soporte Global", "title": "Full Global Support", "desc": "Complete package: performance, design, and security in PrestaShop." }
+    ],
+    "wix": [
+      { "id": "Mantenimiento y Seguridad", "title": "Maintenance & Security", "desc": "Settings, access control, and content backups." },
+      { "id": "Soporte Global", "title": "Full Global Support", "desc": "Comprehensive management: design, apps, and security." }
+    ],
+    "joomla": [
+      { "id": "Mantenimiento y Seguridad", "title": "Maintenance & Security", "desc": "Core, extension, and template updates, and malware removal." },
+      { "id": "Soporte Global", "title": "Full Global Support", "desc": "Complete package: maintenance, design, and security in Joomla." }
+    ],
+    "drupal": [
+      { "id": "Mantenimiento y Seguridad", "title": "Maintenance & Security", "desc": "Core, module, and theme updates, and security patches." },
+      { "id": "Soporte Global", "title": "Full Global Support", "desc": "Advanced comprehensive technical support for Drupal sites." }
+    ]
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "title": "Contact",
+    "description": "Write to me to talk about your project, solve your doubts and take the next step with confidence. I am here to help you scale your website.",
+    "keywords": [
+      "Contact web developer",
+      "Website quote",
+      "Hire WordPress expert",
+      "SEO consulting contact",
+      "Custom web development",
+      "Adrián Loaiza contact",
+      "Alsnippets support"
+    ],
+    "og_title": "Let's talk about your project | Adrián Loaiza",
+    "og_description": "Do you have an idea in mind or do you need to audit your current website? Write to me without obligation and let's analyze how I can help you.",
+    "twitter_title": "Contact | Alsnippets",
+    "twitter_description": "Write to me to talk about your project and take the next step with confidence."
+  },
+  "schema": {
+    "name": "Contact | Alsnippets",
+    "description": "Official contact page for web development and SEO audit services with Adrián Loaiza."
+  },
+  "page": {
+    "hero": {
+      "title_line1": "Let's talk about",
+      "title_highlight": "your project.",
+      "description": "Write to me and let's have a calm conversation about your site, your current doubts, and the real next step you need to take to move forward."
+    },
+    "info": {
+      "email_label": "Email",
+      "whatsapp_label": "WhatsApp",
+      "location_label": "Location",
+      "location_value": "Santa Barbara, Antioquia – Colombia",
+      "view_location": "View location",
+      "map_button_text": "View on Google Maps"
+    },
+    "social_section": {
+      "title": "Find me also on"
+    },
+    "faq_section": {
+      "title": "Frequently Asked Questions",
+      "description": "These are some of the most common doubts before starting a job with me. The idea is for you to have clarity, confidence, and realistic expectations.",
+      "items": [
+        {
+          "q": "Do you work as a freelance or as a company?",
+          "a": "I work as a professional freelancer. This allows me to be directly involved in each project, without intermediaries or delegations. You speak directly with me throughout the process."
+        },
+        {
+          "q": "Why are your services not the cheapest?",
+          "a": "Because I don't offer generic solutions or automated work. My approach is preventive, technical, and responsible. I invest real time in analyzing, proposing, and executing correctly."
+        },
+        {
+          "q": "How do I know you won't disappear mid-project?",
+          "a": "I work with a limited number of projects at the same time and maintain clear communication from the start. I don't overcharge my schedule or delegate your project to third parties."
+        },
+        {
+          "q": "What kind of clients do you work with?",
+          "a": "I work with people and companies that value stability, security, and work well done. I do not accept projects where only 'the cheapest' is sought."
+        },
+        {
+          "q": "Do you need access to my website?",
+          "a": "For audits and technical work, yes. Access is necessary to review the actual state of the site. Everything is handled with confidentiality and best practices."
+        },
+        {
+          "q": "Do you work only with WordPress?",
+          "a": "My main specialty is WordPress, but I also work with modern technologies and custom development when the project requires it."
+        },
+        {
+          "q": "Do you offer support after the job?",
+          "a": "Yes. Depending on the service, I offer guidance, maintenance, or ongoing support. I don't deliver a project and disappear."
+        },
+        {
+          "q": "Do you work with clients outside of Colombia?",
+          "a": "Yes. I work remotely with clients in different countries. Communication is adapted to the agreed medium and time."
+        },
+        {
+          "q": "How long does an audit or intervention take?",
+          "a": "It depends on the state and size of the site. Before starting, I explain the scope, estimated times, and next steps so there are no surprises."
+        },
+        {
+          "q": "What if my problem can't be solved?",
+          "a": "I am honest from the beginning. If something is not viable or not worth doing, I say it clearly. I prefer transparency over unrealistic promises."
+        }
+      ]
+    }
+  }
+}

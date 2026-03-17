@@ -1,0 +1,31 @@
+{
+  "title": "What problem does your WordPress have now?",
+  "items": [
+    {
+      "title": "My website shows strange behavior",
+      "description": "When a website is attacked, problems are not always visible, but the risk remains active and growing.",
+      "image": "/images/home/sitio-web-hackeado-home.webp",
+      "link": "/blog/mi-web-muestra-comportamientos-extranos"
+    },
+    {
+      "title": "My website is slow and losing visitors",
+      "description": "A slow site frustrates users, reduces conversions and negatively affects Google ranking.",
+      "image": "/images/home/sitio-web-lento-home.webp",
+      "link": "/blog/mi-web-es-lenta-y-esta-perdiendo-visitas"
+    },
+    {
+      "title": "I'm afraid to update my website",
+      "description": "Updating without control may seem simple, but a bad decision can leave the site unstable.",
+      "image": "/images/home/actualizar-sitio-web-home.webp",
+      "link": "/blog/tengo-miedo-de-actualizar-mi-sitio-web"
+    },
+    {
+      "title": "I want to improve my site, but... How do I do it?",
+      "description": "Without clear guidance, it's easy to waste time, money and make wrong technical decisions.",
+      "image": "/images/home/mejorar-sitio-web-home.webp",
+      "link": "/blog/quiero-mejorar-mi-sitio-pero-como-le-hago"
+    }
+  ],
+  "read_more": "Read more",
+  "cta_button": "Request consulting"
+}

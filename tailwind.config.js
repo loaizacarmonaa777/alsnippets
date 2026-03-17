@@ -1,10 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: "class",
+  darkMode: 'class',
   content: [
-    "./app/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
-    "./content/**/*.{md,mdx}",
+    './app/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
+    './content/**/*.{md,mdx}'
   ],
   theme: {
     extend: {
@@ -13,41 +13,50 @@ module.exports = {
          ===================================================== */
       colors: {
         background: {
-          primary: "var(--bg-primary)",
-          secondary: "var(--bg-secondary)",
-          tertiary: "var(--bg-tertiary)",
+          primary: 'var(--bg-primary)',
+          secondary: 'var(--bg-secondary)',
+          tertiary: 'var(--bg-tertiary)'
         },
         text: {
-          primary: "var(--text-primary)",
-          secondary: "var(--text-secondary)",
-          muted: "var(--text-muted)",
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          muted: 'var(--text-muted)'
         },
         brand: {
-          primary: "var(--brand-primary)",
-          secondary: "var(--brand-secondary)",
+          primary: 'var(--brand-primary)',
+          secondary: 'var(--brand-secondary)'
         },
         border: {
-          subtle: "var(--border-subtle)",
-        },
+          subtle: 'var(--border-subtle)'
+        }
       },
+      plugins: [
+        function ({ addUtilities }) {
+          addUtilities({
+            '.mask-linear-fade': {
+              mask: 'linear-gradient(90deg, transparent, black 15%, black 85%, transparent)'
+            }
+          })
+        }
+      ],
 
       /* =====================================================
          TYPOGRAPHY — CONECTADA A CSS TOKENS
          ===================================================== */
       fontFamily: {
-        sans: ["var(--font-body)", "system-ui", "sans-serif"],
-        heading: ["var(--font-heading)", "serif"],
+        sans: ['var(--font-body)', 'system-ui', 'sans-serif'],
+        heading: ['var(--font-heading)', 'serif']
       },
 
       /* =====================================================
          SHADOWS — CONECTADAS A CSS TOKENS
          ===================================================== */
       boxShadow: {
-        sm: "var(--shadow-sm)",
-        md: "var(--shadow-md)",
-        lg: "var(--shadow-lg)",
-      },
-    },
+        sm: 'var(--shadow-sm)',
+        md: 'var(--shadow-md)',
+        lg: 'var(--shadow-lg)'
+      }
+    }
   },
-  plugins: [],
-};
+  plugins: []
+}

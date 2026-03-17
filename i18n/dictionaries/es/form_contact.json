@@ -1,0 +1,43 @@
+{
+  "placeholders": {
+    "name": "Nombre completo *",
+    "email": "Correo electrónico *",
+    "phone": "Número de teléfono *",
+    "message": "Cuéntame brevemente en qué puedo ayudarte *",
+    "search_country": "Buscar país o código...",
+    "country_code": "Código"
+  },
+  "validation": {
+    "name_incomplete": "Debes ingresar nombre y apellido",
+    "email_missing_at": "Falta el símbolo @",
+    "email_missing_domain": "Falta el dominio (.xxx)",
+    "email_invalid": "Correo inválido",
+    "phone_too_short": "Faltan números para este país",
+    "phone_too_long": "Hay demasiados números para este país",
+    "word": "palabra",
+    "words": "palabras",
+    "remaining": "restantes",
+    "limit_reached": "Has superado el límite de 300 palabras.",
+    "turnstile_error": "Error de verificación. Intenta de nuevo.",
+    "character": "carácter",
+    "characters": "caracteres"
+  },
+  "legales": {
+    "accept": "Acepto los",
+    "terms": "términos y condiciones",
+    "and": "y la",
+    "privacy": "política de privacidad"
+  },
+  "buttons": {
+    "send": "Enviar mensaje",
+    "sending": "Enviando...",
+    "missing_data": "Faltan datos", 
+    "error_title": "Completa el formulario correctamente"
+  },
+  "messages": {
+    "success": "¡Mensaje enviado con éxito! Te contactaré pronto.",
+    "error_submit": "Error al enviar. Intenta de nuevo.",
+    "confirm_title": "Gracias por tu mensaje.",
+    "confirm_desc": "En un plazo máximo de 24 horas recibirás una respuesta."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "title": "Refund Policy",
+    "description": "Learn about my refund conditions and the scope of the services I offer. Transparency and clarity at every step."
+  },
+  "page": {
+    "hero": {
+      "title": "Refund Policy",
+      "subtitle": "Refund conditions and scope of services offered by Alsnippets."
+    },
+    "intro": "This policy regulates the refund conditions for the services offered by Alsnippets.",
+    "sections": {
+      "audits": {
+        "title": "Audits",
+        "p1": "WordPress audits are professional diagnostic services. Once the analysis has started, no refunds are made.",
+        "p2": "If the client decides to hire subsequent work, the cost of the audit is discounted from the final service."
+      },
+      "consulting": {
+        "title": "Consulting",
+        "p1": "Free consultations do not generate any payment obligation or right to a refund."
+      },
+      "services": {
+        "title": "Contracted Services",
+        "p1": "The payment and refund conditions for personalized services will be specifically defined in each agreement."
+      }
+    }
+  }
+}

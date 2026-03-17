@@ -1,0 +1,133 @@
+{
+  "meta": {
+    "title": "WordPress Performance & Optimization",
+    "description": "Professional WPO service. I optimize load speed, Core Web Vitals, and your WordPress stability to improve SEO and user experience.",
+    "keywords": [
+      "wordpress optimization",
+      "wordpress wpo",
+      "speed up website",
+      "core web vitals",
+      "load speed",
+      "wpo consultant",
+      "adrian loaiza",
+      "alsnippets",
+      "snippets"
+    ],
+    "og_title": "Speed & Performance Optimization | Alsnippets",
+    "og_description": "Is your website loading slow? Technical audit and optimization to make your WordPress fly. Improve your rankings today.",
+    "og_alt": "WordPress WPO Optimization",
+    "twitter_title": "WordPress WPO Optimization | Alsnippets",
+    "twitter_description": "Speed up your website. Performance and speed optimization services for WordPress."
+  },
+  "page": {
+    "hero": {
+      "title": "WordPress Performance & Optimization",
+      "subtitle": "A slow site loses visits, conversions, and ranking. I optimize your WordPress for fast loading, stability, and a better user experience."
+    },
+    "problems": {
+      "title": "Most Frequent Performance Issues",
+      "items": [
+        {
+          "title": "Slow Site Loading",
+          "description": "High response times that affect user experience, increase bounce rates, and hurt search engine rankings.",
+          "image": "/images/optimizacion/carga-lenta-sitio.webp"
+        },
+        {
+          "title": "Unoptimized Images",
+          "description": "Files that are too heavy, uncompressed, or lack modern formats (WebP/AVIF), slowing down mobile and slow connection loads.",
+          "image": "/images/optimizacion/imagenes-sin-optimizar.webp"
+        },
+        {
+          "title": "Excessive Plugins",
+          "description": "Unnecessary, duplicate, or poorly developed extensions that consume server resources and generate internal conflicts.",
+          "image": "/images/optimizacion/exceso-plugins.webp"
+        },
+        {
+          "title": "Bloated Database",
+          "description": "Accumulated revisions, expired transients, orphaned tables, and unnecessary records that increase queries and reduce site speed.",
+          "image": "/images/optimizacion/base-datos-saturada.webp"
+        },
+        {
+          "title": "Poorly Configured Hosting",
+          "description": "Servers without active caching systems, old PHP versions, low memory limits, or low-performance shared infrastructure.",
+          "image": "/images/optimizacion/hosting-mal-configurado.webp"
+        },
+        {
+          "title": "Lack of Caching System",
+          "description": "Absence of page cache, CSS/JS file minification, or lazy loading, forcing the server to generate every page from scratch.",
+          "image": "/images/optimizacion/falta-sistema-cache-optimizacion.webp"
+        }
+      ]
+    },
+    "tech": {
+      "title": "Technical Site Optimization",
+      "description": "Optimization goes far beyond installing a plugin. I analyze the entire site and apply real technical improvements.",
+      "items": [
+        {
+          "title": "Structural Resource Optimization",
+          "description": "Reorganization of images, scripts, and styles to improve loading times.",
+          "image": "/images/optimizacion/optimizacion-estructural-recursos.webp",
+          "slug": "optimizacion-estructural-de-recursos"
+        },
+        {
+          "title": "Multi-level Caching",
+          "description": "Coordinated configuration between server and application to reduce unnecessary load.",
+          "image": "/images/optimizacion/implementacion-estrategica-cache-multinivel.webp",
+          "slug": "implementacion-estrategica-de-cache-multinivel"
+        },
+        {
+          "title": "Database Debugging",
+          "description": "Optimization of tables, queries, and indexes to improve internal performance.",
+          "image": "/images/optimizacion/depuracion-avanzada-base-datos.webp",
+          "slug": "depuracion-avanzada-de-base-de-datos"
+        },
+        {
+          "title": "Dependency Audit",
+          "description": "Evaluation of the real impact of plugins and external resources.",
+          "image": "/images/optimizacion/auditoria-tecnica-dependencias.webp",
+          "slug": "auditoria-tecnica-de-dependencias"
+        }
+      ]
+    },
+    "engineering": {
+      "title": "Advanced Performance Engineering",
+      "items": [
+        {
+          "title": "Performance Architecture",
+          "description": "Design oriented to minimize blocks and prioritize critical resources.",
+          "image": "/images/optimizacion/arquitectura-de-rendimiento.webp",
+          "slug": "arquitectura-de-rendimiento-web"
+        },
+        {
+          "title": "Server Optimization",
+          "description": "I reduce TTFB and latency through advanced server configuration.",
+          "image": "/images/optimizacion/optimizacion-del-servidor.webp",
+          "slug": "optimizacion-del-servidor-y-tiempos-de-respuesta"
+        },
+        {
+          "title": "Optimized Rendering",
+          "description": "I prioritize visible content by optimizing the critical rendering path.",
+          "image": "/images/optimizacion/renderizado-y-carga.webp",
+          "slug": "renderizado-y-carga-critica-optimizada"
+        },
+        {
+          "title": "Visual Stability",
+          "description": "I eliminate layout shifts (CLS) and interaction delays (FID).",
+          "image": "/images/optimizacion/estabilidad-visual.webp",
+          "slug": "estabilidad-visual-y-experiencia-interactiva"
+        }
+      ]
+    },
+    "access": {
+      "title": "Website Access",
+      "p1": "To perform a real optimization, access to the WordPress panel and hosting is required.",
+      "confidential": "Information handled with strict confidentiality."
+    },
+    "cta": {
+      "title": "Does your web need to fly?",
+      "description": "Request a technical audit to identify what is holding back your growth and how to fix it definitively.",
+      "button": "Request Technical Audit",
+      "disclaimer": "Technical consultancy available."
+    }
+  }
+}

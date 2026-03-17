@@ -1,0 +1,50 @@
+{
+  "head": "¿Qué servicio necesitas?",
+  "placeholders": {
+    "select_option": "Selecciona una opción",
+    "consultancy": "Quiero una consultoría",
+    "technical_audit": "Quiero una auditoría técnica",
+    "name": "Nombre completo",
+    "name_ph": "Ej: Adrián Loaiza Carmona",
+    "email": "Correo electrónico",
+    "email_ph": "tuemail@ejemplo.com",
+    "media": "Medio de comunicación",
+    "media_ph": "Selecciona una plataforma",
+    "phone": "Teléfono / WhatsApp",
+    "country_code": "Código",
+    "phone_ph": "Ej: 3001234567",
+    "message_label": "URL y Detalles del sitio",
+    "message_ph": "Pega aquí el enlace de tu sitio web y cuéntame brevemente qué problemas estás experimentando..."
+  },
+  "validation": {
+    "err_name": "Por favor, escribe al menos un nombre y apellido.",
+    "err_email": "Por favor, pon un correo válido con '@'.",
+    "err_media": "Por favor selecciona un medio de contacto.",
+    "err_pais": "Primero selecciona tu país.",
+    "err_tel_missing": "Faltan números",
+    "err_tel_exceed": "Excediste los números permitidos",
+    "char_remaining": "Caracteres restantes: ",
+    "turnstile_error": "Error de verificación. Intenta de nuevo."
+  },
+  "notes": {
+    "media_note": "Para Meet, Teams o Zoom recibirás un enlace por correo."
+  },
+  "legales": {
+    "accept": "He leído y acepto los ",
+    "terms": "términos y condiciones",
+    "and": " y la ",
+    "privacy": "política de privacidad",
+    "confidentiality": ". Entiendo que mis datos serán tratados con estricta confidencialidad."
+  },
+  "buttons": {
+    "submit": "Enviar Solicitud",
+    "sending": "Enviando...",
+    "missing_data": "Faltan datos",
+    "error_title": "Debes completar el formulario correctamente",
+    "back_home": "Volver al inicio"
+  },
+  "messages": {
+    "success_head": "¡Solicitud Enviada!",
+    "success_body": "He recibido tu solicitud correctamente. Estaré revisando la información y me pondré en contacto contigo en las próximas 24-48 horas hábiles a través de"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "head": "Log In",
+  "sub": "Access the booking platform",
+  "placeholders": {
+    "label_name": "Full name",
+    "ph_name": "Put your name here",
+    "label_phone": "Phone (WhatsApp)",
+    "ph_phone": "Ex: 600 000 000",
+    "label_pass": "Password",
+    "ph_pass": "type here: barbershort",
+    "hint_pass": "Type this demo password: barbershort"
+  },
+  "validation": {
+    "err_name": "Enter your first and last name",
+    "err_tel_missing": "Missing numbers",
+    "err_pass": "Incorrect password. Use the demo password.",
+    "err_terms": "You must accept the terms.",
+    "err_fields": "Please complete all fields correctly.",
+    "err_conn": "Connection error.",
+    "err_net": "Network error. Check your connection."
+  },
+  "legales": {
+    "terms": "I accept terms and conditions to receive appointment confirmation via WhatsApp/Email."
+  },
+  "buttons": {
+    "enter": "ENTER BARBER SHORT",
+    "eye_hide": "Hide password",
+    "eye_show": "Show password",
+    "forgot": "Forgot your password?",
+    "login": "Log In",
+    "create": "Create user"
+  },
+  "whatsapp": {
+    "help_msg": "Hi Adrian, I've tried the demo and I want Barber Short in my barbershop."
+  }
+}

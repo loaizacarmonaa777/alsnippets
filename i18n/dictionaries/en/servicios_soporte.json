@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "title": "Professional WordPress Support & Maintenance",
+    "description": "Preventive and corrective WordPress maintenance service. Secure updates, technical support, daily backups, and 24/7 security monitoring for your website.",
+    "keywords": [
+      "wordpress maintenance",
+      "wordpress technical support",
+      "secure plugin update",
+      "wordpress backups",
+      "database optimization",
+      "wordpress security",
+      "web technical service",
+      "adrian loaiza",
+      "alsnippets"
+    ],
+    "og_title": "WordPress Technical Support & Maintenance | Alsnippets",
+    "og_description": "Leave the technical aspects to the experts. I keep your WordPress updated, fast, and secure while you focus on your business.",
+    "og_alt": "WordPress Support and Maintenance",
+    "twitter_title": "Specialized WordPress Maintenance | Alsnippets",
+    "twitter_description": "Technical support and controlled updates for professional WordPress sites."
+  },
+  "schema": {
+    "name": "WordPress Support & Maintenance",
+    "description": "Specialized technical service in maintenance, security, and optimization of WordPress."
+  },
+  "page": {
+    "hero": {
+      "title": "WordPress Support & Maintenance",
+      "subtitle": "You don't need to learn WordPress. You need it to work. I handle security, errors, and site stability so you can focus on your business."
+    },
+    "solutions": {
+      "title": "Problems I solve in WordPress",
+      "subtitle": "Expert technical support for Wix, Shopify, and leading platforms",
+      "description": "I identify and resolve the technical obstacles that hinder your web growth.",
+      "items": [
+        {
+          "title": "Critical Errors",
+          "description": "400, 500 errors, white screens, and failures that prevent normal site operation.",
+          "image": "/images/soporte/errores-criticos.jpg",
+          "href": "/{lang}/contacto"
+        },
+        {
+          "title": "Risk-free Updates",
+          "description": "Secure update of WordPress, plugins, and themes, avoiding conflicts and data loss.",
+          "image": "/images/soporte/actualizaciones-sin-riesgo.jpg",
+          "href": "/{lang}/contacto"
+        },
+        {
+          "title": "Slowness and Performance",
+          "description": "Identification of bottlenecks affecting speed and user experience.",
+          "image": "/images/soporte/lentitud-rendimiento.jpg",
+          "href": "/{lang}/servicios/optimizacion-rendimiento"
+        },
+        {
+          "title": "Server Configuration",
+          "description": "Review of memory, execution times, SSL, cache, and key hosting settings.",
+          "image": "/images/soporte/configuracion-servidor.jpg",
+          "href": "/{lang}/contacto"
+        },
+        {
+          "title": "Real Technical Support",
+          "description": "Clear and direct response when something fails, without eternal tickets or generic answers.",
+          "image": "/images/soporte/sopoerte-tecnico-real.webp",
+          "href": "/{lang}/contacto"
+        },
+        {
+          "title": "Databases",
+          "description": "Optimization, backup, and restoration of WordPress databases to ensure data integrity.",
+          "image": "/images/soporte/bases-datos.jpg",
+          "href": "/{lang}/contacto"
+        }
+      ]
+    },
+    "responsible": {
+      "title": "Responsible Maintenance",
+      "description": "Maintenance is not just updating for the sake of updating. It's about understanding the site status, anticipating problems, and acting with technical judgment.",
+      "items": [
+        {
+          "iconKey": "backup",
+          "title": "Reliable Backups"
+        },
+        {
+          "iconKey": "compatibility",
+          "title": "Compatibility Check"
+        },
+        {
+          "iconKey": "security",
+          "title": "Basic Security Monitoring"
+        },
+        {
+          "iconKey": "support",
+          "title": "Real Technical Support"
+        }
+      ]
+    },
+    "cta": {
+      "title": "Start with a WordPress Audit",
+      "description": "Before intervening any site, I perform a technical audit to assess the real status of your WordPress or CMS and define the best path.",
+      "button": "Request Audit",
+      "disclaimer": "Technical consultancy available."
+    }
+  }
+}

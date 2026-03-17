@@ -1,0 +1,97 @@
+---
+title: "Strengthening Access and Permissions in WordPress"
+description: "How I reinforce credentials, permissions, and vulnerable access points to prevent reinfections in WordPress."
+category: "security"
+lang: "en"
+author: "Adrián Loaiza"
+date: "2026-03-02"
+image: "/images/blog/refuerzo-accesos-permisos.webp"
+coverImage: "/images/blog/refuerzo-accesos-permisos.webp"
+featured: false
+---
+
+## Strengthening Access and Permissions.
+
+Cleaning a site is not enough.
+
+If the door is left open, someone will come back in.
+
+After an infection, reinforcement is mandatory.
+
+---
+
+### Why it happens
+
+Many attacks repeat because:
+
+- Passwords are not changed  
+- FTP access remains active  
+- File permissions are insecure  
+- Unnecessary users exist  
+
+WordPress recommends hardening the configuration after an incident.
+
+Closing access points is just as important as cleaning.
+
+
+
+---
+
+### What it is
+
+Reinforcement (Hardening) means:
+
+- Changing all credentials  
+- Applying secure permissions (proper CHMOD)  
+- Limiting access to critical files  
+- Deactivating unnecessary users  
+- Protecting `wp-config.php`  
+
+It’s not paranoia.  
+It’s prevention.
+
+---
+
+### What it affects
+
+If it is not reinforced:
+
+- The attacker can return  
+- New backdoors appear  
+- The site enters a reinfection cycle  
+- The hosting provider may block the account  
+
+A cleanup without hardening is only temporary.
+
+---
+
+### Possible solutions
+
+When I handle reinforcements at Alsnippets, I do:
+
+- Total credential reset  
+- User and role review  
+- Correct permission configuration  
+- Protection of critical files  
+- Activation of basic monitoring  
+
+[Image showing a secure directory structure with restricted access to sensitive system files]
+
+Then I organize the environment so that access is controlled and I solve structural weak points.
+
+It’s not just about repairing.  
+It’s about shielding.
+
+You can also check my guide on [Malware removal and infected files](/en/eliminacion-malware-archivos-infectados).
+
+---
+
+### Does your WordPress have real problems?
+[Request WordPress Audit](/en/auditoria)
+
+---
+
+### Fuentes y referencias
+
+- https://wordpress.org/support/article/hardening-wordpress/
+- https://www.sucuri.net/guides/wordpress-security/

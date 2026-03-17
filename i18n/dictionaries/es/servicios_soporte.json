@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "title": "Soporte y Mantenimiento WordPress Profesional",
+    "description": "Servicio de mantenimiento WordPress preventivo y correctivo. Actualizaciones seguras, soporte técnico, backups diarios y monitoreo de seguridad 24/7 para tu sitio web.",
+    "keywords": [
+      "mantenimiento wordpress",
+      "soporte técnico wordpress",
+      "actualización plugins segura",
+      "backups wordpress",
+      "optimización base de datos",
+      "seguridad wordpress",
+      "servicio técnico web",
+      "adrian loaiza",
+      "alsnippets"
+    ],
+    "og_title": "Soporte y Mantenimiento Técnico WordPress | Alsnippets",
+    "og_description": "Deja el aspecto técnico en manos de expertos. Mantengo tu WordPress actualizado, rápido y seguro mientras tú te enfocas en tu negocio.",
+    "og_alt": "Soporte y Mantenimiento WordPress",
+    "twitter_title": "Mantenimiento WordPress Especializado | Alsnippets",
+    "twitter_description": "Soporte técnico y actualizaciones controladas para sitios WordPress profesionales."
+  },
+  "schema": {
+    "name": "Soporte y Mantenimiento WordPress",
+    "description": "Servicio técnico especializado en mantenimiento, seguridad y optimización de WordPress."
+  },
+  "page": {
+    "hero": {
+      "title": "Soporte y Mantenimiento WordPress",
+      "subtitle": "No necesitas aprender WordPress. Necesitas que funcione. Me encargo de la seguridad, los errores y la estabilidad de tu sitio para que puedas concentrarte en tu negocio."
+    },
+    "solutions": {
+      "title": "Problemas que soluciono en WordPress",
+      "subtitle": "Soporte técnico experto en Wix, Shopify y las plataformas líderes",
+      "description": "Identifico y resuelvo los obstáculos técnicos que frenan el crecimiento de tu web.",
+      "items": [
+        {
+          "title": "Errores críticos",
+          "description": "Errores 400, 500, pantallas blancas y fallos que impiden el funcionamiento normal del sitio.",
+          "image": "/images/soporte/errores-criticos.jpg",
+          "href": "/{lang}/contacto"
+        },
+        {
+          "title": "Actualizaciones sin riesgo",
+          "description": "Actualización segura de WordPress, plugins y themes, evitando conflictos y pérdidas de información.",
+          "image": "/images/soporte/actualizaciones-sin-riesgo.jpg",
+          "href": "/{lang}/contacto"
+        },
+        {
+          "title": "Lentitud y rendimiento",
+          "description": "Identificación de cuellos de botella que afectan la velocidad y experiencia del usuario.",
+          "image": "/images/soporte/lentitud-rendimiento.jpg",
+          "href": "/{lang}/servicios/optimizacion-rendimiento"
+        },
+        {
+          "title": "Configuración del servidor",
+          "description": "Revisión de memoria, tiempos de ejecución, SSL, caché y ajustes clave del hosting.",
+          "image": "/images/soporte/configuracion-servidor.jpg",
+          "href": "/{lang}/contacto"
+        },
+        {
+          "title": "Soporte técnico real",
+          "description": "Respuesta clara y directa cuando algo falla, sin tickets eternos ni respuestas genéricas.",
+          "image": "/images/soporte/sopoerte-tecnico-real.webp",
+          "href": "/{lang}/contacto"
+        },
+        {
+          "title": "Bases de datos",
+          "description": "Optimización, respaldo y restauración de bases de datos WordPress para garantizar la integridad de los datos.",
+          "image": "/images/soporte/bases-datos.jpg",
+          "href": "/{lang}/contacto"
+        }
+      ]
+    },
+    "responsible": {
+      "title": "Mantenimiento responsable",
+      "description": "El mantenimiento no es solo actualizar por actualizar. Es entender el estado del sitio, anticipar problemas y actuar con criterio técnico.",
+      "items": [
+        {
+          "iconKey": "backup",
+          "title": "Copias de seguridad confiables"
+        },
+        {
+          "iconKey": "compatibility",
+          "title": "Revisión de compatibilidad"
+        },
+        {
+          "iconKey": "security",
+          "title": "Monitoreo básico de seguridad"
+        },
+        {
+          "iconKey": "support",
+          "title": "Soporte técnico real"
+        }
+      ]
+    },
+    "cta": {
+      "title": "Empieza por una auditoría WordPress",
+      "description": "Antes de intervenir cualquier sitio, realizo una auditoría técnica para evaluar el estado real de tu WordPress o CMS y definir el mejor camino.",
+      "button": "Solicitar auditoría",
+      "disclaimer": "Consultoría técnica disponible."
+    }
+  }
+}

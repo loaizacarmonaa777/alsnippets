@@ -3,8 +3,7 @@
 @layer base {
   :root {
     /* =====================================================
-       DESIGN TOKENS — COLORIMETRÍA
-       Light / Dark / Custom
+       DESIGN TOKENS — MODO LUZ (LIGHT MODE)
        ===================================================== */
 
     /* ===== Backgrounds ===== */
@@ -14,14 +13,19 @@
       rgba(247, 255, 245, 1) 51%,
       rgba(255, 246, 240, 1) 100%
     );
+    --bg-1: #ffffff; /* Tarjetas y contenedores primarios */
+    --bg-2: #f7f8fa; /* Fondos secundarios o hovers */
+    --bg-3: #eef1f5; /* Fondos terciarios */
+    --bg-fullwidth: #f1f7fd;
+    --bg-brand: #c9a34e;
+    --bg-brand-hover: rgba(201, 163, 78, 0.15);
+    --bg-success: #22c55e; /* Verde específico para validaciones */
+    --bg-inverse: #0f172a; /* Fondo oscuro puro para contrastes en modo luz */
+    --bg-menu: #fffdf8; /* Fondo específico para el menú en modo luz */
+    --bg-img-pago: #ebdfc6;
 
-    --bg-primary: #ffffff;
-    --bg-secondary: #f7f8fa;
-    --bg-tertiary: #eef1f5;
-    --bg-stack: var(--bg-secondary);
-    --bg-fullwidth: #f1f7fd; /* slate-50 aprox */
-
-    --bg-footer: linear-gradient(
+    /* ===== Gradients ===== */
+    --gradient-footer: linear-gradient(
       to right bottom,
       #1c374a,
       #1d394d,
@@ -36,9 +40,7 @@
       #25343e,
       #253037
     );
-
-    /* Gradiente Pastel para secciones CTA en modo Light */
-    --bg-hero-gradient: linear-gradient(
+    --gradient-hero: linear-gradient(
       to left top,
       #f0f3ff,
       #faf2fc,
@@ -53,43 +55,55 @@
       #ebf8fe,
       #eef5ff
     );
-
-    /* =====================================================
-    Colorimetría — Textos
-===================================================== */
+    --gradient-hero-contact: linear-gradient(
+      rgba(255, 255, 255, 0.61),
+      rgba(255, 255, 255, 0.932)
+    );
+    --gradient-animated: linear-gradient(
+      -45deg,
+      #f0f3ff,
+      #f6fcf4,
+      #faf2fc,
+      #fff8f3
+    );
+    --gradient-cta: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
 
     /* ===== Text ===== */
-    --text-white1: #ffffff;
-    --text-white2: #f7f8fa;
-    --text-primary: #0f172a;
-    --text-secondary: #334155;
-    --text-white: #e4d3af;
-    --text-yellow1: #6e4f04;
-    --text-yellow2: #c9a34e;
-    --text-muted: #64748b;
+    --text-1: #0f172a; /* Títulos y texto principal */
+    --text-2: #334155; /* Párrafos y subtítulos */
+    --text-3: #64748b; /* Textos silenciados */
+    --text-brand: #c9a34e;
+    --text-inverse: #ffffff; /* Texto blanco puro sobre fondos oscuros */
+    --text-success: #15803d; /* Verde para textos de éxito */
 
-    /* ===== Brand ===== */
-    --brand-primary: #c9a34e;
-    --brand-secondary: #1c374a;
-    --brand-primary-hover: #c9a24e2c;
+    /* ===== Texto fondo oscuro ===== */
+    --text-white-1: #ffffff;
+    --text-white-2: #e5e7eb;
+    --text-white-3: #d1d5db;
+    --text-white-4: #64748b;
+    --text-white-5: #c9a34e;
+    --text-white-6: #f7edd7;
+    --text-white-7: #606163;
+    --border-white-1: #ffffff;
+    --border-white-2: #e5e7eb;
+    --border-white-3: #d1d5db;
+    --border-white-4: #64748b;
+    --border-white-5: #c9a34e;
 
-    /* =====================================================
-    Estilos de interfaz — Bordes, Sombras, Focus, Colores de Espectro (Logos)
-===================================================== */
+    /* ===== Border ===== */
+    --border-1: #e5e7eb;
+    --border-2: #d1d5db;
+    --border-brand: rgba(201, 163, 78, 0.5);
+    --border-inverse: rgba(0, 0, 0, 0.2);
 
-    /* ===== Borders & Shadows ===== */
-    --border-subtle: #e5e7eb;
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
-
-    /* ===== Focus ===== */
+    /* ===== Shadow ===== */
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.08);
+    --shadow-brand-glow: 0 0 24px rgba(201, 163, 78, 0.35);
+    --shadow-brand-glow-hover: 0 0 38px rgba(201, 163, 78, 0.55);
     --focus-ring: 0 0 0 3px rgba(201, 163, 78, 0.35);
 
-    /* =====================================================
-    Estilos colores spectrum para logos
-===================================================== */
-
-    /* ===== Spectrum Colors (Logos) ===== */
+    /* ===== Spectrum (Logos) ===== */
     --spectrum-red: #ed1c24;
     --spectrum-blue: #0000ff;
     --spectrum-magenta: #ff00ff;
@@ -103,10 +117,6 @@
       var(--spectrum-red) 100%
     );
 
-    /* =====================================================
-    Estilos Tipografia Tamaños y escalas
-===================================================== */
-
     /* ===== Typography Scale ===== */
     --text-footer1: 0.6rem;
     --text-footer2: 0.8rem;
@@ -114,7 +124,6 @@
     --text-base: 1rem;
     --leading-tight: 1.2;
     --leading-normal: 1.6;
-
     --h1: 3.125rem;
     --h2: 2.375rem;
     --h3: 1.8rem;
@@ -124,34 +133,25 @@
   }
 
   /* =====================================================
-    Modo Oscuro — Variables para Dark Mode
-===================================================== */
-
-  /* --- MODO OSCURO --- */
+     DESIGN TOKENS — MODO OSCURO (DARK MODE)
+     ===================================================== */
   .dark {
-    --bg-body: linear-gradient(
-      to left top,
-      #040f1d,
-      #0a0e1e,
-      #100c1e,
-      #150a1d,
-      #1a081b,
-      #1a091b,
-      #1b091c,
-      #1b0a1c,
-      #180e1f,
-      #141122,
-      #101423,
-      #0c1624
-    );
+    /* ===== Backgrounds ===== */
+    --bg-body: linear-gradient(to bottom right, #0b1120, #030712);
 
-    --bg-primary: #0b0f19;
-    --bg-secondary: #111827;
-    --bg-tertiary: #1f2933;
-    --bg-stack: var(--bg-tertiary);
-    --bg-fullwidth: #0f172a; /* slate-900 aprox */
+    --bg-1: #0b0f19; /* Tarjetas en modo oscuro */
+    --bg-2: #111827;
+    --bg-3: #1f2933;
+    --bg-fullwidth: #0f172a;
+    --bg-brand: #f5d27a; /* Dorado más vibrante para contraste oscuro */
+    --bg-brand-hover: rgba(245, 210, 122, 0.25);
+    --bg-success: #22c55e;
+    --bg-inverse: #ffffff; /* Fondo claro puro para contrastes en modo oscuro */
+    --bg-menu: #050d2e; /* Fondo específico para el menú en modo oscuro */
+    --bg-img-pago: #dac8a3;
 
-    --bg-footer: linear-gradient(
+    /* ===== Gradients ===== */
+    --gradient-footer: linear-gradient(
       to right bottom,
       #9d7413,
       #a37916,
@@ -166,25 +166,58 @@
       #6e4f04,
       #5c4100
     );
-
-    /* Gradiente Oscuro para secciones Hero/CTA en modo Dark */
-    --bg-hero-gradient: linear-gradient(
-      to bottom,
-      #171717,
-      /* neutral-900 */ #0a0a0a /* neutral-950 */
+    --gradient-hero: linear-gradient(to bottom, #171717, #0a0a0a);
+    --gradient-hero-contact: linear-gradient(
+      rgba(4, 15, 78, 0.61),
+      rgba(5, 5, 5, 0.712)
     );
+    --gradient-animated: linear-gradient(
+      -45deg,
+      #0b0f19,
+      #111827,
+      #0f172a,
+      #1f2933
+    );
+    --gradient-cta: linear-gradient(-45deg, #9c452b, #9e1d50, #146180, #15866a);
 
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-muted: #94a3b8;
+    /* ===== Text ===== */
+    --text-1: #f8fafc;
+    --text-2: #cbd5e1;
+    --text-3: #94a3b8;
+    --text-brand: #f5d27a;
+    --text-inverse: #000000; /* Texto oscuro puro sobre fondos claros */
+    --text-success: #4ade80;
 
-    --brand-primary: #f5d27a;
-    --brand-primary-hover: rgba(245, 210, 122, 0.45);
+      /* ===== Texto fondo oscuro ===== */
+    --text-white-1: #ffffff;
+    --text-white-2: #e5e7eb;
+    --text-white-3: #d1d5db;
+    --text-white-4: #64748b;
+    --text-white-5: #c9a34e;
+    --text-white-6: #f7edd7;
+    --text-white-7: #606163;
+    --border-white-1: #ffffff;
+    --border-white-2: #e5e7eb;
+    --border-white-3: #d1d5db;
+    --border-white-4: #64748b;
+    --border-white-5: #c9a34e;
 
-    --border-subtle: #1f2937;
+    /* ===== Border ===== */
+    --border-1: #1f2937;
+    --border-2: #374151;
+    --border-brand: rgba(245, 210, 122, 0.5);
+    --border-inverse: rgba(255, 255, 255, 0.25);
+
+    /* ===== Shadow ===== */
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --shadow-brand-glow: 0 0 24px rgba(245, 210, 122, 0.25);
+    --shadow-brand-glow-hover: 0 0 38px rgba(245, 210, 122, 0.45);
+    --focus-ring: 0 0 0 3px rgba(245, 210, 122, 0.35);
+    /* Sombra de alto impacto para efecto de iluminación neón */
+    --shadow-brand-glow-intense: 0 0 45px rgba(245, 210, 122, 0.945),
+      0 0 20px rgba(245, 210, 122, 0.932);
+
+    /* Spectrum Colors se mantienen iguales por contraste natural */
   }
 }
-
-/* =====================================================
-    Modo Personalizado — Variables para Dark Mode
-===================================================== */

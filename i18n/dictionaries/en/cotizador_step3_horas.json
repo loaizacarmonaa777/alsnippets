@@ -1,0 +1,15 @@
+{
+  "head": "Hourly Pack",
+  "sub": "Choose the technical profile you need.",
+  "noCodeT": "No-Code Development",
+  "noCodeD": "Ideal for configurations in WordPress, Shopify, visual layout, and adjustments.",
+  "codeT": "Custom Development",
+  "codeD": "Ideal for complex programming (React, JavaScript, PHP), APIs, or databases.",
+  "qHours": "How many hours do you estimate you need?",
+  "unit": "hours",
+  "hint": "If you're not sure, choose an initial 5-hour pack to get started.",
+  "taskT": "What tasks will we perform?",
+  "taskPh": "Ex: I need to connect my company's CRM...",
+  "btn": "Generate my Quote",
+  "wait": "Processing..."
+}

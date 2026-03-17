@@ -1,0 +1,35 @@
+{
+  "index": {
+    "hero": {
+      "title": "Blog",
+      "subtitle": "WordPress, SEO, seguridad, rendimiento y tecnología aplicada."
+    }
+  },
+  "meta": {
+    "title": "Blog de Desarrollo Web, SEO y WordPress",
+    "description": "Artículos avanzados sobre optimización WPO, seguridad en WordPress, SEO técnico y desarrollo moderno con React/Next.js. Escrito por Adrián Loaiza.",
+    "keywords": [
+      "Blog WordPress",
+      "Tutoriales SEO técnico",
+      "Optimización WPO",
+      "Seguridad Web",
+      "Desarrollo React y Next.js",
+      "Rendimiento web"
+    ],
+    "og_title": "Blog de Desarrollo Web, SEO y WordPress | Alsnippets",
+    "og_description": "Aprende a escalar tu web, mejorar la seguridad y dominar el SEO técnico con artículos basados en experiencia real.",
+    "og_alt": "Blog de Alsnippets - Desarrollo y SEO"
+  },
+  "schema": {
+    "name": "Blog de Alsnippets - Desarrollo Web y SEO",
+    "description": "Artículos, tutoriales y guías sobre WordPress, optimización de rendimiento (WPO), SEO técnico y seguridad web."
+  },
+  "post": {
+    "not_found_title": "Artículo no encontrado",
+    "back_to_index": "Volver al índice del blog",
+    "sidebar": {
+      "recommended_title": "Lecturas recomendadas",
+      "categories_title": "Explorar temas"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "title": "Suite Text | SEO Tool & Text Analysis",
+    "description": "A product under development focused on optimizing, analyzing, and working with texts with a technical, strategic vision oriented towards SEO results.",
+    "keywords": [
+      "Suite Text",
+      "SEO tool for texts",
+      "SEO content analysis",
+      "Article optimization",
+      "SEO software in development",
+      "Alsnippets tools",
+      "Web content audit"
+    ],
+    "og_title": "Suite Text | SEO Tool and Text Analysis",
+    "og_description": "Optimize and analyze your texts with a technical vision oriented towards SEO results. Meet the new product from Alsnippets.",
+    "og_alt": "Suite Text - SEO Tool by Alsnippets",
+    "twitter_title": "Suite Text | SEO Analysis & Optimization",
+    "twitter_description": "A product under development focused on optimizing texts with a strategic vision."
+  },
+  "schema": {
+    "description": "Web tool under development for technical optimization, analysis, and structuring of texts oriented towards SEO."
+  }
+}

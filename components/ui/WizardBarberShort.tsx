@@ -1,42 +1,17 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import Image from 'next/image'
+import { motion, AnimatePresence } from 'framer-motion'
+import { getDictionary } from '@/i18n/get-dictionary'
 
-interface WizardProps {
-  userData: { name: string; phone: string }
-}
-
-// ==========================================================
-// BASE DE DATOS SIMULADA
-// ==========================================================
-const opcionesCorte = [
-  { id: '', name: 'Selecciona un corte...', price: 0, time: 0 },
-  { id: 'c1', name: 'Corte Clásico', price: 15, time: 30 },
-  { id: 'c2', name: 'Fade / Degradado', price: 20, time: 45 },
-  { id: 'c3', name: 'Taper Fade', price: 18, time: 40 },
-  { id: 'c4', name: 'Buzz Cut (Rapado)', price: 12, time: 20 },
-]
-
-const opcionesBarba = [
-  { id: '', name: 'Selecciona opción de barba...', price: 0, time: 0 },
-  { id: 'b0', name: 'Sin barba / No aplica', price: 0, time: 0 },
-  { id: 'b1', name: 'Perfilado básico', price: 5, time: 10 },
-  { id: 'b2', name: 'Arreglo VIP (Toalla caliente)', price: 15, time: 25 },
-]
-
-const horasDisponibles = [
-  '09:00 AM', '09:45 AM', '10:30 AM', '11:15 AM', 
-  '02:00 PM', '02:45 PM', '03:30 PM', '04:15 PM', '05:00 PM'
-]
-
-export default function WizardBarberShort({ userData }: WizardProps) {
+export default function WizardBarberShort ({ userData, lang, dict }: any) {
+  const t = dict
   const [step, setStep] = useState(1)
   const [selectedBarber, setSelectedBarber] = useState<any>(null)
   const [isProcessing, setIsProcessing] = useState(false)
-  const [dynamicDays, setDynamicDays] = useState<{ id: string; label: string; date: string }[]>([])
+  const [dynamicDays, setDynamicDays] = useState<any[]>([])
 
-  // ESTADO DEL FORMULARIO
   const [formData, setFormData] = useState({
     tipoRostro: '',
     usaLentes: '',
@@ -45,449 +20,978 @@ export default function WizardBarberShort({ userData }: WizardProps) {
     cejas: false,
     limpieza: false,
     masaje: false,
+    lavado: false, // Nueva opción
+    pigmentacion: false, // Nueva opción
     fecha: '',
     hora: '',
-    metodoPago: '',
+    metodoPago: ''
   })
 
-  // ESTADO DEL RESUMEN
-  const [reservationData, setReservationData] = useState({
-    tipoRostro: 'Sin seleccionar',
-    usaLentes: 'Sin seleccionar',
-    corte: 'Sin seleccionar',
-    barba: 'Sin seleccionar',
-    cejas: 'No',
-    limpieza: 'No',
-    masaje: 'No',
-    fechaHora: 'Pendiente',
-    total: 0,
-    tiempo: 0,
-  })
-
-  // EFECTO PARA GENERAR DÍAS DINÁMICOS
-  useEffect(() => {
-    const generateDays = () => {
-      const days = [];
-      const today = new Date();
-      
-      const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-      const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-
-      for (let i = 0; i < 5; i++) {
-        const currentDate = new Date(today);
-        currentDate.setDate(today.getDate() + i);
-
-        let label = '';
-        if (i === 0) label = 'Hoy';
-        else if (i === 1) label = 'Mañana';
-        else label = dayNames[currentDate.getDay()];
-
-        const dateString = `${currentDate.getDate()} ${monthNames[currentDate.getMonth()]}`;
-
-        days.push({
-          id: `d${i + 1}`,
-          label: label,
-          date: dateString,
-        });
+  // 10 OPCIONES DE CORTE (c1 a c10)
+  const opcionesCorte = useMemo(
+    () => [
+      {
+        id: 'c1',
+        name: t?.step2?.haircut_options?.classic || 'Classic',
+        price: 15,
+        time: 30
+      },
+      {
+        id: 'c2',
+        name: t?.step2?.haircut_options?.fade || 'Fade',
+        price: 20,
+        time: 45
+      },
+      {
+        id: 'c3',
+        name: t?.step2?.haircut_options?.taper || 'Taper',
+        price: 18,
+        time: 40
+      },
+      {
+        id: 'c4',
+        name: t?.step2?.haircut_options?.buzz || 'Buzz Cut',
+        price: 12,
+        time: 20
+      },
+      {
+        id: 'c5',
+        name: t?.step2?.haircut_options?.mullet || 'Mullet',
+        price: 22,
+        time: 50
+      },
+      {
+        id: 'c6',
+        name: t?.step2?.haircut_options?.mohawk || 'Mohawk',
+        price: 25,
+        time: 55
+      },
+      {
+        id: 'c7',
+        name: t?.step2?.haircut_options?.pompadour || 'Pompadour',
+        price: 22,
+        time: 45
+      },
+      {
+        id: 'c8',
+        name: t?.step2?.haircut_options?.long || 'Long Hair Cut',
+        price: 25,
+        time: 60
+      },
+      {
+        id: 'c9',
+        name: t?.step2?.haircut_options?.topknot || 'Top Knot',
+        price: 18,
+        time: 35
+      },
+      {
+        id: 'c10',
+        name: t?.step2?.haircut_options?.undercut || 'Undercut',
+        price: 20,
+        time: 40
       }
-      return days;
-    };
+    ],
+    [t]
+  )
 
-    setDynamicDays(generateDays());
-  }, []);
-
-  // EFECTO PARA CALCULAR TOTALES Y RESUMEN
-  useEffect(() => {
-    const corteSeleccionado = opcionesCorte.find(c => c.id === formData.corteId) || opcionesCorte[0]
-    const barbaSeleccionada = opcionesBarba.find(b => b.id === formData.barbaId) || opcionesBarba[0]
-
-    let totalCalculado = corteSeleccionado.price + barbaSeleccionada.price
-    let tiempoCalculado = corteSeleccionado.time + barbaSeleccionada.time
-
-    if (formData.cejas) { totalCalculado += 5; tiempoCalculado += 10 }
-    if (formData.limpieza) { totalCalculado += 15; tiempoCalculado += 20 }
-    if (formData.masaje) { totalCalculado += 10; tiempoCalculado += 15 }
-
-    let fechaHoraTexto = 'Pendiente'
-    if (formData.fecha && formData.hora) {
-      const diaSeleccionado = dynamicDays.find(d => d.id === formData.fecha)
-      fechaHoraTexto = `${diaSeleccionado?.label} (${diaSeleccionado?.date}) a las ${formData.hora}`
-    }
-
-    setReservationData({
-      tipoRostro: formData.tipoRostro || 'Sin seleccionar',
-      usaLentes: formData.usaLentes || 'Sin seleccionar',
-      corte: corteSeleccionado.id ? corteSeleccionado.name : 'Sin seleccionar',
-      barba: barbaSeleccionada.id ? barbaSeleccionada.name : 'Sin seleccionar',
-      cejas: formData.cejas ? 'Sí' : 'No',
-      limpieza: formData.limpieza ? 'Sí' : 'No',
-      masaje: formData.masaje ? 'Sí' : 'No',
-      fechaHora: fechaHoraTexto,
-      total: totalCalculado,
-      tiempo: tiempoCalculado,
-    })
-  }, [formData, dynamicDays])
+  // 10 OPCIONES DE BARBA (b0 a b10)
+  const opcionesBarba = useMemo(
+    () => [
+      { id: 'b0', name: t?.summary?.none || 'None', price: 0, time: 0 },
+      {
+        id: 'b1',
+        name: t?.step2?.beard_options?.basic || 'Basic Trim',
+        price: 8,
+        time: 15
+      },
+      {
+        id: 'b2',
+        name: t?.step2?.beard_options?.vip || 'VIP Arrangement',
+        price: 18,
+        time: 30
+      },
+      {
+        id: 'b3',
+        name: t?.step2?.beard_options?.pointed || 'Pointed',
+        price: 12,
+        time: 20
+      },
+      {
+        id: 'b4',
+        name: t?.step2?.beard_options?.square || 'Square Point',
+        price: 12,
+        time: 20
+      },
+      {
+        id: 'b5',
+        name: t?.step2?.beard_options?.marked || 'Marked',
+        price: 10,
+        time: 15
+      },
+      {
+        id: 'b6',
+        name: t?.step2?.beard_options?.stubble || 'Stubble',
+        price: 7,
+        time: 10
+      },
+      {
+        id: 'b7',
+        name: t?.step2?.beard_options?.goatee || 'Goatee',
+        price: 10,
+        time: 20
+      },
+      {
+        id: 'b8',
+        name: t?.step2?.beard_options?.viking || 'Viking Beard',
+        price: 20,
+        time: 40
+      },
+      {
+        id: 'b9',
+        name: t?.step2?.beard_options?.anchor || 'Anchor Shape',
+        price: 15,
+        time: 25
+      }
+    ],
+    [t]
+  )
 
   const barbers = [
     { id: 1, name: 'José Manuel', image: '/images/barber/barber-1.webp' },
     { id: 2, name: 'Enrique Zapata', image: '/images/barber/barber-2.webp' },
     { id: 3, name: 'Felix Rossi', image: '/images/barber/barber-3.webp' },
     { id: 4, name: 'Sofia Marino', image: '/images/barber/barber-4.webp' },
-    { id: 5, name: 'Alessandro Bianchi', image: '/images/barber/barber-5.webp' },
-    { id: 6, name: 'Chiara Gallo', image: '/images/barber/barber-6.webp' },
+    {
+      id: 5,
+      name: 'Alessandro Bianchi',
+      image: '/images/barber/barber-5.webp'
+    },
+    { id: 6, name: 'Chiara Gallo', image: '/images/barber/barber-6.webp' }
   ]
 
-  const progressSteps = ['Barbero', 'Servicios', 'Fecha y Hora', 'Confirmación']
+  const horasDisponibles = [
+    '09:00 AM',
+    '10:00 AM',
+    '11:00 AM',
+    '02:00 PM',
+    '03:00 PM',
+    '04:00 PM',
+    '05:00 PM'
+  ]
 
-  const handleSelectBarber = (barber: any) => {
-    setSelectedBarber(barber)
-    setStep(2)
-  }
+  // GENERADOR DE DÍAS REALES (Hoy + 5 días)
+  useEffect(() => {
+    const days = []
+    const today = new Date()
+    const locale = lang === 'es' ? 'es-ES' : 'en-US'
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
+    for (let i = 0; i < 6; i++) {
+      const d = new Date(today)
+      d.setDate(today.getDate() + i)
 
-  const toggleExtra = (extraName: 'cejas' | 'limpieza' | 'masaje') => {
-    setFormData(prev => ({ ...prev, [extraName]: !prev[extraName] }))
-  }
+      let label = ''
+      if (i === 0) label = t.step3.today
+      else if (i === 1) label = t.step3.tomorrow
+      else label = d.toLocaleDateString(locale, { weekday: 'short' })
 
-  const selectDate = (id: string) => setFormData(prev => ({ ...prev, fecha: id, hora: '' }))
-  const selectTime = (time: string) => setFormData(prev => ({ ...prev, hora: time }))
-  const selectPaymentMethod = (method: string) => setFormData(prev => ({ ...prev, metodoPago: method }))
+      days.push({
+        id: `d${i + 1}`,
+        label: label,
+        date: `${d.getDate()} ${d.toLocaleDateString(locale, {
+          month: 'short'
+        })}`,
+        fullDate: d.toLocaleDateString(locale, {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        })
+      })
+    }
+    setDynamicDays(days)
+  }, [lang, t])
 
-  // ==========================================================
-  // FUNCIÓN ESTRELLA: ENVIAR A WHATSAPP
-  // ==========================================================
-  const handlePaymentAndWhatsApp = () => {
+  // CÁLCULO DE RESUMEN
+  const reservationData = useMemo(() => {
+    const corte = opcionesCorte.find(c => c.id === formData.corteId) || {
+      price: 0,
+      time: 0,
+      name: t?.summary?.not_selected
+    }
+    const barba = opcionesBarba.find(b => b.id === formData.barbaId) || {
+      price: 0,
+      time: 0,
+      name: t?.summary?.not_selected
+    }
+
+    let total = corte.price + barba.price
+    let time = corte.time + barba.time
+
+    if (formData.cejas) {
+      total += 5
+      time += 10
+    }
+    if (formData.limpieza) {
+      total += 15
+      time += 20
+    }
+    if (formData.masaje) {
+      total += 10
+      time += 15
+    }
+    if (formData.lavado) {
+      total += 5
+      time += 5
+    }
+    if (formData.pigmentacion) {
+      total += 12
+      time += 25
+    }
+
+    const diaObj = dynamicDays.find(d => d.id === formData.fecha)
+    const fechaTexto = diaObj
+      ? `${diaObj.label} (${diaObj.date}) ${formData.hora}`
+      : t?.summary?.pending
+
+    return {
+      total,
+      time,
+      corte: corte.name,
+      barba: barba.name,
+      fechaHora: fechaTexto
+    }
+  }, [formData, opcionesCorte, opcionesBarba, dynamicDays, t])
+
+  const handleWhatsApp = () => {
     setIsProcessing(true)
-    
     setTimeout(() => {
-      const mensaje = `¡Hola Adrián! Acabo de probar la demo de *Barber Short*. 💈✂️\n\nAquí están los detalles de la reserva simulada que acabo de pagar:\n👤 *Cliente:* ${userData.name}\n📱 *Teléfono:* ${userData.phone}\n👨‍🎨 *Barbero elegido:* ${selectedBarber.name}\n📅 *Fecha y Hora:* ${reservationData.fechaHora}\n\n*Servicios Seleccionados:*\n- Corte: ${reservationData.corte}\n- Barba: ${reservationData.barba}\n- Extras: Cejas (${reservationData.cejas}), Limpieza Facial (${reservationData.limpieza}), Masaje Capilar (${reservationData.masaje})\n\n💰 *Total Pagado:* $${reservationData.total.toFixed(2)}\n💳 *Método de pago:* ${formData.metodoPago}\n\nYa tienes mi contacto. ¿Empezamos a crear tu barbería online personalizada basada en Barber Short?🚀`;
-
-      const whatsappUrl = `https://wa.me/573246454061?text=${encodeURIComponent(mensaje)}`;
-      
-      window.open(whatsappUrl, '_blank');
-      
+      const msg = `¡Hola Adrián! Nueva Reserva Demo:\n👤 Cliente: ${
+        userData.name
+      }\n📱 Tel: ${userData.phone}\n👨‍🎨 Barbero: ${
+        selectedBarber.name
+      }\n✂️ Corte: ${reservationData.corte}\n🧔 Barba: ${
+        reservationData.barba
+      }\n📅 Cita: ${
+        reservationData.fechaHora
+      }\n💰 Total: $${reservationData.total.toFixed(2)}`
+      window.open(
+        `https://wa.me/573246454061?text=${encodeURIComponent(msg)}`,
+        '_blank'
+      )
       setIsProcessing(false)
       setStep(5)
     }, 1500)
   }
 
-  const SummaryRow = ({ label, value, highlight = false }: { label: string, value: string | number, highlight?: boolean }) => (
-    <div className="flex justify-between items-start gap-4 text-sm py-1 border-b border-white/5 last:border-0">
-      <span className="text-white/60">{label}:</span>
-      <span className={`text-right font-medium ${value === 'Sin seleccionar' || value === 'No' || value === 'Pendiente' ? 'text-white/30 italic' : highlight ? 'text-[var(--brand-primary)]' : 'text-white'}`}>
+  const SummaryRow = ({ label, value, bold = false }: any) => (
+    <div className='flex justify-between py-2 border-b border-white/5 text-sm'>
+      <span className='text-white/50'>{label}</span>
+      <span
+        className={bold ? 'text-[var(--bg-brand)] font-bold' : 'text-white'}
+      >
         {value}
       </span>
     </div>
   )
 
   return (
-    <div 
-      className={`
-        mx-auto bg-white/10 dark:bg-black/20 backdrop-blur-xl 
-        border border-white/20 shadow-2xl rounded-3xl p-6 md:p-8 
-        transition-all duration-700 ease-in-out w-full
-        ${step === 1 ? 'max-w-4xl' : 'max-w-6xl'}
-      `}
+    <div
+      className={`mx-auto bg-black/60 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-3xl p-6 md:p-8 transition-all duration-500 w-full ${
+        step === 1 ? 'max-w-4xl' : 'max-w-6xl'
+      }`}
     >
       {/* BARRA DE PROGRESO */}
       {step < 5 && (
-        <div className="mb-10 w-full max-w-2xl mx-auto">
-          <div className="flex justify-between relative">
-            <div className="absolute top-1/2 left-0 w-full h-1 bg-white/20 -z-10 -translate-y-1/2 rounded-full"></div>
-            <div 
-              className="absolute top-1/2 left-0 h-1 bg-[var(--brand-primary)] -z-10 -translate-y-1/2 rounded-full transition-all duration-500"
-              style={{ width: `${((step - 1) / (progressSteps.length - 1)) * 100}%` }}
-            ></div>
-            {progressSteps.map((label, index) => {
-              const stepNumber = index + 1;
-              const isActive = step >= stepNumber;
-              return (
-                <div key={label} className="flex flex-col items-center gap-2">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-lg transition-colors ${isActive ? 'bg-[var(--brand-primary)] text-white' : 'bg-white/30 text-white/50 border border-white/20'}`}>
-                    {stepNumber}
-                  </div>
-                  <span className={`hidden md:block text-xs md:text-sm font-medium transition-colors ${isActive ? 'text-white' : 'text-white/50'}`}>
-                    {label}
-                  </span>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* ==================== PASO 1 ==================== */}
-      {step === 1 && (
-        <div className="animate-fade-in text-center space-y-8">
-          <div className="space-y-2 mb-10">
-            <h3 className="text-3xl md:text-4xl font-bold text-white drop-shadow-md">
-              ¡Hola, {userData.name}!
-            </h3>
-            <p className="text-lg md:text-xl text-white/90">Elige quién te hará el corte hoy:</p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
-            {barbers.map((barber) => (
-              <div 
-                key={barber.id}
-                onClick={() => handleSelectBarber(barber)}
-                className="group relative overflow-hidden rounded-2xl cursor-pointer shadow-lg transition-all duration-300 aspect-[2/3] border-2 border-white/10 hover:border-[var(--brand-primary)] hover:-translate-y-2"
+        <div className='flex justify-between mb-10 max-w-2xl mx-auto'>
+          {/* Añadimos ?. y || [] para que si el dict no llega, no se rompa la app 👇 */}
+          {(t?.steps || []).map((s: string, i: number) => (
+            <div key={i} className='flex flex-col items-center gap-2'>
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border ${
+                  step >= i + 1
+                    ? 'bg-[var(--bg-brand)] text-black border-[var(--bg-brand)]'
+                    : 'border-white/20 text-white/30'
+                }`}
               >
-                <Image src={barber.image} alt={barber.name} fill className="object-cover" sizes="(max-width: 768px) 50vw, 33vw"/>
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-colors duration-300"></div>
-                <div className="absolute inset-x-0 bottom-0 p-4 flex items-end justify-center h-full translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                  <span className="text-white font-bold text-lg text-center drop-shadow-lg">{barber.name}</span>
-                </div>
+                {i + 1}
               </div>
-            ))}
-          </div>
+              <span
+                className={`text-[10px] uppercase font-bold tracking-tighter ${
+                  step >= i + 1 ? 'text-[var(--bg-brand)]' : 'text-white/20'
+                }`}
+              >
+                {s}
+              </span>
+            </div>
+          ))}
         </div>
       )}
 
-      {/* ==================== PASO 2, 3, 4 y 5 ==================== */}
-      {step >= 2 && selectedBarber && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-fade-in">
-          
-          {/* --- COLUMNA IZQUIERDA: RESUMEN FIJO --- */}
-          <div className="lg:col-span-4 bg-black/40 rounded-3xl p-6 border border-white/10 flex flex-col items-center relative shadow-inner h-fit sticky top-24">
-            <div className="w-full text-left mb-6">
-              <span className="text-[var(--brand-primary)] text-xs font-bold uppercase tracking-wider">Cliente</span>
-              <p className="text-white font-bold text-xl drop-shadow-sm">{userData.name}</p>
-            </div>
-            <div className="flex flex-col items-center mb-6">
-              <h3 className="text-lg font-bold text-white mb-3 text-center">
-                Barbero: <span className="text-[var(--brand-primary)]">{selectedBarber.name}</span>
-              </h3>
-              <div className="relative w-28 h-28 rounded-full overflow-hidden border-4 border-[var(--brand-primary)] shadow-lg">
-                <Image src={selectedBarber.image} alt={selectedBarber.name} fill className="object-cover"/>
+      <div className='grid grid-cols-1 lg:grid-cols-12 gap-8'>
+        {/* COLUMNA DINÁMICA (DERECHA EN DESKTOP) */}
+        <div
+          className={
+            step === 1 ? 'lg:col-span-12' : 'lg:col-span-8 order-2 lg:order-1'
+          }
+        >
+          {/* ==== STEP 1 === */}
+          {step === 1 && (
+            <div className='text-center space-y-8 animate-fade-in relative px-4 md:px-12'>
+              {/* CABECERA */}
+              <div className='space-y-2'>
+                <h3 className='text-2xl md:text-3xl font-light text-[var(--text-white-6)] uppercase tracking-[0.2em]'>
+                  {t.step1.greeting.replace('{name}', userData.name)}
+                </h3>
+                <p className='text-[var(--text-white-5)] text-[10px] uppercase tracking-widest font-bold'>
+                  {t.step1.instruction}
+                </p>
               </div>
-            </div>
 
-            <div className="w-full bg-white/5 rounded-2xl p-4 space-y-2 border border-white/10 mb-6 flex-grow">
-              <SummaryRow label="Corte" value={reservationData.corte} />
-              <SummaryRow label="Barba" value={reservationData.barba} />
-              <SummaryRow label="Cejas" value={reservationData.cejas} />
-              <SummaryRow label="Limpieza" value={reservationData.limpieza} />
-              <SummaryRow label="Masaje" value={reservationData.masaje} />
-              <div className="pt-2 mt-2 border-t border-white/20">
-                <SummaryRow label="Fecha/Hora" value={reservationData.fechaHora} highlight={true} />
-              </div>
-              {formData.metodoPago && (
-                <div className="pt-2 mt-2 border-t border-white/20">
-                  <SummaryRow label="Pago via" value={formData.metodoPago} />
-                </div>
-              )}
-            </div>
-
-            <div className="w-full bg-[var(--brand-primary)]/10 border border-[var(--brand-primary)]/30 rounded-2xl p-5 space-y-3">
-              <div className="flex justify-between items-center text-white/90">
-                <span className="font-medium">Tiempo total:</span>
-                <span className="font-bold text-white">{reservationData.tiempo} min</span>
-              </div>
-              <div className="flex justify-between items-center text-xl">
-                <span className="font-bold text-white">Total a pagar:</span>
-                <span className="font-bold text-[var(--brand-primary)]">${reservationData.total.toFixed(2)}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* --- COLUMNA DERECHA: DINÁMICA --- */}
-          <div className="lg:col-span-8 bg-black/20 rounded-3xl p-6 md:p-8 border border-white/10 flex flex-col text-white min-h-[500px]">
-            
-            {/* PASO 2: SERVICIOS */}
-            {step === 2 && (
-              <div className="animate-fade-in flex flex-col h-full">
-                <h3 className="text-2xl font-bold mb-6 text-[var(--brand-primary)]">1. Configura tu estilo</h3>
-                <div className="space-y-6 flex-grow">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <label className="text-sm text-white/80 ml-1">Tipo de Rostro</label>
-                      <select name="tipoRostro" value={formData.tipoRostro} onChange={handleChange} className="w-full bg-black/50 border border-white/20 text-white rounded-xl px-4 py-3 outline-none focus:border-[var(--brand-primary)]">
-                        <option value="" className="text-black">Seleccionar...</option>
-                        <option value="Ovalado" className="text-black">Ovalado</option>
-                        <option value="Cuadrado" className="text-black">Cuadrado</option>
-                        <option value="Redondo" className="text-black">Redondo</option>
-                      </select>
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-sm text-white/80 ml-1">¿Utilizas lentes?</label>
-                      <select name="usaLentes" value={formData.usaLentes} onChange={handleChange} className="w-full bg-black/50 border border-white/20 text-white rounded-xl px-4 py-3 outline-none focus:border-[var(--brand-primary)]">
-                        <option value="" className="text-black">Seleccionar...</option>
-                        <option value="Sí" className="text-black">Sí</option>
-                        <option value="No" className="text-black">No</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-sm text-white/80 ml-1">Corte de Cabello</label>
-                    <select name="corteId" value={formData.corteId} onChange={handleChange} className="w-full bg-black/50 border border-white/20 text-white rounded-xl px-4 py-3 outline-none focus:border-[var(--brand-primary)]">
-                      {opcionesCorte.map(c => <option key={c.id} value={c.id} className="text-black">{c.name} {c.price > 0 ? `(+$${c.price})` : ''}</option>)}
-                    </select>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-sm text-white/80 ml-1">Estilo de Barba</label>
-                    <select name="barbaId" value={formData.barbaId} onChange={handleChange} className="w-full bg-black/50 border border-white/20 text-white rounded-xl px-4 py-3 outline-none focus:border-[var(--brand-primary)]">
-                      {opcionesBarba.map(b => <option key={b.id} value={b.id} className="text-black">{b.name} {b.price > 0 ? `(+$${b.price})` : ''}</option>)}
-                    </select>
-                  </div>
-
-                  <div className="pt-4 border-t border-white/10">
-                    <label className="text-sm text-white/80 ml-1 block mb-3">Servicios Extra</label>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                      <div onClick={() => toggleExtra('cejas')} className={`cursor-pointer border rounded-xl p-4 flex flex-col items-center justify-center text-center transition-all ${formData.cejas ? 'bg-[var(--brand-primary)]/20 border-[var(--brand-primary)]' : 'bg-black/30 border-white/10 hover:border-white/30'}`}>
-                        <span className="font-semibold text-sm">Cejas</span><span className="text-xs opacity-70">+$5</span>
-                      </div>
-                      <div onClick={() => toggleExtra('limpieza')} className={`cursor-pointer border rounded-xl p-4 flex flex-col items-center justify-center text-center transition-all ${formData.limpieza ? 'bg-[var(--brand-primary)]/20 border-[var(--brand-primary)]' : 'bg-black/30 border-white/10 hover:border-white/30'}`}>
-                        <span className="font-semibold text-sm">Limpieza Facial</span><span className="text-xs opacity-70">+$15</span>
-                      </div>
-                      <div onClick={() => toggleExtra('masaje')} className={`cursor-pointer border rounded-xl p-4 flex flex-col items-center justify-center text-center transition-all ${formData.masaje ? 'bg-[var(--brand-primary)]/20 border-[var(--brand-primary)]' : 'bg-black/30 border-white/10 hover:border-white/30'}`}>
-                        <span className="font-semibold text-sm">Masaje Capilar</span><span className="text-xs opacity-70">+$10</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="mt-10 flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-white/10">
-                  <button onClick={() => setStep(1)} className="text-white/60 hover:text-white transition-colors text-sm underline">Volver a barbero</button>
-                  <button onClick={() => setStep(3)} disabled={!formData.corteId} className={`px-8 py-3 w-full sm:w-auto rounded-xl font-bold transition-all ${formData.corteId ? 'bg-[var(--brand-primary)] text-white hover:-translate-y-1 shadow-lg' : 'bg-white/10 text-white/30 cursor-not-allowed'}`}>Continuar a Fecha →</button>
-                </div>
-              </div>
-            )}
-
-            {/* PASO 3: FECHA Y HORA */}
-            {step === 3 && (
-              <div className="animate-fade-in flex flex-col h-full">
-                <h3 className="text-2xl font-bold mb-2 text-[var(--brand-primary)]">2. Elige Fecha y Hora</h3>
-                <p className="text-sm text-white/70 mb-8">Basado en el tiempo de {reservationData.tiempo} min requeridos para tus servicios.</p>
-                
-                <div className="space-y-8 flex-grow">
-                  <div>
-                    <h4 className="font-semibold mb-3 text-white">Días disponibles</h4>
-                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-                      {dynamicDays.map(dia => (
-                        <div 
-                          key={dia.id}
-                          onClick={() => selectDate(dia.id)}
-                          className={`min-w-[80px] cursor-pointer border rounded-xl p-3 flex flex-col items-center text-center transition-all flex-shrink-0 ${formData.fecha === dia.id ? 'bg-[var(--brand-primary)] border-[var(--brand-primary)] text-white shadow-lg' : 'bg-black/30 border-white/10 hover:border-white/30'}`}
-                        >
-                          <span className="text-xs uppercase opacity-80">{dia.label}</span>
-                          <span className="font-bold text-sm mt-1">{dia.date}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className={`transition-all duration-500 ${formData.fecha ? 'opacity-100' : 'opacity-30 pointer-events-none'}`}>
-                    <h4 className="font-semibold mb-3 text-white">Horas disponibles {formData.fecha && `para el ${dynamicDays.find(d => d.id === formData.fecha)?.date}`}</h4>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {horasDisponibles.map(hora => (
-                        <button
-                          key={hora}
-                          onClick={() => selectTime(hora)}
-                          className={`py-3 rounded-xl border text-sm font-medium transition-all ${formData.hora === hora ? 'bg-[var(--brand-primary)]/20 border-[var(--brand-primary)] text-[var(--brand-primary)] shadow-[0_0_10px_rgba(255,215,0,0.2)]' : 'bg-black/30 border-white/10 hover:border-white/30'}`}
-                        >
-                          {hora}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-10 flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-white/10">
-                  <button onClick={() => setStep(2)} className="text-white/60 hover:text-white transition-colors text-sm underline">← Volver a servicios</button>
-                  <button onClick={() => setStep(4)} disabled={!formData.fecha || !formData.hora} className={`px-8 py-3 w-full sm:w-auto rounded-xl font-bold transition-all ${formData.fecha && formData.hora ? 'bg-[var(--brand-primary)] text-white hover:-translate-y-1 shadow-lg' : 'bg-white/10 text-white/30 cursor-not-allowed'}`}>Ir a Pago →</button>
-                </div>
-              </div>
-            )}
-
-            {/* PASO 4: CONFIRMACIÓN Y CHECKOUT SIMULADO */}
-            {step === 4 && (
-              <div className="animate-fade-in flex flex-col h-full">
-                <h3 className="text-2xl font-bold mb-2 text-[var(--brand-primary)]">3. Método de Pago</h3>
-                <p className="text-white/70 mb-8">Selecciona cómo deseas simular tu pago para completar la demostración.</p>
-                
-                <div className="space-y-4 flex-grow">
-                  {/* Opción Tarjeta */}
-                  <div 
-                    onClick={() => selectPaymentMethod('Tarjeta de Crédito / Débito')}
-                    className={`p-5 rounded-2xl border cursor-pointer flex items-center gap-4 transition-all ${formData.metodoPago === 'Tarjeta de Crédito / Débito' ? 'bg-[var(--brand-primary)]/10 border-[var(--brand-primary)]' : 'bg-black/30 border-white/10 hover:border-white/30'}`}
+              {/* CONTENEDOR DEL SLIDER */}
+              <div className='relative group'>
+                {/* BOTONES DE NAVEGACIÓN (Extremidades) */}
+                <div className='absolute top-1/2 -translate-y-1/2 -left-4 md:-left-10 z-20'>
+                  <button
+                    onClick={() =>
+                      document
+                        .getElementById('barber-slider')
+                        ?.scrollBy({ left: -300, behavior: 'smooth' })
+                    }
+                    className='w-10 h-10 rounded-full border border-white/10 bg-black/40 backdrop-blur-md flex items-center justify-center text-[var(--text-white-5)] hover:bg-[var(--text-white-5)] hover:text-black transition-all duration-300'
                   >
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.metodoPago === 'Tarjeta de Crédito / Débito' ? 'border-[var(--brand-primary)]' : 'border-white/30'}`}>
-                      {formData.metodoPago === 'Tarjeta de Crédito / Débito' && <div className="w-3 h-3 bg-[var(--brand-primary)] rounded-full"></div>}
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-lg text-white">Tarjeta de Crédito o Débito</h4>
-                      <p className="text-sm text-white/50">Visa, Mastercard, Amex</p>
-                    </div>
-                  </div>
-
-                  {/* Opción Transferencia */}
-                  <div 
-                    onClick={() => selectPaymentMethod('Transferencia / Zelle')}
-                    className={`p-5 rounded-2xl border cursor-pointer flex items-center gap-4 transition-all ${formData.metodoPago === 'Transferencia / Zelle' ? 'bg-[var(--brand-primary)]/10 border-[var(--brand-primary)]' : 'bg-black/30 border-white/10 hover:border-white/30'}`}
-                  >
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.metodoPago === 'Transferencia / Zelle' ? 'border-[var(--brand-primary)]' : 'border-white/30'}`}>
-                      {formData.metodoPago === 'Transferencia / Zelle' && <div className="w-3 h-3 bg-[var(--brand-primary)] rounded-full"></div>}
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-lg text-white">Transferencia Bancaria o Zelle</h4>
-                      <p className="text-sm text-white/50">Pago manual directo</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-10 flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-white/10">
-                  <button onClick={() => setStep(3)} className="text-white/60 hover:text-white transition-colors text-sm underline">← Modificar Fecha</button>
-                  <button 
-                    onClick={handlePaymentAndWhatsApp} 
-                    disabled={!formData.metodoPago || isProcessing}
-                    className={`px-8 py-3 w-full sm:w-auto rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${!formData.metodoPago ? 'bg-white/10 text-white/30 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600 text-white hover:-translate-y-1 shadow-[0_0_15px_rgba(34,197,94,0.4)]'}`}
-                  >
-                    {isProcessing ? (
-                      <span className="animate-pulse">Procesando...</span>
-                    ) : (
-                      <>
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                        Pagar y Confirmar ${reservationData.total.toFixed(2)}
-                      </>
-                    )}
+                    <span className='text-xl'>‹</span>
                   </button>
                 </div>
-              </div>
-            )}
 
-            {/* PASO 5: ÉXITO (Muestra después de redirigir a WA) */}
-            {step === 5 && (
-              <div className="animate-fade-in flex flex-col items-center justify-center h-full text-center space-y-6">
-                <div className="w-20 h-20 bg-green-500/20 border border-green-500 rounded-full flex items-center justify-center mb-2 shadow-[0_0_30px_rgba(34,197,94,0.3)]">
-                  <svg className="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
+                <div className='absolute top-1/2 -translate-y-1/2 -right-4 md:-right-10 z-20'>
+                  <button
+                    onClick={() =>
+                      document
+                        .getElementById('barber-slider')
+                        ?.scrollBy({ left: 300, behavior: 'smooth' })
+                    }
+                    className='w-10 h-10 rounded-full border border-white/10 bg-black/40 backdrop-blur-md flex items-center justify-center text-[var(--text-white-5)] hover:bg-[var(--text-white-5)] hover:text-black transition-all duration-300'
+                  >
+                    <span className='text-xl'>›</span>
+                  </button>
                 </div>
-                <h3 className="text-3xl font-bold text-white">¡Demo Completada!</h3>
-                <p className="text-white/80 max-w-sm mx-auto text-lg leading-relaxed">
-                  El pago simulado se ha procesado con éxito. Se ha abierto una pestaña en WhatsApp para enviar los detalles de esta reserva.
+
+                {/* LISTA DE BARBEROS */}
+                <div
+                  id='barber-slider'
+                  className='flex gap-4 overflow-hidden scroll-smooth snap-x snap-mandatory pb-4'
+                >
+                  {barbers.map(b => (
+                    <motion.div
+                      key={b.id}
+                      onClick={() => {
+                        setSelectedBarber(b)
+                        setStep(2)
+                      }}
+                      className='min-w-[200px] md:min-w-[240px] snap-center relative aspect-[3/4] rounded-xl overflow-hidden border border-[var(--border-white-4)] hover:border-[var(--border-white-5)] transition-all duration-500 group/card cursor-pointer'
+                    >
+                      {/* Imagen (Sin escalado, solo cambio de color) */}
+                      <Image
+                        src={b.image}
+                        alt={b.name}
+                        fill
+                        className='object-cover grayscale group-hover/card:grayscale-0 transition-all duration-700'
+                      />
+
+                      {/* Info del Barbero: Nombre más visible */}
+                      <div className='absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black via-black to-transparent'>
+                        <div className='space-y-0.5'>
+                          <p className='text-[var(--text-white-5)] text-[9px] font-bold uppercase tracking-[0.1em]'>
+                            {t.step1.specialist}
+                          </p>
+                          <h4 className='text-[var(--text-white-1)] text-lg font-bold uppercase tracking-tight'>
+                            {b.name}
+                          </h4>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ==== STEP 2 === */}
+          {step === 2 && (
+            <div className='space-y-8 animate-fade-in max-w-4xl mx-auto'>
+              {/* HEADER SECCIÓN */}
+              <div className='border-b border-white/20 pb-4'>
+                <h3 className='text-2xl font-light text-[var(--text-white-6)] uppercase tracking-[0.3em]'>
+                  {t.step2.title}
+                </h3>
+              </div>
+
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+                {/* 1️⃣ SELECT — TIPO DE ROSTRO */}
+                <div className='space-y-2 group'>
+                  <label className='text-[var(--text-white-6)] text-[10px] font-bold uppercase tracking-[0.2em] ml-1 flex items-center gap-2 transition-colors duration-300 group-focus-within:text-[var(--text-white-6)]'>
+                    {t.step2.face_type}
+                  </label>
+                  <div className='relative'>
+                    <select
+                      className='w-full bg-white/[0.03] text-[var(--text-white-2)] border border-[var(--border-white-1)]/40 px-5 py-4 text-sm outline-none transition-all duration-300 ease-in-out hover:border-[var(--border-white-6)] focus:border-[var(--border-white-5)] focus:bg-white/[0.07] appearance-none cursor-pointer'
+                      value={formData.tipoRostro}
+                      onChange={e =>
+                        setFormData({ ...formData, tipoRostro: e.target.value })
+                      }
+                    >
+                      <option
+                        value=''
+                        className='bg-[#0a0a0b] text-[var(--text-white-5)]'
+                      >
+                        {t.step2.select}
+                      </option>
+                      {t.step2.face_options.map((o: any) => (
+                        <option
+                          key={o}
+                          value={o}
+                          className='bg-[#0a0a0b] text-[var(--text-white-2)]'
+                        >
+                          {o}
+                        </option>
+                      ))}
+                    </select>
+                    <div className='absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--text-white-5)] opacity-90'>
+                      <svg
+                        className='w-4 h-4'
+                        fill='none'
+                        stroke='currentColor'
+                        viewBox='0 0 24 24'
+                      >
+                        <path
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          strokeWidth='2'
+                          d='M19 9l-7 7-7-7'
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2️⃣ SELECT — UTILIZAS LENTES */}
+                <div className='space-y-2 group'>
+                  <label className='text-[var(--text-white-6)] text-[10px] font-bold uppercase tracking-[0.2em] ml-1 flex items-center gap-2 transition-colors duration-300 group-focus-within:text-[var(--text-white-5)]'>
+                    {t.step2.glasses}
+                  </label>
+                  <div className='relative'>
+                    <select
+                      className='w-full bg-white/[0.03] text-[var(--text-white-2)] border border-[var(--border-white-1)]/40 px-5 py-4 text-sm outline-none transition-all duration-300 ease-in-out hover:border-[var(--border-white-6)] focus:border-[var(--border-white-5)] focus:bg-white/[0.07] appearance-none cursor-pointer'
+                      value={formData.usaLentes}
+                      onChange={e =>
+                        setFormData({ ...formData, usaLentes: e.target.value })
+                      }
+                    >
+                      <option
+                        value=''
+                        className='bg-[#0a0a0b] text-[var(--text-white-5)]'
+                      >
+                        {t.step2.select}
+                      </option>
+                      {t.step2.yes_no.map((o: any) => (
+                        <option
+                          key={o}
+                          value={o}
+                          className='bg-[#0a0a0b] text-[var(--text-white-2)]'
+                        >
+                          {o}
+                        </option>
+                      ))}
+                    </select>
+                    <div className='absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--text-white-5)] opacity-90'>
+                      <svg
+                        className='w-4 h-4'
+                        fill='none'
+                        stroke='currentColor'
+                        viewBox='0 0 24 24'
+                      >
+                        <path
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          strokeWidth='2'
+                          d='M19 9l-7 7-7-7'
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3️⃣ CORTE DE CABELLO (Dropdown Elegante) */}
+                <div className='space-y-2 group'>
+                  <label className='text-[var(--text-white-6)] text-[10px] font-bold uppercase tracking-[0.2em] ml-1 flex items-center gap-2 transition-colors duration-300 group-focus-within:text-[var(--text-white-5)]'>
+                    {t.step2.haircut}
+                  </label>
+                  <div className='relative'>
+                    <select
+                      className={`w-full bg-white/[0.03] text-[var(--text-white-2)] border border-[var(--border-white-1)]/40 px-5 py-4 text-sm outline-none transition-all duration-300 ease-in-out hover:border-[var(--border-white-6)] focus:border-[var(--border-white-5)] focus:bg-white/[0.07] appearance-none cursor-pointer ${
+                        formData.corteId
+                          ? 'border-[var(--border-white-5)] text-[var(--text-white-5)] bg-[var(--text-white-5)]/5 shadow-[0_0_20px_rgba(201,163,78,0.1)]'
+                          : 'border-[var(--border-white-4)] text-[var(--text-white-2)] hover:border-[var(--border-white-3)] focus:border-[var(--border-white-5)]'
+                      }`}
+                      value={formData.corteId}
+                      onChange={e =>
+                        setFormData({ ...formData, corteId: e.target.value })
+                      }
+                    >
+                      <option
+                        value=''
+                        className='bg-[#0a0a0b] text-[var(--text-white-5)]'
+                      >
+                        {t.step2.select}
+                      </option>
+                      {opcionesCorte.map(c => (
+                        <option
+                          key={c.id}
+                          value={c.id}
+                          className='bg-[#0a0a0b] text-[var(--text-white-2)]'
+                        >
+                          {c.name} (+${c.price})
+                        </option>
+                      ))}
+                    </select>
+                    <div className='absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--text-white-5)]'>
+                      <svg
+                        className='w-4 h-4'
+                        fill='none'
+                        stroke='currentColor'
+                        viewBox='0 0 24 24'
+                      >
+                        <path
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          strokeWidth='2'
+                          d='M8 9l4-4 4 4m0 6l-4 4-4-4'
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4️⃣ ESTILO DE BARBA (Dropdown Elegante) */}
+                <div className='space-y-2 group'>
+                  <label className='text-[var(--text-white-6)] text-[10px] font-bold uppercase tracking-[0.2em] ml-1 flex items-center gap-2 transition-colors duration-300 group-focus-within:text-[var(--text-white-5)]'>
+                    {t.step2.beard}
+                  </label>
+                  <div className='relative'>
+                    <select
+                      className={`w-full bg-white/[0.03] text-[var(--text-white-2)] border border-[var(--border-white-1)]/40 px-5 py-4 text-sm outline-none transition-all duration-300 ease-in-out hover:border-[var(--border-white-6)] focus:border-[var(--border-white-5)] focus:bg-white/[0.07] appearance-none cursor-pointer ${
+                        formData.barbaId
+                          ? 'border-[var(--border-white-5)] text-[var(--text-white-5)] bg-[var(--text-white-5)]/5 shadow-[0_0_20px_rgba(201,163,78,0.1)]'
+                          : 'border-[var(--border-white-4)] text-[var(--text-white-2)] hover:border-[var(--border-white-3)] focus:border-[var(--border-white-5)]'
+                      }`}
+                      value={formData.barbaId}
+                      onChange={e =>
+                        setFormData({ ...formData, barbaId: e.target.value })
+                      }
+                    >
+                      <option
+                        value=''
+                        className='bg-[#0a0a0b] text-[var(--text-white-5)]'
+                      >
+                        {t.step2.select}
+                      </option>
+                      {opcionesBarba.map(b => (
+                        <option
+                          key={b.id}
+                          value={b.id}
+                          className='bg-[#0a0a0b] text-[var(--text-white-2)]'
+                        >
+                          {b.name} {b.price > 0 ? `(+$${b.price})` : ''}
+                        </option>
+                      ))}
+                    </select>
+                    <div className='absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--text-white-5)]'>
+                      <svg
+                        className='w-4 h-4'
+                        fill='none'
+                        stroke='currentColor'
+                        viewBox='0 0 24 24'
+                      >
+                        <path
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          strokeWidth='2'
+                          d='M8 9l4-4 4 4m0 6l-4 4-4-4'
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* NAVEGACIÓN */}
+              <div className='flex justify-between items-center pt-10 border-t border-white/20'>
+                <motion.button
+                  whileHover={{ x: -5, color: '#ffffff' }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setStep(1)}
+                  className='text-[12px] uppercase font-bold tracking-[0.2em] text-[var(--text-white-5)] transition-all flex items-center gap-2'
+                >
+                  <span className='text-lg text-[var(--text-white-5)]'>←</span>{' '}
+                  {t.buttons.back_barber}
+                </motion.button>
+
+                <motion.button
+                  whileHover={
+                    formData.corteId
+                      ? {
+                          scale: 1.02,
+                          boxShadow: '0 0 30px rgba(201, 163, 78, 0.2)'
+                        }
+                      : {}
+                  }
+                  whileTap={formData.corteId ? { scale: 0.98 } : {}}
+                  onClick={() => setStep(3)}
+                  disabled={!formData.corteId}
+                  className={`px-10 py-4 rounded-xl font-black text-[11px] uppercase tracking-[0.2em] transition-all duration-500 ${
+                    formData.corteId
+                      ? 'bg-[var(--text-white-5)] text-[var(--border-white-1)] border border-[var(--border-white-5)] shadow-xl cursor-pointer'
+                      : 'bg-white/5 text-[var(--text-white-4)] border border-white/5 cursor-not-allowed opacity-30'
+                  }`}
+                >
+                  {t.buttons.continue_date}
+                </motion.button>
+              </div>
+            </div>
+          )}
+
+          {/* ==== STEP 3 === */}
+          {step === 3 && (
+            <div className='space-y-8 animate-fade-in max-w-4xl mx-auto'>
+              {/* HEADER SECCIÓN */}
+              <div className='border-b border-white/20 pb-4'>
+                <h3 className='text-2xl font-light text-[var(--text-white-6)] uppercase tracking-[0.3em]'>
+                  {t.step3.title}
+                </h3>
+              </div>
+
+              {/* TEXTO DE AYUDA (TIME NOTE) */}
+              <div className='-mt-4'>
+                <p className='text-[10px] uppercase tracking-[0.2em] text-[var(--text-white-3)] font-medium italic'>
+                  {t.step3.time_note.replace('{time}', reservationData.time)}
                 </p>
-                <div className="p-4 bg-[var(--brand-primary)]/10 border border-[var(--brand-primary)]/30 rounded-xl max-w-sm mt-4">
-                  <p className="text-[var(--brand-primary)] font-medium text-sm">
-                    Revisa tu WhatsApp y envíame el mensaje automático para que empecemos a crear el sistema para tu negocio.
+              </div>
+
+              <div className='grid grid-cols-1 lg:grid-cols-2 gap-10 items-start'>
+                {/* COLUMNA 1 — CALENDARIO */}
+                <div className='space-y-4'>
+                  <label className='text-[var(--text-white-6)] text-[10px] font-bold uppercase tracking-[0.2em] ml-1 flex items-center gap-2'>
+                    <span className='w-1 h-1 bg-[var(--text-white-5)] rounded-full'></span>
+                    {t.step3.days_title}
+                  </label>
+
+                  <div className='grid grid-cols-2 sm:grid-cols-3 gap-3'>
+                    {dynamicDays.map(d => (
+                      <motion.button
+                        key={d.id}
+                        whileHover={{
+                          y: -2,
+                          border: '1px solid var(--border-white-3)'
+                        }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() =>
+                          setFormData({ ...formData, fecha: d.id })
+                        }
+                        className={`p-4 rounded-xl border transition-all duration-300 ease-in-out flex flex-col items-center gap-1 group ${
+                          formData.fecha === d.id
+                            ? 'bg-[var(--text-white-5)] text-[var(--text-white-2)] border-[var(--border-white-5)] shadow-[0_0_25px_rgba(201,163,78,0.25)]'
+                            : 'bg-white/[0.03] border-[var(--border-white-1)]/20 text-[var(--text-white-2)] hover:bg-white/[0.06]'
+                        }`}
+                      >
+                        <span
+                          className={`text-[9px] uppercase font-bold tracking-widest ${
+                            formData.fecha === d.id
+                              ? 'text-black'
+                              : 'text-[var(--text-white-5)]'
+                          }`}
+                        >
+                          {d.label}
+                        </span>
+                        <span className='text-base font-light tracking-tighter'>
+                          {d.date}
+                        </span>
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* COLUMNA 2 — HORARIOS DISPONIBLES */}
+                <div className='space-y-4'>
+                  <label className='text-[var(--text-white-6)] text-[10px] font-bold uppercase tracking-[0.2em] ml-1 flex items-center gap-2'>
+                    <span className='w-1 h-1 bg-[var(--text-white-4)] rounded-full'></span>
+                    {t.step3.hours_title.replace('{date}', '')}
+                  </label>
+
+                  <div className='grid grid-cols-2 md:grid-cols-3 gap-3'>
+                    {horasDisponibles.map(h => (
+                      <motion.button
+                        key={h}
+                        whileHover={{
+                          backgroundColor: 'rgba(255,255,255,0.08)',
+                          borderColor: 'var(--border-white-5)'
+                        }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setFormData({ ...formData, hora: h })}
+                        className={`py-3 rounded-xl border text-[11px] font-bold tracking-widest transition-all duration-300 ease-in-out ${
+                          formData.hora === h
+                            ? 'bg-[var(--text-white-5)] text-[var(--text-white-1)] border-[var(--border-white-5)] shadow-[0_0_20px_rgba(201,163,78,0.2)]'
+                            : 'bg-white/[0.03] border-[var(--border-white-1)]/20 text-[var(--text-white-2)]'
+                        }`}
+                      >
+                        {h}
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* NAVEGACIÓN */}
+              <div className='flex justify-between items-center pt-10 border-t border-white/20'>
+                <motion.button
+                  whileHover={{ x: -5, color: '#ffffff' }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setStep(2)}
+                  className='text-[12px] uppercase font-bold tracking-[0.2em] text-[var(--text-white-5)] transition-all flex items-center gap-2'
+                >
+                  {/* Se eliminó el span con la flecha manual para usar solo la del diccionario o viceversa */}
+                  {t.buttons.back_services}
+                </motion.button>
+
+                <motion.button
+                  whileHover={
+                    formData.fecha && formData.hora
+                      ? {
+                          scale: 1.02,
+                          boxShadow: '0 0 30px rgba(201, 163, 78, 0.2)'
+                        }
+                      : {}
+                  }
+                  whileTap={
+                    formData.fecha && formData.hora ? { scale: 0.98 } : {}
+                  }
+                  onClick={() => setStep(4)}
+                  disabled={!formData.fecha || !formData.hora}
+                  className={`px-10 py-4 rounded-xl font-black text-[11px] uppercase tracking-[0.2em] transition-all duration-500 ${
+                    formData.fecha && formData.hora
+                      ? 'bg-[var(--text-white-5)] text-[var(--text-white-1)] border border-[var(--border-white-5)] shadow-xl cursor-pointer'
+                      : 'bg-white/5 text-[var(--text-white-3)] border border-white/5 cursor-not-allowed opacity-30'
+                  }`}
+                >
+                  {t.buttons.go_payment}
+                </motion.button>
+              </div>
+            </div>
+          )}
+
+          {step === 4 && (
+            <div className='space-y-8 animate-fade-in max-w-4xl mx-auto'>
+              {/* HEADER SECCIÓN */}
+              <div className='border-b border-white/20 pb-4'>
+                <h3 className='text-2xl font-light text-[var(--text-white-6)] uppercase tracking-[0.3em]'>
+                  {t.step4.title}
+                </h3>
+              </div>
+
+              {/* LISTA DE MÉTODOS DE PAGO */}
+              <div className='grid grid-cols-1 gap-4'>
+                {['Visa / Mastercard', 'Zelle / Transfer', 'Apple Pay'].map(
+                  m => (
+                    <motion.button
+                      key={m}
+                      whileHover={{
+                        x: 5,
+                        backgroundColor: 'rgba(255,255,255,0.06)',
+                        borderColor: 'var(--border-white-3)'
+                      }}
+                      whileTap={{ scale: 0.99 }}
+                      onClick={() =>
+                        setFormData({ ...formData, metodoPago: m })
+                      }
+                      className={`p-6 border rounded-xl text-left flex justify-between items-center transition-all duration-300 ease-in-out ${
+                        formData.metodoPago === m
+                          ? 'bg-[var(--text-white-5)]/10 border-[var(--border-white-5)] text-[var(--text-white-6)] shadow-[0_0_20px_rgba(201,163,78,0.1)]'
+                          : 'bg-white/[0.03] border-[var(--border-white-1)]/20 text-[var(--text-white-2)]'
+                      }`}
+                    >
+                      <span className='font-bold uppercase tracking-[0.15em] text-xs'>
+                        {m}
+                      </span>
+                      {formData.metodoPago === m && (
+                        <motion.span
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className='text-[var(--text-white-5)] text-lg'
+                        >
+                          ●
+                        </motion.span>
+                      )}
+                    </motion.button>
+                  )
+                )}
+              </div>
+
+              {/* NAVEGACIÓN INFERIOR */}
+              <div className='flex justify-between items-center pt-10 border-t border-white/20'>
+                <motion.button
+                  whileHover={{ x: -5, color: '#ffffff' }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setStep(3)}
+                  className='text-[12px] uppercase font-bold tracking-[0.2em] text-[var(--text-white-5)] transition-all flex items-center gap-2'
+                >
+                  {t.buttons.back_date}
+                </motion.button>
+
+                <motion.button
+                  whileHover={
+                    formData.metodoPago && !isProcessing
+                      ? {
+                          scale: 1.05,
+                          boxShadow: '0 10px 30px rgba(34, 197, 94, 0.3)'
+                        }
+                      : {}
+                  }
+                  whileTap={
+                    formData.metodoPago && !isProcessing ? { scale: 0.95 } : {}
+                  }
+                  onClick={handleWhatsApp}
+                  disabled={!formData.metodoPago || isProcessing}
+                  className={`px-10 py-5 font-black text-[11px] rounded-xl uppercase tracking-[0.2em] transition-all duration-300 ${
+                    formData.metodoPago && !isProcessing
+                      ? 'bg-green-500 text-white shadow-xl cursor-pointer'
+                      : 'bg-white/5 text-[var(--text-white-3)] border border-white/5 cursor-not-allowed opacity-30'
+                  }`}
+                >
+                  {isProcessing ? (
+                    <div className='flex items-center gap-3'>
+                      <div className='w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin' />
+                      {t.buttons.processing}
+                    </div>
+                  ) : (
+                    `${t.buttons.pay_confirm} $${reservationData.total.toFixed(
+                      2
+                    )}`
+                  )}
+                </motion.button>
+              </div>
+            </div>
+          )}
+
+          {/* ==== STEP 5 === */}
+          {step === 5 && (
+            <div className='lg:col-span-12 flex flex-col items-center justify-center text-center space-y-12 py-16 animate-fade-in max-w-2xl mx-auto w-full'>
+              {/* ICONO DE CONFIRMACIÓN VIP */}
+              <motion.div
+                initial={{ y: -40, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
+                className='relative'
+              >
+                <motion.div
+                  initial={{ scale: 0.8 }}
+                  animate={{ scale: 1 }}
+                  transition={{
+                    duration: 0.5,
+                    delay: 0.2,
+                    type: 'spring',
+                    stiffness: 200
+                  }}
+                  className='w-24 h-24 bg-green-500 border-2 border-green-500 rounded-full flex items-center justify-center mx-auto shadow-lg'
+                >
+                  <span className='text-white text-4xl font-light'>✓</span>
+                </motion.div>
+              </motion.div>
+
+              {/* TÍTULO COHERENTE */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4, duration: 0.8 }}
+                className='space-y-6'
+              >
+                <h3 className='text-3xl font-light text-[var(--text-white-6)] uppercase tracking-[0.3em] leading-tight'>
+                  {t.step5.title}
+                </h3>
+
+                {/* TEXTO EXPLICATIVO */}
+                <p className='text-[var(--text-white-2)] text-sm max-w-sm mx-auto leading-relaxed'>
+                  {t.step5.instruction}
+                </p>
+              </motion.div>
+
+              {/* BOTÓN REINICIAR VIP */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.5 }}
+                className='pt-4'
+              >
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => window.location.reload()}
+                  className='bg-[var(--text-white-5)] text-black border border-[var(--border-white-5)] px-12 py-5 font-bold uppercase tracking-[0.2em] text-xs transition-all duration-300 ease-in-out shadow-xl'
+                >
+                  {t.step5.restart}
+                </motion.button>
+              </motion.div>
+            </div>
+          )}
+        </div>
+
+        {/* === RESUMEN, BARBERO, TRABAJO A REALIZAR Y PRECIO === */}
+        {step > 1 && step < 5 && (
+          <div className='lg:col-span-4 order-1 lg:order-2 space-y-4'>
+            <div className='bg-white/5 rounded-xl p-6 border border-white/40 sticky top-24'>
+              <div className='flex items-center gap-4 mb-6'>
+                <div className='relative w-16 h-16 rounded-full overflow-hidden border-2 border-[var(--bg-brand)]'>
+                  <Image
+                    src={selectedBarber.image}
+                    alt={selectedBarber.name}
+                    fill
+                    className='object-cover'
+                  />
+                </div>
+                <div>
+                  <p className='text-[10px] uppercase text-[var(--text-white-6)] font-light'>
+                    {t.summary.barber}
+                  </p>
+                  <p className='font-bold text-[var(--text-white-5)]'>
+                    {selectedBarber.name}
                   </p>
                 </div>
-                <button 
-                  onClick={() => window.location.reload()} 
-                  className="mt-8 text-sm text-white/50 hover:text-white underline transition-colors"
-                >
-                  Reiniciar Demo
-                </button>
               </div>
-            )}
-
+              <div className='space-y-1'>
+                <SummaryRow
+                  label={t.summary.corte}
+                  value={reservationData.corte}
+                />
+                <SummaryRow
+                  label={t.summary.barba}
+                  value={reservationData.barba}
+                />
+                <SummaryRow
+                  label={t.summary.date_time}
+                  value={reservationData.fechaHora}
+                />
+                <div className='pt-4 mt-4 border-t border-white/20'>
+                  <div className='flex justify-between items-center'>
+                    <span className='text-sm font-bold text-[var(--text-white-5)]'>
+                      {t.summary.total_pay}
+                    </span>
+                    <span className='text-2xl font-black text-[var(--bg-brand)]'>
+                      ${reservationData.total.toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }

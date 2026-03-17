@@ -1,0 +1,30 @@
+{
+  "title": "Proyectos que impulsan negocios",
+  "subtitle": "Soluciones técnicas reales para problemas complejos en WordPress.",
+  "items": [
+    {
+      "title": "Suite Text",
+      "description": "Optimización y seguridad estructural.",
+      "iconKey": "suite",
+      "href": "/proyectos/suite-text"
+    },
+    {
+      "title": "Barber Shop",
+      "description": "Sistema de reservas y rendimiento.",
+      "iconKey": "barber",
+      "href": "/proyectos/barber-shop"
+    },
+    {
+      "title": "Casos de Éxito",
+      "description": "Estrategias SEO y conversión.",
+      "iconKey": "casos",
+      "href": "/proyectos/casos-exito"
+    },
+    {
+      "title": "Mis Creaciones",
+      "description": "Desarrollo a medida y arquitectura.",
+      "iconKey": "creaciones",
+      "href": "/proyectos/mis-creaciones"
+    }
+  ]
+}

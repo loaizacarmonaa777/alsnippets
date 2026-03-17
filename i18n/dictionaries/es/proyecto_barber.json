@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "title": "Barber Short Demo",
+    "description": "En esta demo, podrás realizar una reserva, elegir tu barbero favorito, añadir más servicios y separar tu cita.",
+    "keywords": [
+      "Software para barberías",
+      "Plataforma reservas barbería",
+      "App gestión de barberías",
+      "Pagos en línea barberías",
+      "Desarrollo web barberos",
+      "Barber Short App",
+      "Alsnippets proyectos"
+    ],
+    "og_title": "Barber Short Demo",
+    "og_description": "Digitaliza tu barbería con Barber Short: reservas automatizadas, gestión de servicios y pagos online.",
+    "og_alt": "Barber Short - Plataforma de reservas Web para Barberías o salones de belleza. Por Alsnippets",
+    "twitter_title": "Barber Short | Plataforma para Barberías",
+    "twitter_description": "Plataforma web para barberías: reservas, gestión de servicios y pagos en línea."
+  },
+  "page": {
+    "hero": {
+      "title": "Barber Short Demo",
+      "subtitle": "En esta demo, podrás realizar una reserva, elegir tu barbero favorito, añadir más servicios y separar tu cita."
+    }
+  },
+  "schema": {
+    "description": "Plataforma web enfocada en reservas, gestión de servicios y pagos en línea para el sector de barberías."
+  }
+}

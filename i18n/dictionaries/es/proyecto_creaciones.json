@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "title": "Mis Creaciones",
+    "description": "Proyectos desarrollados desde cero, plugins de WordPress, themes personalizados y soluciones web propias por Adrián Loaiza.",
+    "keywords": [
+      "Portafolio desarrollo web",
+      "Plugins WordPress a medida",
+      "Themes WordPress personalizados",
+      "Desarrollo web React Next.js",
+      "Proyectos Adrián Loaiza",
+      "Alsnippets creaciones",
+      "Soluciones web custom"
+    ],
+    "og_title": "Mis Creaciones | Plugins y Desarrollo Web | Alsnippets",
+    "og_description": "Explora mis proyectos desarrollados desde cero: plugins, themes y plataformas web a medida.",
+    "og_alt": "Portafolio de Creaciones - Alsnippets",
+    "twitter_title": "Mis Creaciones | Alsnippets",
+    "twitter_description": "Proyectos desarrollados desde cero, plugins, themes y soluciones propias."
+  },
+  "schema": {
+    "name": "Mis Creaciones - Alsnippets",
+    "description": "Galería de proyectos propios, plugins de WordPress y aplicaciones web desarrolladas por Adrián Loaiza."
+  }
+}

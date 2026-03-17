@@ -1,0 +1,61 @@
+{
+  "meta": {
+    "title": "Pricing & Services - Alsnippets",
+    "description": "Calculate the budget for your WordPress project, SEO, or custom development immediately.",
+    "keywords": "wordpress pricing, web quoter, technical support rates, seo consultancy price",
+    "og_title": "Alsnippets Digital Quoter",
+    "og_description": "Get an accurate estimate for your digital project in seconds.",
+    "twitter_title": "Rates & Services | Alsnippets",
+    "twitter_description": "Total transparency in development and support pricing."
+  },
+  "schema": {
+    "name": "Alsnippets Pricing Page",
+    "description": "Professional web development services and technical consultancy."
+  },
+  "page": {
+    "hero": {
+      "title": "Investment & Rates",
+      "subtitle": "Total transparency. Calculate your project value immediately and professionally."
+    },
+    "calculator": {
+      "title": "Smart Quoter",
+      "description": "Select your needs and get an estimated investment based on real technical profiles."
+    },
+    "philosophy": {
+      "title": "My Work Philosophy",
+      "description": "I don't just write code; I build scalable solutions that drive businesses.",
+      "cards": [
+        { "title": "Code Quality", "description": "Clean, documented, and optimized.", "image": "/images/icons/code.svg" },
+        { "title": "Human Support", "description": "Direct communication without intermediaries.", "image": "/images/icons/human.svg" },
+        { "title": "Results", "description": "Total focus on conversion and speed.", "image": "/images/icons/results.svg" }
+      ]
+    },
+    "transparency": {
+      "title": "Transparency in every process",
+      "p1": "The prices shown are estimates based on standard requirements.",
+      "p2": "Every project is unique, and the final value is confirmed after a brief technical audit."
+    },
+    "methods": {
+      "title": "Other ways to work",
+      "custom": {
+        "title": "Custom Project",
+        "description": "If your project doesn't fit the calculator, we design a proposal from scratch."
+      },
+      "audit": {
+        "title": "Pre-Audit",
+        "description": "In-depth analysis of security and performance before starting any changes."
+      }
+    },
+    "cta": {
+      "title": "Need something very specific?",
+      "description": "If you have a complex technical requirement, let's talk directly.",
+      "button": "Request Audit",
+      "disclaimer": "*Guaranteed response in less than 24 business hours."
+    },
+    "system": {
+      "waitSecurity": "Please wait for the security validation (Cloudflare) to complete.",
+      "errorGen": "There was an error generating your quote. Please try again.",
+      "errorNet": "Network error. Please check your internet connection and try again."
+    }
+  }
+}

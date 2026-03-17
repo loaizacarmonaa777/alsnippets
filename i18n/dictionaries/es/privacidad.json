@@ -1,0 +1,31 @@
+{
+  "meta": {
+    "title": "Política de privacidad",
+    "description": "En Alsnippets respeto tu privacidad y me comprometo a proteger los datos personales que compartes a través de este sitio web."
+  },
+  "page": {
+    "hero": {
+      "title": "Política de privacidad",
+      "subtitle": "En Alsnippets respeto tu privacidad y me comprometo a proteger los datos personales que compartes a través de este sitio web."
+    },
+    "sections": {
+      "collection": {
+        "title": "Datos que se recopilan",
+        "content": "Puedo recopilar datos como nombre, correo electrónico, información del sitio web y mensajes enviados mediante formularios o contacto directo."
+      },
+      "usage": {
+        "title": "Uso de la información",
+        "content": "La información se utiliza únicamente para responder consultas, prestar servicios, mejorar la experiencia del usuario y cumplir obligaciones legales."
+      },
+      "protection": {
+        "title": "Protección de datos",
+        "content": "Aplico medidas técnicas y organizativas razonables para proteger los datos personales frente a accesos no autorizados, pérdida o uso indebido."
+      },
+      "rights": {
+        "title": "Derechos del usuario",
+        "content": "Puedes solicitar acceso, rectificación o eliminación de tus datos personales en cualquier momento escribiendo a contact@alsnippets.com."
+      }
+    },
+    "footer_note": "Esta política cumple con normativas de protección de datos aplicables en América Latina, Estados Unidos y la Unión Europea (GDPR)."
+  }
+}

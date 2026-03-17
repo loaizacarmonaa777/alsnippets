@@ -1,0 +1,41 @@
+{
+  "head": "Estimated Quote",
+  "prepared": "Quote prepared for",
+  "serv": "Service",
+  "invest": "Approximate Investment",
+  "audit": "*Subject to final technical audit",
+  "btnWA": "Send to WhatsApp",
+  "btnPDF": "Download PDF Proposal",
+  "btnReset": "New Quote",
+  "safety": "Your data is protected. Sending via WhatsApp starts our direct conversation.",
+  "waContact": "I'd like to schedule a brief call to review the technical details.",
+  "labels": {
+    "webBase": "Structural Web Development",
+    "webEcom": "+ E-commerce & Payment Module",
+    "webBrand": "+ Visual Identity & Branding",
+    "sopGlobal": "Comprehensive Global Support",
+    "sopCustom": "Custom Technical Support",
+    "hrsTitle": "Package of",
+    "hrsUnit": "hours",
+    "seoTitle": "SEO Audit & Initial Strategy",
+    "hosting": "Hosting & Server Management",
+    "dominio": "Domain & DNS Management",
+    "textos": "Content Architecture & Copy",
+    "techSurcharge": "Technology Adjustment"
+  },
+  "pdf": {
+    "title": "Technical Service Proposal",
+    "date": "Issue Date",
+    "prepared": "Client",
+    "consultant": "Alsnippets Specialist",
+    "breakdown": "Investment Summary",
+    "included": "Budgeted",
+    "clausulesTitle": "Technical Transparency Clauses",
+    "c1": "This budget is based on standards for the selected technology ({tech}).",
+    "c2": "Sites with technical debt, legacy code, or poorly managed plugins may require additional cleanup hours.",
+    "c3": "Server/hosting costs are subject to the rates of the recommended provider (SiteGround).",
+    "footer1": "Alsnippets - High Performance Technical Solutions.",
+    "footer2": "Proposal valid for 15 days from issue date."
+  },
+  "waMsg": "Hello Adrián! 👋 I just generated a quote on Alsnippets.\n\n*Client:* {name}\n*Tech:* {tech}\n*Investment:* {total}"
+}

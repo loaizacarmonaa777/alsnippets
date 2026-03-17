@@ -1,12 +1,10 @@
 /* =====================================================
-   Blog — Categorías dinámicas
+   Blog — Categorías dinámicas (Localizadas)
    Ruta: /lib/blog/getCategories.ts
-   Responsabilidad:
-   - Derivar categorías desde los posts MDX
-   - Separar slug (lógica) y name (UI)
    ===================================================== */
 
 import { getAllPosts } from "./getPosts";
+import { getCategoryLabel } from "./categoryLabels";
 
 /* =====================================================
    Tipado de categoría
@@ -17,17 +15,25 @@ export type BlogCategory = {
 };
 
 /* =====================================================
-   Obtener categorías únicas desde los posts
+   Obtener categorías únicas filtradas por idioma
    ===================================================== */
-export function getCategories(): BlogCategory[] {
-  const posts = getAllPosts();
+export function getCategories(lang: string): BlogCategory[] {
+  // 1. Obtenemos todos los posts
+  const allPosts = getAllPosts();
 
+  // 2. Filtramos los posts para obtener solo las categorías que existen
+  // en el idioma actual (asumiendo que tus posts tienen el campo post.lang)
+  const postsInLang = allPosts.filter((post) => post.lang === lang);
+
+  // 3. Extraemos los slugs únicos
   const uniqueSlugs = Array.from(
-    new Set(posts.map((post) => post.category))
+    new Set(postsInLang.map((post) => post.category.toLowerCase()))
   );
 
+  // 4. Mapeamos al objeto BlogCategory usando nuestras traducciones
   return uniqueSlugs.map((slug) => ({
-    slug, // minúscula, usada para lógica
-    name: slug.charAt(0).toUpperCase() + slug.slice(1), // UI
+    slug, 
+    // Usamos el helper bilingüe que creamos antes
+    name: getCategoryLabel(slug, lang),
   }));
 }

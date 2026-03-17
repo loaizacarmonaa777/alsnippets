@@ -1,0 +1,99 @@
+---
+title: "Semantic Reorganization of the Site"
+description: "Adjusting sections, hierarchies, and relationships between pages to improve comprehension and relevance."
+category: "seo"
+lang: "en"
+author: "Adrián Loaiza"
+date: "2026-03-02"
+image: "/images/blog/reorganizacion-semantica-del-sitio.webp"
+coverImage: "/images/blog/reorganizacion-semantica-del-sitio.webp"
+featured: false
+---
+
+## Semantic Reorganization of the Site.
+
+Code speaks. And it tells Google what your page is about.
+
+But often, the message is confusing. Mislabelled sections, broken hierarchies, important content hidden under generic tags.
+
+Reorganizing semantics is not about changing the design. It’s about making the HTML structure tell the same story you want to communicate.
+
+---
+
+### Why it happens
+
+When we build a website quickly, we tend to prioritize visuals. Making it look good. But the invisible part—the code—remains cluttered.
+
+- `divs` are used for everything, without considering `header`, `main`, `article`, or `aside`.
+- Headings jump from `H2` to `H5` without logical order.
+- Sections are not marked as such.
+- Relationships between pages are lost due to poor link architecture.
+
+Google reads code, not design. If the code doesn't communicate well, the page loses value.
+
+
+
+---
+
+### What it is
+
+Semantic reorganization means cleaning and ordering the website's skeleton.
+
+- I review HTML5 tags so that each block has the correct meaning.
+- I order the heading hierarchy so it makes sense from top to bottom.
+- I correctly mark articles, navigation, and footers.
+- I review internal links to connect related content.
+
+It’s not visible at first glance, but when you do it, Google understands better what you’re talking about and what is important.
+
+---
+
+### What it affects
+
+Poor semantics confuse search engines. And that has consequences:
+
+- **Featured Snippets**: if you don't mark a list or a paragraph well, Google won't show it as a featured result.
+- **Topic Comprehension**: without a clear hierarchy, the engine struggles to identify the page's main topic.
+- **Accessibility**: screen readers also depend on semantics to guide visually impaired users.
+- **User Experience**: a cluttered structure is noticeable in navigation.
+
+The damage is silent, but it drags down positioning in the long run.
+
+[Image showing a comparison between a non-semantic div-soup structure and a clean semantic HTML5 structure]
+
+---
+
+### Possible solutions
+
+When I perform a semantic audit at Alsnippets, I follow a routine:
+
+1. **Heading structure review**. I check that there is only one H1 and that subsequent tags maintain a logical order.
+2. **Section tag analysis**. I replace generic `divs` with `section`, `article`, `aside`, or `nav` where appropriate.
+3. **Internal navigation improvement**. I add contextual links between related content to strengthen the site's architecture.
+4. **Elimination of redundant content**. Sometimes there are blocks that add no value and only generate semantic noise.
+5. **Testing with tools**. I use validators to see how Google interprets each page before and after the changes.
+
+The result is a website that is easier for machines to read and clearer for people.
+
+This work usually goes hand in hand with a good [intent and structure analysis](/en/analisis-intencion-estructura).
+
+---
+
+### Tips
+
+- **Think of a table of contents, not design**. When layouting, ask yourself: "if this were a book, what chapter label would it have?".
+- **Don't abuse the H1**. One per page is enough. More than one causes confusion.
+- **Use Chrome's Inspector**. Look at the code as if you were Google. Do you see clearly what is important?
+
+---
+
+### Does your WordPress have real problems?
+[Request WordPress Audit](/en/auditoria)
+
+---
+
+### Sources and references
+
+- https://developers.google.com/search/docs/fundamentals/seo-starter-guide
+- https://web.dev/learn/html/semantic-html/
+- https://validator.w3.org/

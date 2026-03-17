@@ -1,0 +1,84 @@
+[
+  {
+    "title": "Análisis y Protección contra ataques",
+    "image": "/images/home/card-proteccion-contra-ataques-home.webp",
+    "description": "La falta de protección expone tu sitio a riesgos.",
+    "chips": [
+      "Malware",
+      "Virus",
+      "Backdoors",
+      "Fuerza bruta",
+      "Robo de datos",
+      "Accesos no autorizados",
+      "Sitio comprometido"
+    ]
+  },
+  {
+    "title": "Actualizaciones controladas",
+    "image": "/images/home/card-actualizaciones-controladas-home.webp",
+    "description": "Actualizar sin control impacta más de lo que imaginas.",
+    "chips": [
+      "Incompatibilidad",
+      "Errores críticos",
+      "Pantalla blanca",
+      "Fallos de plugins",
+      "Conflictos versión",
+      "Errores PHP",
+      "Caídas del sitio"
+    ]
+  },
+  {
+    "title": "Copias de seguridad confiables",
+    "image": "/images/home/card-copias-seguridad-home.webp",
+    "description": "Sin copias funcionales, cualquier error puede convertirse en un desastre.",
+    "chips": [
+      "Pérdidas",
+      "Backups rotos",
+      "Fallos de restauración",
+      "Datos irrecuperables",
+      "Cambios perdidos",
+      "Caídas"
+    ]
+  },
+  {
+    "title": "Optimización de velocidad y carga",
+    "image": "/images/home/card-optimizacion-velocidad-home.webp",
+    "description": "No identificar los cuellos de botella afecta rendimiento y experiencia.",
+    "chips": [
+      "Carga lenta",
+      "CLS elevado",
+      "LCP deficiente",
+      "TTFB alto",
+      "Scripts bloqueantes",
+      "Imágenes pesadas",
+      "Mala experiencia móvil"
+    ]
+  },
+  {
+    "title": "Acompañamiento en todo el proceso",
+    "image": "/images/home/card-acompanamiento-proceso-home.webp",
+    "description": "Conmigo cada decisión técnica tiene respaldo, criterio y seguimiento.",
+    "chips": [
+      "Decisiones técnicas",
+      "Cambios urgentes",
+      "Soporte humano",
+      "Comunicación directa",
+      "Respuesta rápida"
+    ],
+    "highlight": true
+  },
+  {
+    "title": "Los errores son parte del proceso",
+    "image": "/images/home/card-errores-proceso-home.webp",
+    "description": "WordPress no es solo no-code: se necesita experiencia para resolver.",
+    "chips": [
+      "Errores 404",
+      "Errores 500",
+      "Conflictos",
+      "Fallos en servidor",
+      "Fallos del Layout",
+      "Bugs inesperados",
+      "Diagnóstico técnico"
+    ]
+  }
+]

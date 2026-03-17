@@ -1,0 +1,162 @@
+---
+title: "Backdoors en WordPress: la puerta trasera que mantiene vivo el hackeo"
+description: "Qué es un backdoor en WordPress, cómo funciona, por qué permite reinfecciones y cómo eliminarlo sin romper tu sitio."
+category: "virus"
+lang: "es"
+author: "Adrián Loaiza"
+date: "2026-03-02"
+image: "/images/blog/backdoors-wordpress.webp"
+coverImage: "/images/blog/backdoors-wordpress.webp"
+featured: false
+---
+
+## Backdoors en WordPress: la puerta trasera que mantiene vivo el hackeo
+
+Imagina una puerta medio abierta.  
+Desde afuera parece que todo está cerrado.
+
+Pero por dentro, alguien puede entrar cuando quiera.
+
+Eso es exactamente un **backdoor en WordPress**.
+
+Tu sitio puede verse limpio.  
+El malware visible puede haber sido eliminado.  
+Pero si la puerta trasera sigue activa, el atacante todavía tiene acceso.
+
+---
+
+## Qué es un backdoor en WordPress
+
+Un **backdoor** es un fragmento de código malicioso que permite acceder al servidor sin pasar por el login normal de WordPress.
+
+No es el ataque principal.  
+Es el mecanismo que lo mantiene vivo.
+
+Normalmente se esconde en:
+
+- Archivos del core modificados
+- Plugins aparentemente legítimos
+- Temas activos o inactivos
+- Archivos con nombres similares a los originales
+- Carpetas de uploads con código PHP oculto
+
+WordPress explica cómo las infecciones suelen persistir cuando no se elimina el punto de entrada .
+
+Eliminar el síntoma no elimina la puerta.
+
+---
+
+## Cómo funciona realmente
+
+Un backdoor suele usar técnicas como:
+
+- `eval()` con código ofuscado
+- `base64_decode`
+- `gzinflate`
+- Variables dinámicas
+- Carga remota de scripts externos
+
+Algunos permiten ejecutar comandos desde una URL secreta.  
+Otros crean usuarios administradores invisibles.  
+Algunos simplemente esperan instrucciones desde un servidor externo.
+
+Sucuri documenta múltiples variantes comunes en WordPress .
+
+Lo peligroso no es solo el acceso.  
+Es la **persistencia**.
+
+---
+
+## Por qué los plugins no siempre lo detectan
+
+Muchos plugins de seguridad:
+
+- Buscan firmas conocidas
+- Detectan patrones básicos
+- Escanean archivos visibles
+
+Pero un backdoor bien diseñado:
+
+- Se camufla en archivos legítimos
+- Se divide en múltiples fragmentos
+- Usa lógica condicional avanzada
+- Solo se activa bajo ciertas condiciones
+
+Por eso algunos sitios se “limpian” y a las semanas vuelven a infectarse.
+
+La puerta nunca se cerró.
+
+---
+
+## Qué consecuencias tiene
+
+Un backdoor activo permite:
+
+- Reinfecciones constantes  
+- Inyección de spam SEO  
+- Redirecciones maliciosas  
+- Robo de datos  
+- Suspensión del hosting  
+
+Además, cada reinfección suele ser más profunda que la anterior.
+
+Lo que empieza como spam puede terminar en compromiso total del servidor.
+
+---
+
+## Cómo lo abordo en Alsnippets
+
+Cuando trabajo un caso de backdoor no empiezo borrando archivos al azar.
+
+Abordo el problema así:
+
+1. Comparo el core con versiones oficiales.
+2. Reviso manualmente `.htaccess`.
+3. Analizo temas activos e inactivos.
+4. Busco funciones críticas (`eval`, `base64`, `assert`, etc.).
+5. Reviso usuarios administradores ocultos.
+6. Verifico tareas programadas (cron jobs).
+7. Cambio todas las credenciales (WordPress, FTP, base de datos, hosting).
+
+Después de limpiar:
+
+- Refuerzo permisos.
+- Elimino plugins innecesarios.
+- Organizo un entorno más seguro.
+- Produzco un cierre real del punto de entrada.
+
+En Alsnippets no solo elimino malware.  
+Soluciono la persistencia que lo mantiene activo.
+
+Porque si la puerta sigue entreabierta, el atacante no necesita volver a forzar la entrada.
+
+---
+
+## Señales de que podrías tener un backdoor
+
+- El sitio se reinfecta después de limpiarlo.
+- Aparecen usuarios administradores desconocidos.
+- Hay archivos PHP en la carpeta uploads.
+- El hosting detecta actividad sospechosa recurrente.
+- Google muestra advertencias intermitentes.
+
+Si algo de esto ocurre, no es casualidad.
+
+---
+
+## ¿Tu WordPress tiene problemas reales?
+
+Un backdoor no siempre es visible, pero siempre deja rastro.
+
+Si tu sitio ha sido hackeado más de una vez o presenta comportamientos extraños, es probable que exista una puerta trasera activa.
+
+[Solicitar auditoría WordPress](/auditoria)
+
+---
+
+### Fuentes y referencias
+
+https://wordpress.org/documentation/article/faq-my-site-was-hacked/
+https://www.sucuri.net/guides/wordpress-backdoor/
+https://developers.google.com/search/docs/monitor-debug/security/hacked-site
+https://www.wordfence.com/docs/how-to-clean-a-hacked-wordpress-site/

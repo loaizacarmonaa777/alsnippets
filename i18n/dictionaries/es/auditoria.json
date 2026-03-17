@@ -1,0 +1,75 @@
+{
+  "meta": {
+    "title": "Auditoría y Consultoría WordPress Profesional",
+    "description": "Auditoría y consultoría WordPress profesional. Trabajo de forma remota con proyectos en Colombia, Latinoamérica, España, USA, Canadá y otros países.",
+    "keywords": ["Auditoría WordPress", "Consultoría WordPress", "Seguridad WordPress", "Optimización WPO"],
+    "og_title": "Auditoría y Consultoría WordPress Profesional | Adrián Loaiza",
+    "og_description": "Asegura el rendimiento, la seguridad y la escalabilidad de tu sitio web con una auditoría técnica profunda.",
+    "og_alt": "Auditoría y Consultoría WordPress por Adrián Loaiza",
+    "twitter_title": "Auditoría y Consultoría WordPress | Alsnippets",
+    "twitter_description": "Diagnóstico profundo, seguridad y rendimiento para tu web. Trabajo 100% remoto."
+  },
+  "schema": {
+    "serviceType": "WordPress Audit and Consulting",
+    "name": "Auditoría y Consultoría Técnica WordPress",
+    "description": "Servicio avanzado de diagnóstico, optimización de velocidad (WPO), limpieza de malware y consultoría técnica.",
+    "areaServed": [
+      { "@type": "Country", "name": "Colombia" },
+      { "@type": "Country", "name": "España" },
+      { "@type": "Country", "name": "Estados Unidos" },
+      { "@type": "Country", "name": "Canadá" },
+      { "@type": "Continent", "name": "Latinoamérica" }
+    ],
+    "catalogName": "Servicios WordPress",
+    "offers": [
+      "Optimización de Rendimiento (WPO)",
+      "Auditoría de Seguridad y Limpieza de Malware",
+      "Acompañamiento y Soporte Técnico Remoto"
+    ]
+  },
+  "page": {
+    "hero": {
+      "title": "Auditoría WordPress",
+      "subtitle": "Identifica problemas técnicos, reduce riesgos y escala tu sitio web con un acompañamiento profesional y remoto."
+    },
+    "intro": {
+      "title": "Anticipar es mejor que lamentar",
+      "description": "La tecnología no es infalible. Mi trabajo es anticipar problemas, reducir riesgos y responder con criterio cuando algo ocurre. Ofrezco servicio remoto para Colombia, Latinoamérica, España, USA, Canadá y más."
+    },
+    "guarantee": {
+      "title": "Trabajo responsable, sin sobrecarga ni abandono",
+      "description": "Trabajo con un número limitado de proyectos. Prefiero cumplir bien cada compromiso, mantener comunicación clara y acompañar cada proyecto de principio a fin sin delegarlo a terceros."
+    },
+    "options": {
+      "main_title": "¿Qué opción necesitas?",
+      "common": {
+        "refund_link": "Ver Política de Devoluciones"
+      },
+      "audit": {
+        "title": "Auditoría Técnica",
+        "description": "Revisión profunda del estado real de tu sitio web para detectar vulnerabilidades, cuellos de botella y oportunidades de mejora (WPO).",
+        "items": [
+          "Revisión de Core, hosting y dominio.",
+          "Análisis de seguridad y rendimiento.",
+          "Requiere acceso al entorno técnico."
+        ],
+        "note": "* El costo de la auditoría se descuenta del servicio final si decides realizar el trabajo técnico conmigo."
+      },
+      "consulting": {
+        "title": "Consultoría Estratégica",
+        "description": "Sesión de orientación y diagnóstico 1 a 1 donde resolvemos dudas específicas, evaluamos ideas y definimos la arquitectura o camino a seguir.",
+        "items": [
+          "Primera sesión gratuita (60 mins).",
+          "Videollamada (Meet / Teams / Zoom).",
+          "No requiere compartir accesos."
+        ],
+        "note": "Las sesiones posteriores tienen un costo basado en el tiempo de dedicación y el alcance del requerimiento."
+      }
+    },
+    "form_section": {
+      "title_1": "Comencemos",
+      "title_highlight": "hoy mismo.",
+      "description": "Rellena este formulario con los detalles de lo que necesitas. Te responderé lo más pronto posible para coordinar nuestra primera toma de contacto."
+    }
+  }
+}

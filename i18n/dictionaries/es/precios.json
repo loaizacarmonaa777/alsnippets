@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "title": "Precios y Cotizaciones - Alsnippets",
+    "description": "Cada proyecto es distinto. Descubre mi forma de trabajo y obtén una cotización a medida.",
+    "keywords": [
+      "Precios desarrollo web",
+      "Cotización WordPress",
+      "Tarifas SEO"
+    ],
+    "og_title": "Precios y Forma de Trabajo | Adrián Loaiza",
+    "og_description": "Auditorías y cotizaciones basadas en el valor real para tu negocio.",
+    "twitter_title": "Precios Alsnippets",
+    "twitter_description": "Transparencia total en servicios de desarrollo y SEO."
+  },
+  "schema": {
+    "name": "Precios y Forma de Trabajo - Alsnippets",
+    "description": "Metodología de trabajo y cotizaciones personalizadas."
+  },
+  "page": {
+    "hero": {
+      "title": "Precios y forma de trabajo",
+      "subtitle": "Cada proyecto es distinto. No trabajo con paquetes cerrados sin entender primero el contexto real."
+    },
+    "philosophy": {
+      "title": "¿Cómo se define el precio?",
+      "description": "El valor depende del estado actual, la complejidad y los objetivos.",
+      "cards": [
+        {
+          "title": "Estado del sitio",
+          "description": "Evaluamos la deuda técnica y salud del servidor.",
+          "image": "/images/precios/estado-sitio-web.webp"
+        },
+        {
+          "title": "Personalización",
+          "description": "Soluciones a medida vs plantillas prefabricadas.",
+          "image": "/images/precios/nivel-personalizacion.webp"
+        },
+        {
+          "title": "Complejidad",
+          "description": "Integraciones con APIs y pasarelas de pago.",
+          "image": "/images/precios/complejidad-tecnica.webp"
+        },
+        {
+          "title": "Trabajo manual",
+          "description": "Optimización profunda y limpieza de datos.",
+          "image": "/images/precios/trabajo-manual.webp"
+        },
+        {
+          "title": "Responsabilidad",
+          "description": "Protocolos estrictos en sitios con tráfico real.",
+          "image": "/images/precios/riesgos-responsabilidad.webp"
+        },
+        {
+          "title": "Código propio",
+          "description": "Funcionalidades únicas sin depender de plugins.",
+          "image": "/images/precios/implementacion-codigo-personalizado.webp"
+        }
+      ]
+    },
+    "transparency": {
+      "title": "Transparencia desde el inicio",
+      "p1": "Realizo una revisión técnica para proponer una solución realista.",
+      "p2": "Esto evita sorpresas de presupuesto durante el proceso."
+    },
+    "methods": {
+      "title": "Formas de trabajo",
+      "custom": {
+        "title": "Servicios a medida",
+        "description": "Ideal para proyectos específicos, mejoras puntuales o desarrollos con requerimientos particulares."
+      },
+      "audit": {
+        "title": "Auditoría WordPress",
+        "description": "El primer paso recomendado para conocer el estado real de tu sitio antes de intervenir."
+      }
+    },
+    "cta": {
+      "title": "Empieza por una auditoría",
+      "description": "Analizamos el estado real de tu CMS para definir el mejor camino.",
+      "button": "Solicitar auditoría",
+      "disclaimer": "Disponible para España, USA y Latinoamérica."
+    }
+  }
+}

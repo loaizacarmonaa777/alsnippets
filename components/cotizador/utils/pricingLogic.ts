@@ -1,141 +1,152 @@
-// components/cotizador/utils/pricingLogic.ts
+/* =====================================================
+    PRICING LOGIC & I18N DATA - FULL VERSION
+   ===================================================== */
+import {
+  parsePhoneNumber,
+  getCountries,
+  getCountryCallingCode,
+  CountryCode
+} from 'libphonenumber-js'
 
-export type Currency = 'COP' | 'EUR' | 'USD';
+export type Currency = 'COP' | 'EUR' | 'USD'
 
 export interface CountryData {
-  name: string;
-  currency: Currency;
-  code: string;
+  name: string
+  currency: Currency
+  code: string
 }
 
-// 1. DICCIONARIO MUNDIAL DE PREFIJOS
-// Si un país usa Euro, le asignamos 'EUR'. Colombia 'COP'. El resto del mundo usará 'USD'.
-const countryPrefixes: Record<string, { name: string; currency: Currency }> = {
-  // === COLOMBIA ===
-  '+57': { name: 'Colombia', currency: 'COP' },
-  
-  // === LATAM (Facturación en USD) ===
-  '+52': { name: 'México', currency: 'USD' },
-  '+54': { name: 'Argentina', currency: 'USD' },
-  '+56': { name: 'Chile', currency: 'USD' },
-  '+51': { name: 'Perú', currency: 'USD' },
-  '+593': { name: 'Ecuador', currency: 'USD' },
-  '+58': { name: 'Venezuela', currency: 'USD' },
-  '+591': { name: 'Bolivia', currency: 'USD' },
-  '+595': { name: 'Paraguay', currency: 'USD' },
-  '+598': { name: 'Uruguay', currency: 'USD' },
-  '+55': { name: 'Brasil', currency: 'USD' },
-  '+501': { name: 'Belice', currency: 'USD' },
-  '+502': { name: 'Guatemala', currency: 'USD' },
-  '+503': { name: 'El Salvador', currency: 'USD' },
-  '+504': { name: 'Honduras', currency: 'USD' },
-  '+505': { name: 'Nicaragua', currency: 'USD' },
-  '+506': { name: 'Costa Rica', currency: 'USD' },
-  '+507': { name: 'Panamá', currency: 'USD' },
-  '+53': { name: 'Cuba', currency: 'USD' },
-  '+1809': { name: 'Rep. Dominicana', currency: 'USD' },
-  '+1829': { name: 'Rep. Dominicana', currency: 'USD' },
-  '+1849': { name: 'Rep. Dominicana', currency: 'USD' },
-  '+1787': { name: 'Puerto Rico', currency: 'USD' },
-  '+1939': { name: 'Puerto Rico', currency: 'USD' },
-  
-  // === NORTEAMÉRICA (Facturación en USD) ===
-  '+1': { name: 'Estados Unidos / Canadá', currency: 'USD' },
+export interface CountryOption {
+  n: string
+  v: string
+  iso: string
+}
 
-  // === EUROPA ZONA EURO (Facturación en EUR) ===
-  '+34': { name: 'España', currency: 'EUR' },
-  '+33': { name: 'Francia', currency: 'EUR' },
-  '+49': { name: 'Alemania', currency: 'EUR' },
-  '+39': { name: 'Italia', currency: 'EUR' },
-  '+351': { name: 'Portugal', currency: 'EUR' },
-  '+31': { name: 'Países Bajos', currency: 'EUR' },
-  '+32': { name: 'Bélgica', currency: 'EUR' },
-  '+43': { name: 'Austria', currency: 'EUR' },
-  '+30': { name: 'Grecia', currency: 'EUR' },
-  '+353': { name: 'Irlanda', currency: 'EUR' },
-  '+358': { name: 'Finlandia', currency: 'EUR' },
-  '+372': { name: 'Estonia', currency: 'EUR' },
-  '+371': { name: 'Letonia', currency: 'EUR' },
-  '+370': { name: 'Lituania', currency: 'EUR' },
-  '+421': { name: 'Eslovaquia', currency: 'EUR' },
-  '+386': { name: 'Eslovenia', currency: 'EUR' },
-  '+357': { name: 'Chipre', currency: 'EUR' },
-  '+356': { name: 'Malta', currency: 'EUR' },
-  '+352': { name: 'Luxemburgo', currency: 'EUR' },
+// 1. MAPEO DE MONEDAS
+const CURRENCY_MAP: Record<string, Currency> = {
+  CO: 'COP',
+  ES: 'EUR',
+  FR: 'EUR',
+  DE: 'EUR',
+  IT: 'EUR',
+  PT: 'EUR',
+  BE: 'EUR',
+  NL: 'EUR',
+  AT: 'EUR',
+  GR: 'EUR',
+  IE: 'EUR'
+}
 
-  // === EUROPA NO-EURO Y RESTO DEL MUNDO (Facturación en USD) ===
-  '+44': { name: 'Reino Unido', currency: 'USD' },
-  '+41': { name: 'Suiza', currency: 'USD' },
-  '+46': { name: 'Suecia', currency: 'USD' },
-  '+47': { name: 'Noruega', currency: 'USD' },
-  '+45': { name: 'Dinamarca', currency: 'USD' },
-  '+48': { name: 'Polonia', currency: 'USD' },
-  '+420': { name: 'República Checa', currency: 'USD' },
-  '+81': { name: 'Japón', currency: 'USD' },
-  '+86': { name: 'China', currency: 'USD' },
-  '+91': { name: 'India', currency: 'USD' },
-  '+61': { name: 'Australia', currency: 'USD' },
-  '+64': { name: 'Nueva Zelanda', currency: 'USD' },
-};
+// 2. MULTIPLICADORES POR TECNOLOGÍA (El "cerebro" del cotizador)
+export const TECH_MULTIPLIERS: Record<string, number> = {
+  WordPress: 1.0,
+  Wix: 0.85, // Menos complejidad técnica
+  Shopify: 1.25, // Especialidad Liquid + Ecosistema cerrado
+  Prestashop: 1.4, // Alta complejidad en BD y Smarty
+  Joomla: 1.5, // Escasez de especialistas
+  Drupal: 1.6, // Arquitectura corporativa
+  Otro: 1.3
+}
 
-// 2. FUNCIÓN INTELIGENTE DE DETECCIÓN
-export const getCountryFromPhone = (phone: string): CountryData => {
-  const cleanPhone = phone.trim();
-  
-  // Magia técnica: Ordenamos las llaves por longitud de mayor a menor.
-  // Así evitamos que "+1809" (Rep. Dominicana) se confunda con "+1" (USA).
-  const prefixes = Object.keys(countryPrefixes).sort((a, b) => b.length - a.length);
-
-  for (const prefix of prefixes) {
-    if (cleanPhone.startsWith(prefix)) {
-      return {
-        name: countryPrefixes[prefix].name,
-        currency: countryPrefixes[prefix].currency,
-        code: prefix
-      };
-    }
-  }
-
-  // Si escribe un código que no tenemos en la lista (ej: +971 Emiratos Árabes)
-  if (cleanPhone.startsWith('+') && cleanPhone.length >= 3) {
-    return { name: 'Internacional', currency: 'USD', code: 'INT' };
-  }
-
-  // Si aún no ha escrito nada o faltan números
-  return { name: '', currency: 'USD', code: '' };
-};
-
-
-// 3. TARIFA BASE DE MIS SERVICIOS
+// 3. TARIFAS BASE (WordPress como estándar)
 export const PRICES = {
   USD: {
-    webBase: 450,
-    wooCommerce: 250,
-    branding: 150,
-    soporteModulo: 85,     // Precio por cada tarea individual de soporte
-    soporteGlobal: 350,    // Precio si eligen "Soporte Global Integral"
-    horaNoCode: 30,
+    // Servicios de Soporte
+    mantenimiento: 120,
+    wpo: 180,
+    diseno: 100,
+    ecommerce: 220,
+    infraestructura: 150,
+    soporteGlobal: 350,
+    // Servicios de Creación / Cimientos
+    webBase: 450, // Estructura inicial del sitio
+    seoAuditoria: 200, // Auditoría inicial y Setup
+    gestionDominio: 25, // Compra y DNS
+    gestionHosting: 180, // Configuración anual
+    setupTextos: 150, // Arquitectura de información
+    brandingBase: 250, // Identidad visual
     horaCode: 45,
-    seo: 200               // Auditoría SEO inicial
+    horaNoCode: 30
   },
   EUR: {
-    webBase: 400,
-    wooCommerce: 230,
-    branding: 140,
-    soporteModulo: 80,
+    mantenimiento: 110,
+    wpo: 165,
+    diseno: 95,
+    ecommerce: 200,
+    infraestructura: 140,
     soporteGlobal: 320,
-    horaNoCode: 28,
+    webBase: 400,
+    seoAuditoria: 180,
+    gestionDominio: 22,
+    gestionHosting: 165,
+    setupTextos: 140,
+    brandingBase: 230,
     horaCode: 42,
-    seo: 180
+    horaNoCode: 28
   },
   COP: {
-    webBase: 1800000,
-    wooCommerce: 1000000,
-    branding: 600000,
-    soporteModulo: 350000,
+    mantenimiento: 450000,
+    wpo: 750000,
+    diseno: 400000,
+    ecommerce: 900000,
+    infraestructura: 600000,
     soporteGlobal: 1400000,
-    horaNoCode: 120000,
+    webBase: 1800000,
+    seoAuditoria: 800000,
+    gestionDominio: 100000,
+    gestionHosting: 750000,
+    setupTextos: 600000,
+    brandingBase: 1000000,
     horaCode: 180000,
-    seo: 800000
+    horaNoCode: 120000
   }
-};
+}
+
+// 4. FUNCIONES DE APOYO (Para evitar errores de TypeScript)
+
+export const COUNTRY_OPTIONS = [
+  {
+    group: 'Países',
+    options: getCountries()
+      .map(countryCode => ({
+        n:
+          new Intl.DisplayNames(['es'], { type: 'region' }).of(countryCode) ||
+          countryCode,
+        v: `+${getCountryCallingCode(countryCode)}`,
+        iso: countryCode
+      }))
+      .sort((a, b) => a.n.localeCompare(b.n))
+  }
+]
+
+export const getCountryFromPhone = (
+  phone: string,
+  lang: string = 'es'
+): CountryData => {
+  const currentLang = lang as 'es' | 'en'
+  try {
+    const phoneNumber = parsePhoneNumber(phone)
+    if (phoneNumber && phoneNumber.country) {
+      const countryCode = phoneNumber.country as string
+      const currency = CURRENCY_MAP[countryCode] || 'USD'
+      const name =
+        new Intl.DisplayNames([currentLang], { type: 'region' }).of(
+          countryCode
+        ) || countryCode
+
+      return { name, currency, code: `+${phoneNumber.countryCallingCode}` }
+    }
+  } catch (e) {}
+  return { name: '', currency: 'USD', code: '' }
+}
+
+/**
+ * Aplica el multiplicador tecnológico y redondea
+ */
+export const calculateAdjustedPrice = (
+  basePrice: number,
+  tech: string
+): number => {
+  const multiplier = TECH_MULTIPLIERS[tech] || 1.0
+  return Math.round(basePrice * multiplier)
+}

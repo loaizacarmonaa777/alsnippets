@@ -1,0 +1,13 @@
+{
+  "placeholders": {
+    "email": "Enter your email@"
+  },
+  "buttons": {
+    "subscribe": "Subscribe"
+  },
+  "messages": {
+    "success": "Thanks for subscribing!",
+    "err_sub": "Error subscribing.",
+    "err_conn": "Connection error."
+  }
+}

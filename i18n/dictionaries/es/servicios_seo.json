@@ -1,0 +1,130 @@
+{
+  "meta": {
+    "title": "SEO y GEO: Optimización para Buscadores y Motores Generativos",
+    "description": "Evoluciona tu estrategia: optimizo tu web para Google y para motores de IA (GEO). Estructura semántica y contexto técnico para ser la fuente confiable de los LLMs.",
+    "keywords": [
+      "SEO técnico",
+      "GEO",
+      "Generative Engine Optimization",
+      "optimización para IA",
+      "LLM optimization",
+      "posicionamiento buscadores IA",
+      "arquitectura de información",
+      "adrian loaiza",
+      "alsnippets"
+    ],
+    "og_title": "SEO y GEO | El futuro de la búsqueda con IA | Alsnippets",
+    "og_description": "No solo optimizo para Google, preparo tu sitio para que la IA (ChatGPT, Gemini, Perplexity) entienda y cite tu contenido.",
+    "og_alt": "SEO y GEO - Optimización para Inteligencia Artificial",
+    "twitter_title": "SEO y GEO | Optimización para el futuro | Alsnippets",
+    "twitter_description": "Estructura técnica y semántica para dominar Google y motores generativos."
+  },
+  "schema": {
+    "name": "Consultoría SEO y GEO (Generative Engine Optimization)",
+    "description": "Optimización técnica y semántica de sitios web para buscadores tradicionales y motores de inteligencia artificial."
+  },
+  "page": {
+    "hero": {
+      "title": "SEO y GEO: El nuevo paradigma de búsqueda",
+      "subtitle": "Optimización para Google y para motores de IA (ChatGPT, Gemini, Perplexity)"
+    },
+    "how_it_works": {
+      "title": "Cómo funciona realmente <br/> el SEO en 2026",
+      "paragraphs": [
+        "El SEO tradicional se centraba en palabras clave y backlinks. Hoy, los motores de búsqueda y los LLMs (Large Language Models) evalúan el contexto, la autoridad temática y la estructura semántica.",
+        "Mi enfoque combina la solidez del SEO técnico con la optimización para motores generativos (GEO), preparando tu contenido para ser entendido, citado y recomendado por la IA."
+      ],
+      "items": [
+        {
+          "title": "Análisis de intención",
+          "description": "Identifico qué busca realmente el usuario y cómo la IA interpreta esa consulta.",
+          "image": "/images/seo/analisis-intencion-estructura.webp"
+        },
+        {
+          "title": "Arquitectura semántica",
+          "description": "Reorganizo la información para que sea comprensible para humanos y máquinas.",
+          "image": "/images/seo/reorganizacion-semantica-sitio.webp"
+        },
+        {
+          "title": "Contexto completo",
+          "description": "Cada sección tiene el contexto necesario para responder preguntas complejas.",
+          "image": "/images/seo/contexto-completo-seccion.webp"
+        },
+        {
+          "title": "Señales de autoridad",
+          "description": "Construyo una base de experiencia y confianza que los LLMs reconocen.",
+          "image": "/images/seo/senales-autoridad-experiencia.webp"
+        }
+      ]
+    },
+    "what_is_geo": {
+      "title": "GEO (Generative Engine Optimization)",
+      "p1": "Los motores generativos como ChatGPT, Gemini o Perplexity no leen tu web como lo hace Google. <strong>Extraen, sintetizan y citan información</strong> basándose en la claridad, estructura y autoridad de tu contenido.",
+      "p2": "La optimización para motores generativos (GEO) se enfoca en que tu sitio sea la fuente que estos sistemas elijan para responder a las consultas de los usuarios.",
+      "items": [
+        {
+          "title": "Contenido estructurado",
+          "description": "Organización jerarquizada que facilita la extracción de respuestas precisas.",
+          "image": "/images/seo/contenido-comprensible-jerarquizado.webp"
+        },
+        {
+          "title": "Lenguaje claro",
+          "description": "Evito ambigüedades para que la IA interprete correctamente tu mensaje.",
+          "image": "/images/seo/lenguaje-claro-directo.webp"
+        },
+        {
+          "title": "Contexto real",
+          "description": "La información relevante no se diluye en contenido inflado o repetitivo.",
+          "image": "/images/seo/contexto-real-no-inflado.webp"
+        },
+        {
+          "title": "Respuestas delimitadas",
+          "description": "Preguntas y respuestas claras que la IA puede extraer directamente.",
+          "image": "/images/seo/respuestas-delimitadas.webp"
+        }
+      ]
+    },
+    "process": {
+      "title": "Mi proceso de optimización",
+      "items": [
+        {
+          "title": "Estrategia de contenido a largo plazo",
+          "description": "Planificación editorial basada en pilares temáticos y autoridad de nicho.",
+          "image": "/images/seo/estrategia-contenido-largo-plazo.webp",
+          "slug": "estrategia-de-contenido-a-largo-plazo"
+        },
+        {
+          "title": "Reorganización semántica",
+          "description": "Estructuro la información para que los motores entiendan la jerarquía y relaciones.",
+          "image": "/images/seo/reorganizacion-semantica-sitio.webp",
+          "slug": "reorganizacion-semantica-del-sitio"
+        },
+        {
+          "title": "Optimización para LLMs",
+          "description": "Preparo el contenido para ser procesado y citado por inteligencia artificial.",
+          "image": "/images/seo/optimizacion-para-buscadores-llms.webp",
+          "slug": "optimizacion-para-buscadores-y-llms"
+        },
+        {
+          "title": "Seguimiento y ajustes",
+          "description": "Análisis continuo de cómo la IA interpreta y recomienda tu contenido.",
+          "image": "/images/seo/seguimiento-ajustes-proguresivos.webp",
+          "slug": "seguimiento-y-ajustes-progresivos"
+        }
+      ]
+    },
+    "expectations": {
+      "title": "¿Qué debes tener en cuenta?",
+      "paragraphs": [
+        "El SEO y GEO no son magia ni resultados inmediatos. Es un trabajo de construcción de autoridad que rinde frutos a mediano y largo plazo.",
+        "No prometo posiciones #1 en Google en una semana. Prometo una estrategia sólida, transparente y técnicamente impecable que posicione tu sitio como referencia en tu industria."
+      ]
+    },
+    "cta": {
+      "title": "Prepara tu sitio para el futuro de las búsquedas",
+      "description": "Solicita una auditoría SEO/GEO y descubre cómo tu contenido puede destacar tanto en Google como en motores de IA.",
+      "button": "Solicitar auditoría SEO",
+      "disclaimer": "Consultoría especializada · Sin compromiso"
+    }
+  }
+}

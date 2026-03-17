@@ -1,0 +1,130 @@
+{
+  "meta": {
+    "title": "SEO & GEO: Optimization for Search Engines and Generative Engines",
+    "description": "Evolve your strategy: I optimize your website for Google and AI engines (GEO). Semantic structure and technical context to be the trusted source for LLMs.",
+    "keywords": [
+      "technical SEO",
+      "GEO",
+      "Generative Engine Optimization",
+      "AI optimization",
+      "LLM optimization",
+      "AI search positioning",
+      "information architecture",
+      "adrian loaiza",
+      "alsnippets"
+    ],
+    "og_title": "SEO & GEO | The future of AI-powered search | Alsnippets",
+    "og_description": "I don't just optimize for Google, I prepare your site so AI (ChatGPT, Gemini, Perplexity) understands and cites your content.",
+    "og_alt": "SEO & GEO - Optimization for Artificial Intelligence",
+    "twitter_title": "SEO & GEO | Optimization for the future | Alsnippets",
+    "twitter_description": "Technical and semantic structure to dominate Google and generative engines."
+  },
+  "schema": {
+    "name": "SEO & GEO Consulting (Generative Engine Optimization)",
+    "description": "Technical and semantic optimization of websites for traditional search engines and artificial intelligence engines."
+  },
+  "page": {
+    "hero": {
+      "title": "SEO & GEO: The new search paradigm",
+      "subtitle": "Optimization for Google and AI engines (ChatGPT, Gemini, Perplexity)"
+    },
+    "how_it_works": {
+      "title": "How SEO really works <br/> in 2026",
+      "paragraphs": [
+        "Traditional SEO focused on keywords and backlinks. Today, search engines and LLMs (Large Language Models) evaluate context, topical authority, and semantic structure.",
+        "My approach combines the solidity of technical SEO with optimization for generative engines (GEO), preparing your content to be understood, cited, and recommended by AI."
+      ],
+      "items": [
+        {
+          "title": "Intent analysis",
+          "description": "I identify what the user is really looking for and how AI interprets that query.",
+          "image": "/images/seo/analisis-intencion-estructura.webp"
+        },
+        {
+          "title": "Semantic architecture",
+          "description": "I reorganize information to be understandable for humans and machines.",
+          "image": "/images/seo/reorganizacion-semantica-sitio.webp"
+        },
+        {
+          "title": "Complete context",
+          "description": "Each section has the necessary context to answer complex questions.",
+          "image": "/images/seo/contexto-completo-seccion.webp"
+        },
+        {
+          "title": "Authority signals",
+          "description": "I build a foundation of experience and trust that LLMs recognize.",
+          "image": "/images/seo/senales-autoridad-experiencia.webp"
+        }
+      ]
+    },
+    "what_is_geo": {
+      "title": "GEO (Generative Engine Optimization)",
+      "p1": "Generative engines like ChatGPT, Gemini, or Perplexity don't read your website like Google does. <strong>They extract, synthesize, and cite information</strong> based on the clarity, structure, and authority of your content.",
+      "p2": "Optimization for generative engines (GEO) focuses on making your site the source these systems choose to answer user queries.",
+      "items": [
+        {
+          "title": "Structured content",
+          "description": "Hierarchical organization that facilitates the extraction of precise answers.",
+          "image": "/images/seo/contenido-comprensible-jerarquizado.webp"
+        },
+        {
+          "title": "Clear language",
+          "description": "I avoid ambiguities so AI correctly interprets your message.",
+          "image": "/images/seo/lenguaje-claro-directo.webp"
+        },
+        {
+          "title": "Real context",
+          "description": "Relevant information isn't diluted in inflated or repetitive content.",
+          "image": "/images/seo/contexto-real-no-inflado.webp"
+        },
+        {
+          "title": "Delimited answers",
+          "description": "Clear questions and answers that AI can extract directly.",
+          "image": "/images/seo/respuestas-delimitadas.webp"
+        }
+      ]
+    },
+    "process": {
+      "title": "My optimization process",
+      "items": [
+        {
+          "title": "Long-term content strategy",
+          "description": "Editorial planning based on thematic pillars and niche authority.",
+          "image": "/images/seo/estrategia-contenido-largo-plazo.webp",
+          "slug": "estrategia-de-contenido-a-largo-plazo"
+        },
+        {
+          "title": "Semantic reorganization",
+          "description": "I structure information so engines understand hierarchy and relationships.",
+          "image": "/images/seo/reorganizacion-semantica-sitio.webp",
+          "slug": "reorganizacion-semantica-del-sitio"
+        },
+        {
+          "title": "LLM optimization",
+          "description": "I prepare content to be processed and cited by artificial intelligence.",
+          "image": "/images/seo/optimizacion-para-buscadores-llms.webp",
+          "slug": "optimizacion-para-buscadores-y-llms"
+        },
+        {
+          "title": "Monitoring and adjustments",
+          "description": "Continuous analysis of how AI interprets and recommends your content.",
+          "image": "/images/seo/seguimiento-ajustes-proguresivos.webp",
+          "slug": "seguimiento-y-ajustes-progresivos"
+        }
+      ]
+    },
+    "expectations": {
+      "title": "What should you keep in mind?",
+      "paragraphs": [
+        "SEO and GEO aren't magic or immediate results. It's a process of building authority that pays off in the medium and long term.",
+        "I don't promise #1 positions on Google in a week. I promise a solid, transparent, and technically impeccable strategy that positions your site as a reference in your industry."
+      ]
+    },
+    "cta": {
+      "title": "Prepare your site for the future of search",
+      "description": "Request an SEO/GEO audit and discover how your content can stand out both on Google and AI engines.",
+      "button": "Request SEO audit",
+      "disclaimer": "Specialized consulting · No obligation"
+    }
+  }
+}

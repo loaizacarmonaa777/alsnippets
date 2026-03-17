@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "title": "Terms and Conditions",
+    "description": "The use of this website implies the acceptance of the following terms and conditions."
+  },
+  "page": {
+    "hero_title": "Terms and Conditions",
+    "hero_subtitle": "The use of this website implies the acceptance of the following terms and conditions.",
+    "sections": [
+      {
+        "title": "Site Use",
+        "content": "Alsnippets content is informative and professional. Misuse of the site, or unauthorized reproduction of its contents, is not permitted."
+      },
+      {
+        "title": "Services",
+        "content": "The services offered are subject to prior evaluation. No service is considered contracted until there is an explicit agreement between both parties."
+      },
+      {
+        "title": "Liability",
+        "content": "Alsnippets is not responsible for damages resulting from the misuse of the site or for decisions made without direct professional advice."
+      }
+    ],
+    "footer_note": "These terms may be updated without prior notice."
+  }
+}

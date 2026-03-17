@@ -1,0 +1,294 @@
+{
+  "meta": {
+    "title": "Casos de Éxito",
+    "description": "Sitios web y proyectos reales en los que he trabajado, optimizado el rendimiento (WPO) o acompañado técnicamente para escalar sus resultados.",
+    "keywords": [
+      "Casos de éxito desarrollo web",
+      "Ejemplos optimización WPO",
+      "Proyectos SEO técnico",
+      "Auditoría WordPress clientes",
+      "Portafolio Adrián Loaiza",
+      "Resultados rendimiento web"
+    ],
+    "og_title": "Casos de Éxito y Proyectos Reales | Alsnippets",
+    "og_description": "Descubre cómo he ayudado a marcas y negocios a mejorar su rendimiento web, seguridad y arquitectura técnica.",
+    "og_alt": "Casos de Éxito - Alsnippets",
+    "twitter_title": "Casos de Éxito | Alsnippets",
+    "twitter_description": "Sitios web y proyectos reales optimizados y acompañados técnicamente."
+  },
+  "schema": {
+    "name": "Casos de Éxito - Alsnippets",
+    "description": "Repositorio de casos de estudio y proyectos reales donde se ha aplicado auditoría, optimización WPO y desarrollo a medida."
+  },
+  "page": {
+    "hero": {
+      "title": "Casos de éxito",
+      "subtitle": "Sitios web y proyectos reales en los que he trabajado, optimizado o acompañado técnicamente a nivel internacional."
+    },
+    "intro": "Mi experiencia abarca desde el desarrollo completo de plataformas multilingües con integraciones complejas (PHP, WooCommerce), hasta intervenciones quirúrgicas de seguridad (malware) y optimización de rendimiento (WPO) para entidades gubernamentales.",
+    "creations_title": "Creación y Desarrollo a Medida",
+    "creations_desc": "Plataformas construidas desde cero o reestructuradas profundamente. Integraciones de pago personalizadas, sistemas de reservas y despliegues multi-idioma.",
+    "creations_list": [
+      {
+        "title": "Transcendent Institute",
+        "url": "https://transcendentinstitute.com/",
+        "type": "Optimización y Creación",
+        "description": "Plataforma internacional multilingüe con sistema de reservas avanzado y e-commerce.",
+        "features": [
+          "WordPress",
+          "Elementor PRO",
+          "WPML (5 Idiomas)",
+          "WooCommerce",
+          "Modern Events Calendar",
+          "Seguridad y Caché",
+          "Diseño UI/UX"
+        ],
+        "image": "/images/casos-exito/transcendent-psychology.webp"
+      },
+      {
+        "title": "Inner Mastery Europa",
+        "url": "https://innermastery.eu/",
+        "type": "Creación y Desarrollo Custom",
+        "description": "Portal europeo con lógica PHP a medida para selectores de precios dinámicos y descuentos por fechas.",
+        "features": [
+          "WordPress",
+          "Divi Pro",
+          "PHP Custom",
+          "WooCommerce",
+          "MEC Calendar",
+          "Backups de Seguridad",
+          "WPO Optimizado",
+          "SEO",
+          "Diseño UI/UX",
+          "Acceso Panel Administrativo",
+          "Plesk"
+        ],
+        "image": "/images/casos-exito/inner-mastery-europe.webp"
+      },
+      {
+        "title": "Inner Mastery España",
+        "url": "https://innermastery.es/",
+        "type": "Creación",
+        "description": "Versión española del portal de reservas con integraciones personalizadas de pago.",
+        "features": [
+          "WordPress",
+          "Divi Pro",
+          "PHP Custom",
+          "WooCommerce",
+          "MEC Calendar",
+          "Backups de Seguridad",
+          "WPO Optimizado",
+          "SEO",
+          "Diseño UI/UX",
+          "Acceso Panel Administrativo",
+          "Plesk"
+        ],
+        "image": "/images/casos-exito/inner-mastery-spain.webp"
+      },
+      {
+        "title": "Inner Mastery Italia",
+        "url": "https://innermastery.it/",
+        "type": "Creación",
+        "description": "Plataforma oficial para Italia con sistema de reservas y calendario de eventos localizados.",
+        "features": [
+          "WordPress",
+          "Divi Pro",
+          "PHP Custom",
+          "WooCommerce",
+          "MEC Calendar",
+          "Backups de Seguridad",
+          "WPO Optimizado",
+          "SEO",
+          "Diseño UI/UX",
+          "Acceso Panel Administrativo",
+          "Plesk"
+        ],
+        "image": "/images/casos-exito/inner-mastery-italy.webp"
+      },
+      {
+        "title": "Inner Mastery Alemania",
+        "url": "https://deutsch.innermastery.eu/",
+        "type": "Creación",
+        "description": "Despliegue de infraestructura y plataforma de reservas para el mercado alemán.",
+        "features": [
+          "WordPress",
+          "Divi Pro",
+          "PHP Custom",
+          "WooCommerce",
+          "MEC Calendar",
+          "Backups de Seguridad",
+          "WPO Optimizado",
+          "SEO",
+          "Diseño UI/UX",
+          "Acceso Panel Administrativo",
+          "Plesk"
+        ],
+        "image": "/images/casos-exito/inner-mastery-germany.webp"
+      },
+      {
+        "title": "Inner Mastery Suiza",
+        "url": "https://swiss.innermastery.eu/",
+        "type": "Creación Multilingüe",
+        "description": "Portal suizo con soporte multi-idioma y lógica de precios dinámica.",
+        "features": [
+          "WordPress",
+          "Divi Pro",
+          "PHP Custom",
+          "WooCommerce",
+          "MEC Calendar",
+          "Backups de Seguridad",
+          "WPO Optimizado",
+          "SEO",
+          "Diseño UI/UX",
+          "Acceso Panel Administrativo",
+          "Plesk"
+        ],
+        "image": "/images/casos-exito/inner-mastery-switzerland.webp"
+      },
+      {
+        "title": "Inneos Evolution",
+        "url": "https://inneosevolution.org/",
+        "type": "Creación",
+        "description": "Sitio corporativo con integración de e-commerce y gestión de eventos.",
+        "features": [
+          "WordPress",
+          "Divi Pro",
+          "PHP Custom",
+          "WooCommerce",
+          "MEC Calendar",
+          "Backups de Seguridad",
+          "WPO Optimizado",
+          "SEO",
+          "Diseño UI/UX",
+          "Acceso Panel Administrativo",
+          "SiteGround"
+        ],
+        "image": "/images/casos-exito/inneos-evolution.webp"
+      },
+      {
+        "title": "Kintsugi Salud y Bienestar",
+        "url": "https://kintsuguisaludybienestar.com/",
+        "type": "Creación",
+        "description": "Plataforma para futura escuela online con blog y tienda integrada.",
+        "features": [
+          "Iconos",
+          "Logos",
+          "Imágenes",
+          "WordPress",
+          "WooCommerce",
+          "Blog",
+          "Diseño UI/UX",
+          "Backups de Seguridad",
+          "Configuración Servidor",
+          "Acceso Panel Administrativo",
+          "SiteGround"
+        ],
+        "image": "/images/casos-exito/kintsugi-salud-y-bienestar.webp"
+      },
+      {
+        "title": "Business Ecard",
+        "url": "https://eb-cards.com/webEbCards/",
+        "type": "Desarrollo Nativo",
+        "description": "Desarrollo de tarjetas de presentación digitales de alto rendimiento.",
+        "features": [
+          "Iconos",
+          "Logos",
+          "Imágenes",
+          "HTML5",
+          "CSS3",
+          "JS",
+          "WPO Extremo",
+          "WPO Optimizado",
+          "SEO",
+          "Diseño UI/UX",
+          "Servidor nginx"
+        ],
+        "image": "/images/casos-exito/ebcards.webp"
+      }
+    ],
+    "optimizations_title": "Optimización WPO, Seguridad y SEO",
+    "optimizations_desc": "Intervenciones técnicas en sitios de alto tráfico. Limpieza de hacks, migración de servidores, afinamiento de bases de datos y estrategias de posicionamiento técnico.",
+    "optimizations_list": [
+      {
+        "title": "EDESO",
+        "url": "https://edeso.gov.co/",
+        "type": "Seguridad y Rendimiento",
+        "description": "Entidad gubernamental. Limpieza profunda de malware (Japanese Keyword Hack), migración de servidor y optimización WPO.",
+        "features": [
+          "Limpieza Malware",
+          "Migración Servidor",
+          "WPO",
+          "WPBakery",
+          "Backups de Seguridad",
+          "Actualización controlada",
+          "cPanel"
+        ],
+        "image": "/images/casos-exito/edeso.webp"
+      },
+      {
+        "title": "VIVA (Empresa de Vivienda de Antioquia)",
+        "url": "https://viva.gov.co/",
+        "type": "Auditoría y SEO",
+        "description": "Entidad gubernamental. Implementación técnica SEO durante 3 meses, optimización de caché y arquitectura web.",
+        "features": [
+          "SEO Técnico",
+          "Optimización Servidor",
+          "WPO",
+          "WPBakery",
+          "Backups de Seguridad",
+          "Actualización controlada",
+          "cPanel"
+        ],
+        "image": "/images/casos-exito/viva-empresa-vivienda-de-antioquia.webp"
+      },
+      {
+        "title": "Sanaya Ancestral Wellness",
+        "url": "https://sanayawellness.com/",
+        "type": "WPO y Rendimiento",
+        "description": "Optimización extrema de imágenes, configuración avanzada de caché y mantenimiento de servidor.",
+        "features": [
+          "Caché de Objetos",
+          "WP Translate (2 idiomas)",
+          "Elementor Pro",
+          "Backups de Seguridad",
+          "Actualización controlada"
+        ],
+        "image": "/images/casos-exito/sanaya-ancestal-wellness.webp"
+      },
+      {
+        "title": "4R Soluciones Ambientales",
+        "url": "https://www.4rsoluciones.co/",
+        "type": "Mantenimiento Técnico",
+        "description": "Intervención técnica para mejora de rendimiento y actualización de infraestructura base.",
+        "features": [
+          "WPO",
+          "WPBakery",
+          "Backups de Seguridad",
+          "Actualización controlada",
+          "cPanel"
+        ],
+        "image": "/images/casos-exito/4r-soluciones.webp"
+      },
+      {
+        "title": "AOS Alianza Oriente Sostenible",
+        "url": "https://proyectoaos.com/",
+        "type": "Optimización Servidor",
+        "description": "Afinamiento de caché de página y objetos, junto con actualizaciones controladas del core.",
+        "features": [
+          "WPO",
+          "Seguridad",
+          "Backups de Seguridad",
+          "Actualización controlada",
+          "cPanel"
+        ],
+        "image": "/images/casos-exito/alianza-oriente-sostenible-aos.webp"
+      }
+    ],
+    "cta": {
+      "title": "¿Necesitas resultados similares en tu proyecto?",
+      "description": "Ya sea que necesites desarrollar una plataforma compleja o rescatar un sitio web comprometido, puedo ayudarte a escalarlo técnicamente.",
+      "button": "Solicitar auditoría técnica",
+      "disclaimer": "Soporte y consultoría disponible para Colombia, Europa y Norteamérica."
+    }
+  }
+}

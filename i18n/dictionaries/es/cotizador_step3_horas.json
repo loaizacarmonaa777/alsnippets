@@ -1,0 +1,15 @@
+{
+  "head": "Bolsa de Horas",
+  "sub": "Elige el perfil técnico que necesitas.",
+  "noCodeT": "Desarrollo No-Code",
+  "noCodeD": "Ideal para configuraciones en WordPress, Shopify, maquetación visual y ajustes.",
+  "codeT": "Desarrollo a Medida",
+  "codeD": "Ideal para programación compleja (React, JavaScript, PHP), APIs o bases de datos.",
+  "qHours": "¿Cuántas horas estimas que necesitas?",
+  "unit": "horas",
+  "hint": "Si no estás seguro, elige un paquete inicial de 5 horas para comenzar.",
+  "taskT": "¿Qué tareas realizaremos?",
+  "taskPh": "Ej: Necesito conectar el CRM de mi empresa...",
+  "btn": "Generar mi Cotización",
+  "wait": "Procesando..."
+}

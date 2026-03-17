@@ -1,0 +1,43 @@
+{
+  "placeholders": {
+    "name": "Full name *",
+    "email": "Email address *",
+    "phone": "Phone number *",
+    "message": "Tell me briefly how I can help you *",
+    "search_country": "Search country or code...",
+    "country_code": "Code"
+  },
+  "validation": {
+    "name_incomplete": "Please enter first and last name",
+    "email_missing_at": "Missing @ symbol",
+    "email_missing_domain": "Missing domain (.xxx)",
+    "email_invalid": "Invalid email",
+    "phone_too_short": "Not enough numbers for this country",
+    "phone_too_long": "Too many numbers for this country",
+    "word": "word",
+    "words": "words",
+    "remaining": "remaining",
+    "limit_reached": "You have exceeded the 300-word limit.",
+    "turnstile_error": "Verification error. Please try again.",
+    "character": "character",
+    "characters": "characters"
+  },
+  "legales": {
+    "accept": "I accept the",
+    "terms": "terms and conditions",
+    "and": "and the",
+    "privacy": "privacy policy"
+  },
+  "buttons": {
+    "send": "Send message",
+    "sending": "Sending...",
+    "missing_data": "Missing data",
+    "error_title": "Please complete the form correctly"
+  },
+  "messages": {
+    "success": "Message sent successfully! I will contact you soon.",
+    "error_submit": "Error. Please try again.",
+    "confirm_title": "Thank you for your message.",
+    "confirm_desc": "You will receive a reply within 24 hours."
+  }
+}

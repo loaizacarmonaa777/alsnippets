@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "title_prefix": "Digital Card -",
+    "description": "Professional contact and social networks for {name}. Save my information directly to your contacts.",
+    "og_title": "Digital Card for",
+    "og_description": "Click to view my professional profile and save my contact info."
+  },
+  "page": {
+    "error_title": "Card not found",
+    "error_desc": "The digital profile you are looking for does not exist or has been deactivated.",
+    "cta_branding": "Create my Digital Card with Alsnippets",
+    "vcard_note": "Professional contact via Alsnippets"
+  }
+}

@@ -1,227 +1,373 @@
-// components/cotizador/Step4Resumen.tsx
 'use client'
 
-import React from 'react';
-import { CheckCircle, MessageCircle, Download, RefreshCw } from 'lucide-react';
-import type { CotizadorData } from './CotizadorApp';
-import { PRICES, Currency } from './utils/pricingLogic';
+import React from 'react'
+import {
+  CheckCircle,
+  MessageCircle,
+  Download,
+  RefreshCw,
+  Mail,
+  Phone
+} from 'lucide-react'
+import type { CotizadorData } from './CotizadorApp'
+import {
+  PRICES,
+  Currency,
+  TECH_MULTIPLIERS,
+  calculateAdjustedPrice
+} from './utils/pricingLogic'
 
 interface Step4ResumenProps {
-  formData: CotizadorData;
-  onReset: () => void;
+  formData: CotizadorData
+  onReset: () => void
+  lang: string
+  dict: any
 }
 
-export default function Step4Resumen({ formData, onReset }: Step4ResumenProps) {
-  
-  // 1. EL MOTOR MATEMÁTICO
+export default function Step4Resumen ({
+  formData,
+  onReset,
+  lang,
+  dict: t
+}: Step4ResumenProps) {
   const getCalculation = () => {
-    const p = PRICES[formData.moneda as Currency] || PRICES['USD'];
-    let total = 0;
-    const items: { label: string; highlight?: boolean }[] = [];
+    const p = PRICES[formData.moneda as Currency] || PRICES['USD']
+    const tech = formData.plataformaSoporte || 'WordPress'
+    const labels = t?.labels || {}
+    let totalBase = 0
+    const items: { label: string; highlight?: boolean }[] = []
 
-    switch (formData.servicioPrincipal) {
-      case 'Crear Web':
-        total += p.webBase;
-        items.push({ label: 'Desarrollo Sitio Web Base (5-7 secciones)' });
-        if (formData.necesitaWooCommerce === 'Sí') {
-          total += p.wooCommerce;
-          items.push({ label: '+ Integración E-commerce Completa' });
-        }
-        if (formData.tieneBranding === 'No') {
-          total += p.branding;
-          items.push({ label: '+ Diseño de Branding y Manual de Marca' });
-        }
-        break;
-
-      case 'Soporte':
-        if (formData.necesidadesSoporte.includes('Soporte Global')) {
-          total += p.soporteGlobal;
-          items.push({ label: `Soporte Global Integral (${formData.plataformaSoporte})`, highlight: true });
-        } else if (formData.plataformaSoporte === 'Otro') {
-          total += p.soporteModulo * 1.5; // Revisión custom
-          items.push({ label: `Revisión Técnica Custom (${formData.plataformaSoporte})` });
-        } else {
-          formData.necesidadesSoporte.forEach(need => {
-            total += p.soporteModulo;
-            items.push({ label: `+ ${need}` });
-          });
-        }
-        break;
-
-      case 'Por Horas':
-        const rate = formData.tipoHoras === 'Code' ? p.horaCode : p.horaNoCode;
-        total += rate * formData.cantidadHoras;
-        items.push({ label: `Bolsa de ${formData.cantidadHoras} horas (${formData.tipoHoras})`, highlight: true });
-        break;
-
-      case 'SEO':
-        total += p.seo;
-        items.push({ label: 'Auditoría y Estrategia SEO Inicial' });
-        break;
+    if (formData.servicioPrincipal === 'Crear Web') {
+      totalBase += p.webBase
+      items.push({ label: labels.webBase })
+      if (formData.necesitaWooCommerce === 'Sí') totalBase += p.ecommerce
+      if (formData.tieneBranding === 'No') totalBase += p.brandingBase
+      if (formData.tieneDominio === 'No') totalBase += p.gestionDominio
+      if (formData.tieneHosting === 'No') totalBase += p.gestionHosting
+      if (formData.tieneEstructura === 'No') totalBase += p.setupTextos
+    } else if (formData.servicioPrincipal === 'Soporte') {
+      if (formData.necesidadesSoporte.includes('Soporte Global')) {
+        totalBase += p.soporteGlobal
+        items.push({ label: `${labels.sopGlobal} (${tech})`, highlight: true })
+      } else {
+        formData.necesidadesSoporte.forEach(needId => {
+          if (needId.includes('Mantenimiento')) totalBase += p.mantenimiento
+          else if (needId.includes('Rendimiento')) totalBase += p.wpo
+          else if (needId.includes('Diseño')) totalBase += p.diseno
+          else if (needId.includes('Tienda')) totalBase += p.ecommerce
+          else if (needId.includes('Hosting')) totalBase += p.infraestructura
+          else totalBase += 100
+          items.push({ label: `+ ${needId}` })
+        })
+      }
+    } else if (formData.servicioPrincipal === 'SEO') {
+      totalBase += p.seoAuditoria
+      items.push({ label: labels.seoTitle })
+    } else if (formData.servicioPrincipal === 'Por Horas') {
+      const rate = formData.tipoHoras === 'Code' ? p.horaCode : p.horaNoCode
+      totalBase = rate * formData.cantidadHoras
+      items.push({
+        label: `${labels.hrsTitle} ${formData.cantidadHoras} ${labels.hrsUnit}`,
+        highlight: true
+      })
     }
 
-    return { total, items };
-  };
+    const finalTotal =
+      formData.servicioPrincipal === 'Por Horas'
+        ? totalBase
+        : calculateAdjustedPrice(totalBase, tech)
 
-  const { total, items } = getCalculation();
+    return { total: finalTotal, items, tech }
+  }
 
-  // Formateador de moneda profesional
-  const formattedTotal = new Intl.NumberFormat(formData.moneda === 'COP' ? 'es-CO' : 'en-US', {
-    style: 'currency',
-    currency: formData.moneda,
-    minimumFractionDigits: formData.moneda === 'COP' ? 0 : 2
-  }).format(total);
+  const { total, items, tech } = getCalculation()
 
-  // 2. ENLACES Y ACCIONES
+  const formattedTotal = new Intl.NumberFormat(
+    formData.moneda === 'COP' ? 'es-CO' : 'en-US',
+    {
+      style: 'currency',
+      currency: formData.moneda,
+      minimumFractionDigits: 0
+    }
+  ).format(total)
+
   const generateWhatsAppLink = () => {
-    const text = `¡Hola Adrián! 👋 Acabo de realizar una cotización en tu web.\n\n*Nombre:* ${formData.nombre}\n*Servicio:* ${formData.servicioPrincipal}\n*Total estimado:* ${formattedTotal} ${formData.moneda}\n\nMe gustaría hablar sobre los detalles para empezar.`;
-    return `https://wa.me/573246454061?text=${encodeURIComponent(text)}`;
-  };
+    let text = t?.waMsg || ''
+    text = text
+      .replace('{name}', formData.nombre)
+      .replace('{tech}', tech)
+      .replace('{total}', `${formattedTotal} ${formData.moneda}`)
+
+    return `https://wa.me/573246454061?text=${encodeURIComponent(
+      text + '\n\n' + t?.waContact
+    )}`
+  }
 
   const handlePrintPDF = () => {
-    const printWindow = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
-    if (!printWindow) return;
+    const printWindow = window.open('', '', 'width=850,height=1000')
+    if (!printWindow) return
 
-    const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+    const pdf = t?.pdf || {}
+    const today = new Date().toLocaleDateString(
+      lang === 'en' ? 'en-US' : 'es-ES',
+      { year: 'numeric', month: 'long', day: 'numeric' }
+    )
 
     const htmlContent = `
       <html>
         <head>
-          <title>Cotización - Alsnippets</title>
+          <title>Alsnippets - ${formData.nombre}</title>
           <style>
-            body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 40px; color: #1a1a1a; line-height: 1.6; max-width: 800px; margin: 0 auto; }
-            .header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
-            .logo { max-width: 180px; margin-bottom: 10px; }
-            .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; }
-            .info-grid p { margin: 5px 0; font-size: 14px; }
-            .item-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #e2e8f0; font-size: 15px; }
-            .highlight { color: #b45309; font-weight: bold; }
-            .total-box { margin-top: 30px; padding: 20px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; text-align: right; }
-            .total-title { font-size: 12px; color: #166534; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; margin: 0; }
-            .total-amount { font-size: 32px; font-weight: 900; color: #15803d; margin: 5px 0 0 0; }
-            .footer { margin-top: 50px; text-align: center; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 20px; }
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+            
+            :root { 
+              --brand: #c9a34e; 
+              --text-main: #0f172a; 
+              --text-muted: #334155;
+              --bg-card: #f7f8fa;
+              --white: #ffffff;
+            }
+
+            body { 
+              font-family: 'Inter', 'Helvetica', Arial, sans-serif; 
+              padding: 40px; 
+              color: var(--text-main); 
+              line-height: 1.6;
+              background-color: var(--white);
+            }
+
+            .header { 
+              display: flex; 
+              justify-content: space-between; 
+              align-items: center; 
+              border-bottom: 3px solid #c9a34e; 
+              padding-bottom: 20px; 
+              margin-bottom: 40px; 
+            }
+
+            .logo-box { flex: 1; }
+
+            .logo-box img { 
+              display: block;
+              width: 250px; /* Tamaño optimizado para PDF */
+              height: auto;
+              -webkit-print-color-adjust: exact;
+            }
+            .meta { text-align: right; font-size: 13px; color: var(--text-muted); }
+
+            .grid { display: flex; gap: 30px; margin-bottom: 40px; }
+            .card { flex: 1; background: var(--bg-card); padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb; }
+            .card h4 { margin: 0 0 10px 0; color: var(--brand); text-transform: uppercase; font-size: 11px; letter-spacing: 1.5px; font-weight: 900; }
+            .card p { margin: 2px 0; font-size: 13px; font-weight: 500; }
+
+            .item-list h3 { font-size: 18px; border-bottom: 1px solid var(--brand); padding-bottom: 8px; margin-bottom: 15px; font-weight: 900; }
+            .item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
+
+            /* FRANJA OSCURA DE PRECIO CORREGIDA */
+            .total-section { 
+              margin-top: 40px; 
+              padding: 30px 40px; 
+              background-color: #0f172a !important; 
+              color: #ffffff !important; 
+              border-radius: 16px; 
+              display: flex; 
+              justify-content: space-between; 
+              align-items: center;
+              -webkit-print-color-adjust: exact; /* Fuerza el color en impresión */
+            }
+
+            .total-section h3 { margin: 0; font-size: 16px; color: #ffffff !important; font-weight: 700; }
+            .total-section p { margin: 5px 0 0 0; font-size: 12px; color: #c9a34e !important; font-weight: 900; text-transform: uppercase; }
+            .amount { font-size: 42px; font-weight: 900; color: #c9a34e !important; }
+
+            .clausules { 
+              margin-top: 40px; 
+              font-size: 11px; 
+              color: var(--text-muted); 
+              background: #fffdf8; 
+              padding: 20px; 
+              border-radius: 8px; 
+              border: 1px solid #f7edd7; 
+              -webkit-print-color-adjust: exact;
+            }
+
+            .signature-box { margin-top: 40px; }
+            .signature-box img { max-width: 180px; height: auto; margin: 10px 0; display: block; }
+
+            .footer { 
+              margin-top: 60px; 
+              text-align: center; 
+              font-size: 11px; 
+              border-top: 1px solid #e5e7eb; 
+              padding-top: 20px; 
+              color: var(--text-muted); 
+            }
           </style>
         </head>
         <body>
           <div class="header">
-            <img src="${window.location.origin}/brand/logo-dark-eslogan-es.svg" class="logo" alt="Alsnippets Logo" onerror="this.style.display='none'" />
-            <h1 style="margin: 10px 0 5px 0; font-size: 24px;">Presupuesto Estimado</h1>
-            <p style="margin: 0; color: #64748b; font-size: 14px;">Fecha: ${today}</p>
+            <div class="logo-box">
+              <img 
+                src="${window.location.origin}/brand/logo-fondo-light-eslogan-es.svg" 
+                alt="Alsnippets Logo" 
+              />
+            </div>
+            <div class="meta">
+              <p><strong>${pdf.date}:</strong> ${today}</p>
+              <p><strong>Ref No:</strong> ALS-${Math.floor(Math.random() * 9000) + 1000}</p>
+            </div>
           </div>
 
-          <div class="info-grid">
-            <div>
-              <strong style="color: #0f172a;">Preparado para:</strong>
-              <p>${formData.nombre}</p>
+          <div class="grid">
+            <div class="card">
+              <h4>${pdf.prepared}</h4>
+              <p><strong>${formData.nombre}</strong></p>
               <p>${formData.email}</p>
-              <p>${formData.whatsapp} (${formData.pais})</p>
+              <p>${formData.whatsapp}</p>
+              <p>${formData.pais}</p>
             </div>
-            <div>
-              <strong style="color: #0f172a;">Consultor Técnico:</strong>
-              <p>Adrián Loaiza - Alsnippets</p>
+            <div class="card">
+              <h4>${pdf.consultant}</h4>
+              <p><strong>Adrián Loaiza Carmona</strong></p>
               <p>contact@alsnippets.com</p>
               <p>+57 324 645 4061</p>
             </div>
           </div>
 
-          <h3 style="margin-bottom: 15px; border-bottom: 2px solid #0f172a; display: inline-block; padding-bottom: 5px;">Desglose de Servicios (${formData.servicioPrincipal})</h3>
-          
-          ${items.map(i => `
-            <div class="item-row">
-              <span class="${i.highlight ? 'highlight' : ''}">${i.label}</span>
-              <span style="color: #64748b;">Incluido</span>
-            </div>
-          `).join('')}
+          <div class="item-list">
+            <h3>${pdf.breakdown}</h3>
+            ${items
+              .map(
+                i => `
+              <div class="item">
+                <span>${i.label}</span>
+                <span style="color: #15803d; font-weight: bold;">[${pdf.included}]</span>
+              </div>
+            `
+              )
+              .join('')}
+          </div>
 
-          <div class="total-box">
-            <p class="total-title">Inversión Aproximada (${formData.moneda})</p>
-            <p class="total-amount">${formattedTotal}</p>
+          <div class="total-section">
+            <div>
+              <h3>${t?.invest} (${formData.moneda})</h3>
+              <p>${t?.audit}</p>
+            </div>
+            <div class="amount">${formattedTotal}</div>
+          </div>
+
+          <div class="clausules">
+            <strong>${pdf.clausulesTitle}</strong>
+            <p>• ${pdf.c1?.replace('{tech}', tech)}</p>
+            <p>• ${pdf.c2}</p>
+            <p>• ${pdf.c3}</p>
+          </div>
+
+          <div class="signature-box">
+            <p style="font-size: 12px; color: #334155; margin-bottom: 5px;">${
+              pdf.consultant
+            }:</p>
+            <img src="${
+              window.location.origin
+            }/images/precios/firma-adrian.png" alt="Firma" />
+            <p style="margin: 0; font-weight: 900; color: #0f172a;">Adrián Loaiza Carmona</p>
+            <p style="margin: 0; font-size: 11px; color: #c9a34e; font-weight: 700;">Full-Stack Specialist & Founder</p>
           </div>
 
           <div class="footer">
-            <p>Este documento es una estimación automatizada basada en la información proporcionada y no representa un contrato vinculante.</p>
-            <p>Los precios finales pueden variar tras una auditoría técnica profunda del sitio web y los requerimientos exactos.</p>
+            <p>${pdf.footer1}</p>
+            <p>${pdf.footer2}</p>
           </div>
         </body>
       </html>
-    `;
+    `
+    printWindow.document.write(htmlContent)
+    printWindow.document.close()
 
-    printWindow.document.write(htmlContent);
-    printWindow.document.close();
-    printWindow.focus();
-    
+    // Esperamos un poco más para asegurar que las imágenes carguen antes de imprimir
     setTimeout(() => {
-      printWindow.print();
-      printWindow.close();
-    }, 700); // Damos un poco más de tiempo para que cargue el logo
-  };
+      printWindow.focus()
+      printWindow.print()
+      printWindow.close()
+    }, 2000)
+  }
 
   return (
-    <div className="space-y-8 animate-fade-in pb-4">
-      <div className="text-center space-y-3">
-        <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
-        <h2 className="text-3xl font-black text-[var(--text-primary)]">Cotización Estimada</h2>
-        <p className="text-[var(--text-secondary)]">Preparada especialmente para <strong className="text-[var(--text-primary)]">{formData.nombre}</strong></p>
+    <div className='space-y-8 animate-fade-in pb-4'>
+      <div className='text-center space-y-3'>
+        <CheckCircle className='w-16 h-16 text-green-500 mx-auto' />
+        <h2 className='text-3xl font-black text-[var(--text-1)]'>{t?.head}</h2>
+        <p className='text-[var(--text-2)]'>
+          {t?.prepared}{' '}
+          <strong className='text-[var(--text-1)]'>{formData.nombre}</strong>
+        </p>
       </div>
 
-      <div className="bg-[var(--bg-body)] p-6 md:p-8 rounded-2xl border border-[var(--border-subtle)] space-y-4 shadow-sm">
-        <div className="flex justify-between items-center border-b border-[var(--border-subtle)] pb-4">
-          <span className="font-bold text-[var(--text-primary)] uppercase tracking-wider text-sm">
-            Servicio: {formData.servicioPrincipal}
+      <div className='bg-[var(--bg-1)] p-6 md:p-8 rounded-2xl border border-[var(--border-1)] shadow-xl'>
+        <div className='flex justify-between items-center border-b border-[var(--border-1)] pb-4 mb-4'>
+          <span className='font-bold text-[var(--text-1)] uppercase text-xs tracking-widest'>
+            {tech} / {formData.servicioPrincipal}
           </span>
-          <span className="text-xs bg-[var(--brand-primary)]/10 text-[var(--brand-primary)] px-2 py-1 rounded-md font-bold">
+          <span className='bg-[var(--bg-brand)]/10 text-[var(--text-brand)] px-3 py-1 rounded-full text-xs font-black'>
             {formData.moneda}
           </span>
         </div>
-        
-        <div className="space-y-3 py-2">
+
+        <div className='space-y-3'>
           {items.map((item, idx) => (
-            <div key={idx} className="flex justify-between items-start border-b border-[var(--border-subtle)] border-dashed pb-3 last:border-0">
-              <span className={`text-sm ${item.highlight ? 'text-[var(--brand-primary)] font-bold' : 'text-[var(--text-secondary)]'}`}>
+            <div
+              key={idx}
+              className='flex justify-between text-sm py-1 border-b border-dashed border-[var(--border-1)] last:border-0'
+            >
+              <span
+                className={
+                  item.highlight
+                    ? 'text-[var(--text-brand)] font-bold'
+                    : 'text-[var(--text-2)]'
+                }
+              >
                 {item.label}
               </span>
             </div>
           ))}
         </div>
 
-        <div className="pt-6 mt-2 flex flex-col md:flex-row justify-between items-end md:items-center gap-2 border-t border-[var(--border-subtle)]">
-          <div>
-            <span className="block text-xs uppercase tracking-wider text-[var(--text-secondary)] font-bold">Inversión Aproximada</span>
-            <span className="text-xs opacity-60 text-[var(--text-muted)]">*Sujeto a auditoría final</span>
+        <div className='mt-8 pt-6 border-t-2 border-[var(--border-1)] flex justify-between items-center'>
+          <div className='text-left'>
+            <p className='text-[var(--text-3)] text-[10px] uppercase font-bold tracking-tighter'>
+              {t?.invest}
+            </p>
+            <p className='text-[var(--text-brand)] text-[9px] font-medium'>
+              {t?.audit}
+            </p>
           </div>
-          <span className="text-4xl md:text-5xl font-black text-[var(--brand-primary)]">
+          <div className='text-4xl md:text-5xl font-black text-[var(--text-1)]'>
             {formattedTotal}
-          </span>
+          </div>
         </div>
       </div>
 
-      {/* BOTONES DE ACCIÓN */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <a 
-          href={generateWhatsAppLink()} 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="flex items-center justify-center gap-2 p-4 bg-[#25D366] text-white rounded-xl font-bold hover:bg-[#1ebe57] transition-all hover:-translate-y-1 shadow-md shadow-green-900/10"
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+        <a
+          href={generateWhatsAppLink()}
+          target='_blank'
+          className='flex items-center justify-center gap-2 p-4 bg-[#25D366] text-white rounded-xl font-bold hover:scale-[1.02] transition-all shadow-lg'
         >
-          <MessageCircle className="w-5 h-5" /> WhatsApp
+          <MessageCircle /> {t?.btnWA}
         </a>
-        <button 
-          onClick={handlePrintPDF} 
-          className="flex items-center justify-center gap-2 p-4 bg-[var(--bg-tertiary)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:border-[var(--brand-primary)] rounded-xl font-bold transition-all hover:-translate-y-1 shadow-sm"
+        <button
+          onClick={handlePrintPDF}
+          className='flex items-center justify-center gap-2 p-4 bg-[var(--bg-3)] text-[var(--text-1)] rounded-xl font-bold hover:scale-[1.02] transition-all border border-[var(--border-1)]'
         >
-          <Download className="w-5 h-5" /> Generar PDF
+          <Download /> {t?.btnPDF}
         </button>
-        <button 
-          onClick={onReset} 
-          className="flex items-center justify-center gap-2 p-4 bg-[var(--bg-body)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--brand-primary)] rounded-xl font-bold transition-all hover:-translate-y-1 shadow-sm md:col-span-2 lg:col-span-1"
+        <button
+          onClick={onReset}
+          className='flex items-center justify-center gap-2 p-4 bg-[var(--bg-1)] text-[var(--text-2)] rounded-xl font-bold hover:scale-[1.02] transition-all border border-[var(--border-1)]'
         >
-          <RefreshCw className="w-5 h-5" /> Nueva Cotización
+          <RefreshCw /> {t?.btnReset}
         </button>
       </div>
-      
-      <p className="text-center text-xs text-[var(--text-muted)] pt-4">
-        Tus datos están seguros. Al hacer clic en WhatsApp, me enviarás este resumen directamente.
-      </p>
     </div>
-  );
+  )
 }

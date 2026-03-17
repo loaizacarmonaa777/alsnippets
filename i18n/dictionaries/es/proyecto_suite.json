@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "title": "Suite Text | Herramienta SEO y Análisis de Textos",
+    "description": "Un producto en desarrollo enfocado en optimizar, analizar y trabajar textos con una visión técnica, estratégica y orientada a resultados SEO.",
+    "keywords": [
+      "Suite Text",
+      "Herramienta SEO para textos",
+      "Análisis de contenido SEO",
+      "Optimización de artículos",
+      "Software SEO en desarrollo",
+      "Alsnippets herramientas",
+      "Auditoría de contenido web"
+    ],
+    "og_title": "Suite Text | Herramienta SEO y Análisis de Textos",
+    "og_description": "Optimiza y analiza tus textos con una visión técnica y orientada a resultados SEO. Conoce el nuevo producto de Alsnippets.",
+    "og_alt": "Suite Text - Herramienta SEO por Alsnippets",
+    "twitter_title": "Suite Text | Análisis y Optimización SEO",
+    "twitter_description": "Un producto en desarrollo enfocado en optimizar textos con visión estratégica."
+  },
+  "schema": {
+    "description": "Herramienta web en desarrollo para la optimización, análisis y estructuración técnica de textos orientados a SEO."
+  }
+}

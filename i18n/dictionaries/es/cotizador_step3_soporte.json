@@ -1,0 +1,66 @@
+{
+  "head": "Soporte Técnico",
+  "sub": "¿En qué tecnología está creado tu sitio web?",
+  "other": "Otro",
+  "servFor": "Servicios para",
+  "servSub": "Selecciona las áreas en las que necesitas ayuda (puedes elegir varias):",
+  "otherT": "Soporte para Otros CMS / Custom",
+  "otherD": "Como desarrollador Full-Stack, también trabajo con sitios creados a medida (React, PHP puro, Node) o CMS menos comunes. Por favor, describe brevemente tu plataforma.",
+  "otherPh": "Ej: Mi sitio está hecho a medida en Laravel...",
+  "btn": "Generar mi Cotización",
+  "wait": "Procesando...",
+  "cms_services": {
+    "wordpress": [
+      { "id": "Mantenimiento y Seguridad", "title": "Mantenimiento y Seguridad", "desc": "Actualizaciones de Core/PHP, limpieza de malware, pantalla blanca (WSoD) y copias de seguridad." },
+      { "id": "Optimización WPO", "title": "Rendimiento y Optimización (WPO)", "desc": "Solución a carga lenta, optimización de caché, base de datos e imágenes para mejorar PageSpeed." },
+      { "id": "Diseño y Estructura", "title": "Diseño y Maquetadores", "desc": "Soporte para Elementor/Divi, incompatibilidades tras actualizar y errores de visualización 404." },
+      { "id": "E-commerce Core", "title": "Tienda (WooCommerce)", "desc": "Resolución de conflictos de carrito, pasarelas de pago y problemas de conexión con base de datos." },
+      { "id": "Asistencia e Infraestructura", "title": "Asistencia e Infraestructura", "desc": "Resolución de errores de servidor (500), límites de memoria PHP y configuración de hosting." },
+      { "id": "Soporte Global", "title": "Soporte Global Integral", "desc": "Me encargo de todo. Un paquete completo que cubre mantenimiento, rendimiento, diseño y seguridad." }
+    ],
+    "shopify": [
+      { "id": "Configuración Core", "title": "Configuración Core y Dominios", "desc": "Gestión de SSL, conexión de dominios DNS y configuración de correos." },
+      { "id": "Optimización WPO", "title": "Rendimiento y Optimización", "desc": "Optimización de código Liquid, compresión de imágenes y reducción de apps pesadas." },
+      { "id": "Diseño Liquid", "title": "Diseño y Código Liquid", "desc": "Personalización de secciones, solución a diseños rotos y adaptación móvil." },
+      { "id": "E-commerce Core", "title": "Ventas y Checkout", "desc": "Solución a Checkout no disponible, Shopify Payments y sincronización de inventario." },
+      { "id": "Apps e Integraciones", "title": "Conflictos de Apps", "desc": "Depuración de aplicaciones que chocan entre sí y configuración de APIs." },
+      { "id": "Soporte Global", "title": "Soporte Global Integral", "desc": "Me encargo de todo. Paquete completo para blindar tu tienda Shopify." }
+    ],
+    "prestashop": [
+      { "id": "Mantenimiento y Seguridad", "title": "Mantenimiento y Seguridad", "desc": "Actualizaciones, eliminación de malware, copias de seguridad y revisión de vulnerabilidades." },
+      { "id": "Rendimiento y Optimización", "title": "Rendimiento y Optimización", "desc": "Optimización de velocidad de carga, caché, base de datos y recursos de compra." },
+      { "id": "Módulos y Compatibilidad", "title": "Módulos y Compatibilidad", "desc": "Resolución de errores por módulos incompatibles y conflictos tras actualizaciones." },
+      { "id": "Gestión de Catálogo", "title": "Gestión de Catálogo", "desc": "Errores en productos, combinaciones, stock o importación/exportación." },
+      { "id": "Pagos y Checkout", "title": "Pagos y Procesos de Compra", "desc": "Solución de errores en carrito, pasarelas de pago, impuestos y envíos." },
+      { "id": "Hosting y DB", "title": "Hosting y Base de Datos", "desc": "Errores 500, conexión a base de datos y límites de servidor." },
+      { "id": "Soporte Global", "title": "Soporte Global Integral", "desc": "Me encargo de todo. Soporte completo en rendimiento, diseño y seguridad." }
+    ],
+    "wix": [
+      { "id": "Mantenimiento y Seguridad", "title": "Mantenimiento y Seguridad", "desc": "Configuraciones, control de accesos y copias de seguridad de contenido." },
+      { "id": "Rendimiento y Optimización", "title": "Rendimiento y Optimización", "desc": "Optimización de carga de páginas, imágenes y estructura de apps." },
+      { "id": "Diseño Wix", "title": "Diseño y Editor Wix", "desc": "Ajustes en el editor, errores de visualización en móvil y diseño." },
+      { "id": "Apps y Funcionalidades", "title": "Aplicaciones y Funcionalidades", "desc": "Errores con Wix Apps, formularios, reservas e integraciones externas." },
+      { "id": "Wix Stores", "title": "Tiendas y Pagos (Wix Stores)", "desc": "Problemas en carrito, métodos de pago y procesos de compra." },
+      { "id": "SEO y Configuración", "title": "SEO y Configuración del Sitio", "desc": "Indexación, redirecciones, estructura SEO y conexión con Google." },
+      { "id": "Soporte Global", "title": "Soporte Global Integral", "desc": "Gestión integral de tu sitio Wix: diseño, apps y seguridad." }
+    ],
+    "joomla": [
+      { "id": "Mantenimiento y Seguridad", "title": "Mantenimiento y Seguridad", "desc": "Actualización del core, extensiones, plantillas y eliminación de malware." },
+      { "id": "Extensiones y Conflictos", "title": "Extensiones y Compatibilidad", "desc": "Conflictos entre extensiones y errores tras actualizaciones." },
+      { "id": "Rendimiento y Optimización", "title": "Rendimiento y Optimización", "desc": "Optimización de caché, base de datos e imágenes." },
+      { "id": "Plantillas y Diseño", "title": "Plantillas y Diseño", "desc": "Errores de visualización, ajustes en templates y problemas responsive." },
+      { "id": "Usuarios y Permisos", "title": "Usuarios y Permisos", "desc": "Gestión de roles ACL y problemas de acceso al panel." },
+      { "id": "Servidor e Infraestructura", "title": "Servidor e Infraestructura", "desc": "Errores 500, problemas con PHP y configuración de hosting." },
+      { "id": "Soporte Global", "title": "Soporte Global Integral", "desc": "Paquete completo: mantenimiento, diseño y seguridad en Joomla." }
+    ],
+    "drupal": [
+      { "id": "Mantenimiento y Seguridad", "title": "Mantenimiento y Seguridad", "desc": "Actualizaciones del core, módulos, temas y parches de seguridad." },
+      { "id": "Módulos e Integraciones", "title": "Módulos e Integraciones", "desc": "Errores en módulos e integraciones externas." },
+      { "id": "Rendimiento y Caché", "title": "Rendimiento y Caché", "desc": "Optimización avanzada de caché y base de datos." },
+      { "id": "Contenido y Vistas", "title": "Estructura de Contenido", "desc": "Problemas con tipos de contenido, Views y taxonomías." },
+      { "id": "Usuarios y Permisos", "title": "Usuarios y Permisos", "desc": "Configuración de roles y resolución de errores de acceso." },
+      { "id": "Servidor e Infraestructura", "title": "Infraestructura y Servidor", "desc": "Errores 500, dependencias PHP o base de datos." },
+      { "id": "Soporte Global", "title": "Soporte Global Integral", "desc": "Soporte técnico integral avanzado para sitios Drupal." }
+    ]
+  }
+}

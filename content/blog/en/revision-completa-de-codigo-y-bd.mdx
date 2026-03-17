@@ -1,0 +1,106 @@
+---
+title: "Complete Code and Database Review in WordPress"
+description: "How I perform a deep technical audit of themes, plugins, and databases to detect hidden users and malicious injections."
+category: "security"
+lang: "en"
+author: "Adrián Loaiza"
+date: "2026-03-02"
+image: "/images/blog/revision-completa-de-codigo-y-bd.webp"
+coverImage: "/images/blog/revision-completa-de-codigo-y-bd.webp"
+featured: false
+---
+
+## Complete Code and Database Review.
+
+There are times when the site seems clean.
+
+No redirects.  
+No visible spam.
+
+But something is still wrong.
+
+In these cases, the problem is usually in the code or the database.
+
+And that is where almost nobody looks.
+
+---
+
+### Why it happens
+
+Many attacks don't just modify files.
+
+They also:
+
+- Insert hidden administrator users
+- Inject code into tables
+- Alter internal options
+- Manipulate dynamic routes
+
+Google warns that some attacks directly affect the internal structure of the site.
+
+
+
+If the database is not reviewed, the cleanup remains incomplete.
+
+---
+
+### What it is
+
+A complete audit involves reviewing:
+
+- Active and inactive theme files
+- Installed plugins
+- Database tables
+- Registered users
+- Automatically loaded options (autoload)
+
+I look for suspicious patterns, obfuscated strings, and SQL injections.
+
+Sucuri details how attackers often hide code in tables like `wp_options`.
+
+Not everything is in the files.
+
+---
+
+### What it affects
+
+If the database is compromised, it can cause:
+
+- Reinfections
+- Dynamic spam
+- Alteration of configurations
+- Automatic creation of junk content
+
+And the worst part: malware can regenerate itself even after deleting files.
+
+
+
+---
+
+### Possible solutions
+
+When I tackle deep audits at Alsnippets, I do:
+
+- Secure database export
+- Manual review of critical tables
+- Removal of unauthorized users
+- Cleanup of injected options
+- Complete review of themes and plugins
+
+Then I organize the environment to prevent it from happening again and solve structural vulnerabilities.
+
+The difference lies in reviewing what others do not.
+
+You can complement this with my article on [Strange behaviors in WordPress](/en/mi-web-muestra-comportamientos-extranos).
+
+---
+
+### Does your WordPress have real problems?
+[Request WordPress Audit](/en/auditoria)
+
+---
+
+### Sources and references
+
+- https://developers.google.com/search/docs/monitor-debug/security/hacked-site
+- https://www.sucuri.net/guides/wordpress-security/

@@ -1,0 +1,84 @@
+[
+  {
+    "title": "Analysis and Protection against attacks",
+    "image": "/images/home/card-proteccion-contra-ataques-home.webp",
+    "description": "Lack of protection exposes your site to risks.",
+    "chips": [
+      "Malware",
+      "Virus",
+      "Backdoors",
+      "Brute force",
+      "Data theft",
+      "Unauthorized access",
+      "Compromised site"
+    ]
+  },
+  {
+    "title": "Controlled updates",
+    "image": "/images/home/card-actualizaciones-controladas-home.webp",
+    "description": "Updating without control impacts more than you imagine.",
+    "chips": [
+      "Incompatibility",
+      "Critical errors",
+      "White screen",
+      "Plugin failures",
+      "Version conflicts",
+      "PHP errors",
+      "Site crashes"
+    ]
+  },
+  {
+    "title": "Reliable backups",
+    "image": "/images/home/card-copias-seguridad-home.webp",
+    "description": "Without functional backups, any error can become a disaster.",
+    "chips": [
+      "Losses",
+      "Broken backups",
+      "Restoration failures",
+      "Unrecoverable data",
+      "Lost changes",
+      "Downtime"
+    ]
+  },
+  {
+    "title": "Speed and load optimization",
+    "image": "/images/home/card-optimizacion-velocidad-home.webp",
+    "description": "Not identifying bottlenecks affects performance and experience.",
+    "chips": [
+      "Slow loading",
+      "High CLS",
+      "Poor LCP",
+      "High TTFB",
+      "Blocking scripts",
+      "Heavy images",
+      "Poor mobile experience"
+    ]
+  },
+  {
+    "title": "Accompaniment throughout the process",
+    "image": "/images/home/card-acompanamiento-proceso-home.webp",
+    "description": "With me, every technical decision has support, criteria and follow-up.",
+    "chips": [
+      "Technical decisions",
+      "Urgent changes",
+      "Human support",
+      "Direct communication",
+      "Quick response"
+    ],
+    "highlight": true
+  },
+  {
+    "title": "Errors are part of the process",
+    "image": "/images/home/card-errores-proceso-home.webp",
+    "description": "WordPress is not just no-code: experience is needed to solve.",
+    "chips": [
+      "404 errors",
+      "500 errors",
+      "Conflicts",
+      "Server failures",
+      "Layout failures",
+      "Unexpected bugs",
+      "Technical diagnosis"
+    ]
+  }
+]

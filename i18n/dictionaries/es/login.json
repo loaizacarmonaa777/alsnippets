@@ -1,0 +1,10 @@
+{
+  "title": "Acceso de Especialista",
+  "sub": "Inicia sesión para acceder a las herramientas de auditoría avanzada.",
+  "label_email": "Correo electrónico",
+  "label_pass": "Contraseña",
+  "btn_enter": "Desbloquear Suite",
+  "error": "Credenciales no autorizadas.",
+  "forgot": "¿Olvidaste tu contraseña?",
+  "register_note": "Acceso restringido a personal de Alsnippets."
+}

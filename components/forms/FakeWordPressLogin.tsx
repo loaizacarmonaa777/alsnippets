@@ -2,16 +2,60 @@
 
 import { useState, useRef, useEffect } from 'react'
 
-export default function FakeWordPressLogin() {
+interface FakeWPProps {
+  lang: string
+}
+
+/* =====================================================
+   FakeWordPressLogin
+   - Imita la estética de acceso a WordPress
+   - PROTOCOLO ALSNIPPETS: Blindaje visual y lógica i18n
+   ===================================================== */
+
+export default function FakeWordPressLogin ({ lang }: FakeWPProps) {
   const [showAlert, setShowAlert] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [blink, setBlink] = useState(false)
 
   const wrapperRef = useRef<HTMLDivElement>(null)
 
-  /* Click fuera → cerrar alerta */
+  // Objeto de traducción local (Lógica Sensible)
+  const t = {
+    es: {
+      user: 'Nombre de usuario o correo electrónico',
+      pass: 'Contraseña',
+      check: 'Necesito accesos',
+      btn: 'Acceder',
+      lost: '¿No le has dado la contraseña a Adrián?',
+      back: '← Ir a contacto para enviarle la contraseña',
+      alertHead: 'Accesos necesarios.',
+      alertBody:
+        'Para poder realizar modificaciones reales, necesito los accesos correctos.'
+    },
+    en: {
+      user: 'Username or Email Address',
+      pass: 'Password',
+      check: 'I need access',
+      btn: 'Log In',
+      lost: "Haven't given the password to Adrián yet?",
+      back: '← Go to contact to send him the password',
+      alertHead: 'Required access.',
+      alertBody: 'To make real changes, I need the correct credentials.'
+    }
+  }[lang as 'es' | 'en'] || {
+    user: 'Nombre de usuario o correo electrónico',
+    pass: 'Contraseña',
+    check: 'Necesito accesos',
+    btn: 'Acceder',
+    lost: '¿No le has dado la contraseña a Adrián?',
+    back: '← Ir a contacto para enviarle la contraseña',
+    alertHead: 'Accesos necesarios.',
+    alertBody:
+      'Para poder realizar modificaciones reales, necesito los accesos correctos.'
+  }
+
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    function handleClickOutside (event: MouseEvent) {
       if (
         wrapperRef.current &&
         !wrapperRef.current.contains(event.target as Node)
@@ -19,119 +63,79 @@ export default function FakeWordPressLogin() {
         setShowAlert(false)
       }
     }
-
     document.addEventListener('mousedown', handleClickOutside)
-    return () =>
-      document.removeEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
   const handleFocus = () => {
     setShowAlert(true)
     setBlink(true)
-
-    setTimeout(() => {
-      setBlink(false)
-    }, 250)
+    setTimeout(() => setBlink(false), 250)
   }
 
   const togglePassword = () => {
     setShowPassword(prev => !prev)
     setBlink(true)
-
-    setTimeout(() => {
-      setBlink(false)
-    }, 250)
+    setTimeout(() => setBlink(false), 250)
   }
 
   return (
-    <div className="flex items-center justify-center px-4">
-      <div ref={wrapperRef} className="w-full max-w-sm">
-
-        {/* Logo */}
+    <div className='flex items-center justify-center px-4'>
+      <div ref={wrapperRef} className='w-full max-w-sm'>
+        {/* Branding WordPress */}
         <div
           className={`text-center mb-6 transition-transform duration-300 ${
             showAlert ? '-translate-y-2' : ''
           }`}
         >
           <img
-            src="/logos/stack/01-wordpress.svg"
-            alt="WordPress"
-            className="h-20 mx-auto opacity-90"
+            src='/logos/stack/01-wordpress.svg'
+            alt='WordPress'
+            className='h-20 mx-auto opacity-90 dark:brightness-200'
           />
         </div>
 
-        {/* Alerta estilo WP */}
+        {/* Alerta Blindada (Solo cambio de texto) */}
         <div
-          className={`
-            overflow-hidden
-            transition-all duration-300
-            ${showAlert ? 'max-h-40 opacity-100 mb-4' : 'max-h-0 opacity-0'}
-          `}
+          className={`overflow-hidden transition-all duration-300 bg-amber-50 ${
+            showAlert ? 'max-h-40 opacity-100 mb-4' : 'max-h-0 opacity-0'
+          }`}
         >
-          <div className="border-l-4 border-red-600 bg-white p-3 text-sm shadow-sm">
-            <strong>Accesos necesarios.</strong> Para poder realizar modificaciones
-            reales en tu sitio, necesito los accesos correctos.
-            <br />
-            La seguridad y protección de tu información siempre están de tu lado.
+          <div className='border-l-4 border-[var(--spectrum-red)] bg-[var(--bg-1)] p-3 text-sm shadow-[var(--shadow-1)] text-[var(--text-1)]'>
+            <strong>{t.alertHead}</strong> {t.alertBody}
           </div>
         </div>
 
-        {/* Caja login estilo WP */}
-        <div className="bg-white p-6 shadow-md border border-gray-300 space-y-4">
-
-          {/* Usuario */}
+        {/* Caja login (Blindaje Visual Absoluto) */}
+        <div className='bg-[var(--bg-1)] dark:bg-white p-6 shadow-[var(--shadow-2)] border border-[var(--border-1)] space-y-4 dark:text-black'>
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Nombre de usuario o correo electrónico
+            <label className='block text-sm font-medium mb-1 text-[var(--text-1)]'>
+              {t.user}
             </label>
             <input
-              type="text"
+              type='text'
               onFocus={handleFocus}
-              className="
-                w-full
-                border border-gray-300
-                rounded-sm
-                px-3 py-2
-                text-sm
-                focus:border-[#2271b1]
-                focus:ring-1
-                focus:ring-[#2271b1]
-                outline-none
-              "
+              className='w-full border border-[var(--border-2)] bg-[var(--bg-body)] text-[var(--text-1)] rounded-sm px-3 py-2 text-sm focus:border-[var(--text-brand)] focus:ring-1 focus:ring-[var(--text-brand)] outline-none'
             />
           </div>
 
-          {/* Contraseña */}
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Contraseña
+            <label className='block text-sm font-medium mb-1 text-[var(--text-1)]'>
+              {t.pass}
             </label>
-
-            <div className="relative">
+            <div className='relative'>
               <input
                 type={showPassword ? 'text' : 'password'}
                 onFocus={handleFocus}
-                className="
-                  w-full
-                  border border-gray-300
-                  rounded-sm
-                  px-3 py-2
-                  text-sm
-                  pr-10
-                  focus:border-[#2271b1]
-                  focus:ring-1
-                  focus:ring-[#2271b1]
-                  outline-none
-                "
+                className='w-full border border-[var(--border-2)] bg-[var(--bg-body)] text-[var(--text-1)] rounded-sm px-3 py-2 text-sm pr-10 focus:border-[var(--text-brand)] focus:ring-1 focus:ring-[var(--text-brand)] outline-none'
               />
-
               <button
-                type="button"
+                type='button'
                 onClick={togglePassword}
-                className="absolute right-3 top-2 text-gray-500 hover:text-gray-700"
+                className='absolute right-3 top-2 text-[var(--text-3)]'
               >
                 <span
-                  className={`inline-block transition-transform duration-150 ${
+                  className={`inline-block transition-transform ${
                     blink ? 'scale-y-0' : 'scale-y-100'
                   }`}
                 >
@@ -141,63 +145,42 @@ export default function FakeWordPressLogin() {
             </div>
           </div>
 
-          {/* Checkbox */}
-          <div className="flex items-center gap-2 text-sm">
-            <input type="checkbox" />
-            <span>Necesito accesos</span>
+          <div className='flex items-center gap-2 text-sm text-[var(--text-2)]'>
+            <input type='checkbox' className='accent-[var(--text-brand)]' />
+            <span>{t.check}</span>
           </div>
 
-          {/* Botón WP */}
-          <div className="flex justify-end">
+          <div className='flex justify-end'>
             <button
-              type="button"
+              type='button'
               onClick={handleFocus}
-              className="
-                inline-flex
-                items-center
-                justify-center
-                rounded-sm
-                bg-[#2271b1]
-                border border-[#2271b1]
-                px-4
-                py-2
-                text-sm
-                font-medium
-                text-white
-                transition-colors
-                duration-150
-                hover:bg-[#135e96]
-                hover:border-[#135e96]
-                active:bg-[#0a4b78]
-                active:border-[#0a4b78]
-                focus:outline-none
-                focus:ring-2
-                focus:ring-[#2271b1]
-              "
+              className='bg-[var(--bg-brand)] text-[var(--text-inverse)] px-4 py-2 text-sm font-medium rounded-sm'
             >
-              Acceder
+              {t.btn}
             </button>
           </div>
         </div>
 
-        {/* Links inferiores */}
-        <div className="mt-4 text-sm text-center space-y-2">
+        {/* Links inferiores (Blindaje de rutas i18n) */}
+        <div className='mt-4 text-sm text-center space-y-2'>
           <div>
-            <a href="#" className="text-[#2271b1] hover:underline">
-              ¿No le haz dado la contraseña a Adrián?
+            <a
+              href='#'
+              className='text-[var(--text-brand)] hover:underline opacity-90'
+            >
+              {t.lost}
             </a>
           </div>
 
           <div>
             <a
-              href="/contacto"
-              className="text-[#2271b1] hover:underline"
+              href={`/${lang}/contacto`}
+              className='text-[var(--text-brand)] hover:underline opacity-90'
             >
-              ← Ir a contacto para enviarle la contraseña
+              {t.back}
             </a>
           </div>
         </div>
-
       </div>
     </div>
   )

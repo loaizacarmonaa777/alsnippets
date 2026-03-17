@@ -1,0 +1,50 @@
+{
+  "head": "What service do you need?",
+  "placeholders": {
+    "select_option": "Select an option",
+    "consultancy": "I want a consultancy",
+    "technical_audit": "I want a technical audit",
+    "name": "Full name",
+    "name_ph": "Ex: John Doe",
+    "email": "Email address",
+    "email_ph": "your-email@example.com",
+    "media": "Communication method",
+    "media_ph": "Select a platform",
+    "phone": "Phone / WhatsApp",
+    "country_code": "Code",
+    "phone_ph": "Ex: 3001234567",
+    "message_label": "URL and Site Details",
+    "message_ph": "Paste your website link here and briefly tell me what issues you are experiencing..."
+  },
+  "validation": {
+    "err_name": "Please enter at least a first and last name.",
+    "err_email": "Please enter a valid email address.",
+    "err_media": "Please select a contact method.",
+    "err_pais": "Please select your country first.",
+    "err_tel_missing": "Missing digits",
+    "err_tel_exceed": "Exceeded allowed digits",
+    "char_remaining": "Characters remaining: ",
+    "turnstile_error": "Verification error. Please try again."
+  },
+  "notes": {
+    "media_note": "For Meet, Teams, or Zoom, you will receive a link via email."
+  },
+  "legales": {
+    "accept": "I have read and accept the ",
+    "terms": "terms and conditions",
+    "and": " and the ",
+    "privacy": "privacy policy",
+    "confidentiality": ". I understand that my data will be treated with strict confidentiality."
+  },
+  "buttons": {
+    "submit": "Send Request",
+    "sending": "Sending...",
+    "missing_data": "Missing data",
+    "error_title": "You must complete the form correctly",
+    "back_home": "Back to home"
+  },
+  "messages": {
+    "success_head": "Request Sent!",
+    "success_body": "I have received your request correctly. I will be reviewing the information and will contact you within the next 24-48 business hours via"
+  }
+}

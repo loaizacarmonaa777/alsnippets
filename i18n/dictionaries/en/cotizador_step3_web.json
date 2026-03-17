@@ -1,0 +1,16 @@
+{
+  "head": "Create website",
+  "sub": "Let's get to know the foundations of your new project.",
+  "yes": "Yes",
+  "no": "No",
+  "q1": { "t": "Do you have a web Domain?", "d": "The unique name of your company (ex: yourcompany.com)." },
+  "q2": { "t": "Do you have Hosting?", "d": "The server where your website files are stored." },
+  "q3": { "t": "Is Branding defined?", "d": "Logo, fonts, and corporate color palette." },
+  "q4": { "t": "Structure & Copy ready?", "d": "Knowing what pages you need and having the text written." },
+  "q5": { "t": "Will you sell online?", "d": "Catalog, shopping cart, and payment gateways." },
+  "descT": "Project description (Optional)",
+  "descP": "Tell me briefly what your business is about...",
+  "descPh": "Ex: I am a law firm and I need...",
+  "btn": "Generate my Quote",
+  "wait": "Processing..."
+}

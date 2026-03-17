@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "title": "About Me | Adrián Loaiza - Alsnippets",
+    "description": "I am Adrián Loaiza (Alsnippets), a senior web developer specialized in WordPress, WooCommerce, Shopify, and modern technologies (React/Next.js). I offer coding, security, and WPO performance solutions for clients in Spain, USA, Europe, and Latin America.",
+    "extra_keywords": [
+      "Professional profile",
+      "Career path",
+      "Remote Freelance",
+      "Web Audit Spain",
+      "Web Development USA",
+      "adrian loaiza",
+      "alsnippets"
+    ],
+    "og_title": "About Me | Adrián Loaiza - Alsnippets",
+    "og_description": "High-level web development and CMS optimization for global businesses.",
+    "og_alt": "Adrián Loaiza - Alsnippets Tech Stack",
+    "twitter_description": "Expert in WordPress, Shopify, and Custom Code for international markets."
+  },
+  "page": {
+    "hero": {
+      "title": "Engineering Behind the Code",
+      "subtitle": "I help companies and entrepreneurs build solid, fast, and secure digital products. My approach combines software engineering with a strategic business vision."
+    },
+    "intro": {
+      "title": "More than a developer, <br /> a technology partner",
+      "paragraphs": [
+        "From my beginnings with PHP to the robustness of React and Next.js, my career has focused on solving complex problems through efficient solutions.",
+        "My methodology is based on transparency, extreme performance (WPO), and security by design."
+      ],
+      "items": [
+        {
+          "title": "Clean Code",
+          "description": "Maintainable and scalable development following industry best practices.",
+          "image": "/images/sobre-mi/codigo-limpio.webp"
+        },
+        {
+          "title": "WPO Focus",
+          "description": "Speed is not optional. I optimize every millisecond of loading time.",
+          "image": "/images/sobre-mi/enfoque-wpo.webp"
+        },
+        {
+          "title": "Proactive Security",
+          "description": "I protect data integrity and the continuity of your business.",
+          "image": "/images/sobre-mi/seguridad-proactiva.webp"
+        }
+      ]
+    },
+    "experience": {
+      "title": "Specialization & Technologies",
+      "items": [
+        {
+          "title": "WordPress Ecosystem",
+          "description": "Custom development of themes and plugins, advanced optimization, and security.",
+          "image": "/images/sobre-mi/ecosistema-wordpress.webp"
+        },
+        {
+          "title": "Modern JavaScript",
+          "description": "Dynamic applications with React and Next.js for a superior user experience.",
+          "image": "/images/sobre-mi/javascript-moderno.webp"
+        },
+        {
+          "title": "Backend & Servers",
+          "description": "PHP architectures, secure deployments, and hosting server management.",
+          "image": "/images/sobre-mi/backend-servidores.webp"
+        },
+        {
+          "title": "Senior E-commerce",
+          "description": "Consulting and development for high-traffic WooCommerce and Shopify stores.",
+          "image": "/images/sobre-mi/ecommerce-senior.webp"
+        }
+      ]
+    },
+    "bio": {
+      "title": "My Path in the Digital World",
+      "paragraphs": [
+        "Over the years, I have had the opportunity to work with clients from Spain, Latin America, and the United States, facing challenges ranging from corporate sites to massive transactional platforms.",
+        "Through Alsnippets, I share my knowledge and help other developers raise their technical standards while executing high-impact projects for my clients."
+      ]
+    },
+    "cta": {
+      "title": "Shall we talk about your next project?",
+      "description": "If you are looking for someone who gets technically and strategically involved in your vision, I am ready to help.",
+      "button": "Contact me",
+      "disclaimer": "Availability for select projects."
+    }
+  }
+}

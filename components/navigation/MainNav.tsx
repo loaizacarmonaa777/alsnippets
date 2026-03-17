@@ -1,193 +1,106 @@
-"use client";
+'use client'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { useTheme } from 'next-themes'
+import { User } from 'lucide-react'
+import NavDesktop from './NavDesktop'
+import NavMobile from './NavMobile'
+import ThemeSwitcher from './ThemeSwitcher'
+import LanguageSwitcher from '../LanguageSwitcher'
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
-
-// Asegúrate de que las rutas sean correctas según tu estructura
-import TopBar from "./TopBar";
-import DesktopMenu from "./DesktopMenu";
-import MobileMenu from "./MobileMenu";
-import MenuOverlay from "./MenuOverlay";
-import useScrollHeader from "./useScrollHeader"; // Ajusta el path si es necesario
-
-export default function MainNav() {
-  /* =========================
-     Estados globales
-     ========================= */
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
+export default function MainNav ({ lang }: { lang: string }) {
+  // 👇 1. NORMALIZAMOS EL LANG
+  const normalizedLang = lang.replace(/^\//, '');
   
-  // Hook para detectar scroll (true si bajamos > 50px)
-  const isCompact = useScrollHeader();
+  const [scrolled, setScrolled] = useState(false)
+  const { theme } = useTheme()
+  const [mounted, setMounted] = useState(false)
 
-  /* =========================
-     Estado idioma (client-only)
-     ========================= */
-  const [altLanguage, setAltLanguage] = useState<string>("EN");
-
-  useEffect(() => {
-    // Solo ejecutamos esto en el cliente para evitar errores de hidratación
-    if (typeof window !== "undefined") {
-      const lang = navigator.language || "";
-      setAltLanguage(lang.startsWith("es") ? "EN" : "ES");
+  // 👇 2. CORREGIMOS LAS TRADUCCIONES
+  const translations = {
+    es: {
+      home: 'Ir al inicio',
+      account: 'Cuenta'
+    },
+    en: {
+      home: 'Go to home',
+      account: 'Account'
     }
-  }, []);
-
-  /* =========================
-     Bloquear scroll al abrir menú
-     ========================= */
-  useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-      setActiveSubmenu(null);
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isMenuOpen]);
-
-  /* =========================
-     Handlers
-     ========================= */
-  const closeMenu = () => setIsMenuOpen(false);
-  
-  const toggleSubmenu = (key: string) => {
-    setActiveSubmenu((prev) => (prev === key ? null : key));
   };
+  
+  const t = translations[normalizedLang as 'es' | 'en'] || translations.es;
+
+  useEffect(() => {
+    setMounted(true)
+    const handleScroll = () => setScrolled(window.scrollY > 50)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
-    <>
-      {/* TopBar (Desktop Only)
-         Nota: Si sigues viendo cuadros negros, asegúrate de haber actualizado
-         el archivo TopBar.tsx con el código que te di en la respuesta anterior.
-      */}
-      <TopBar />
-
-      <header
-        className={`
-          sticky top-0 z-50
-          transition-all duration-300 ease-out
-          border-b border-transparent
-          /* FONDO DINÁMICO CON VARIABLES */
-          bg-[var(--bg-primary)]/80 
-          backdrop-blur-md
-          supports-[backdrop-filter]:bg-[var(--bg-primary)]/60
-          
-          /* Sombra suave al hacer scroll */
-          ${isCompact ? "shadow-sm border-[var(--border-subtle)]" : "shadow-none"}
-        `}
-      >
-        <div
-          className={`
-            max-w-6xl mx-auto px-6
-            flex items-center justify-between
-            transition-all duration-300 ease-out
-            ${isCompact ? "h-16" : "h-20"}
-          `}
-        >
-
-          {/* =========================
-              LOGO
-             ========================= */}
+    <header
+      className={`nav-glass transition-all duration-500 ${
+        scrolled ? 'nav-glass-scrolled' : 'top-14'
+      }`}
+      style={{ background: 'var(--bg-menu)', backdropFilter: 'none' }}
+    >
+      <div className='flex h-16 items-center justify-between px-6'>
+        {/* SECCIÓN 1: LOGO */}
+        <div className='flex items-center'>
           <Link
-            href="/"
-            className="flex items-center transition-transform duration-300 ease-out hover:opacity-90"
-            onClick={closeMenu}
+            href={`/${normalizedLang}`}
+            className='group flex items-center'
+            aria-label={t.home}
           >
-            {/* Logo Light */}
             <img
-              src="/brand/logo-light.svg"
-              alt="Alsnippets Logo"
-              className={`
-                block dark:hidden w-auto transition-all duration-300
-                ${isCompact ? "h-8" : "h-10"}
-              `}
-            />
-
-            {/* Logo Dark */}
-            <img
-              src="/brand/logo-dark.svg"
-              alt="Alsnippets Logo"
-              className={`
-                hidden dark:block w-auto transition-all duration-300
-                ${isCompact ? "h-8" : "h-10"}
-              `}
+              src={
+                mounted && theme === 'dark'
+                  ? '/brand/logo-fondo-dark-menu.svg'
+                  : '/brand/logo-fondo-light-menu.svg'
+              }
+              alt='Alsnippets Logo'
+              className={`h-10 w-auto transition-opacity duration-300 ${
+                !mounted ? 'opacity-0' : 'opacity-100'
+              }`}
             />
           </Link>
-
-          {/* =========================
-              ACCIONES MOBILE (Derecha)
-             ========================= */}
-          <div className="flex items-center gap-3 md:hidden">
-            
-            {/* Botón Idioma Mobile */}
-            <button
-              type="button"
-              aria-label="Cambiar idioma"
-              className="
-                w-9 h-9 flex items-center justify-center rounded-full
-                text-sm font-bold
-                text-[var(--text-primary)]
-                bg-[var(--bg-tertiary)]
-                hover:bg-[var(--brand-primary)]
-                hover:text-white
-                transition-all duration-300
-              "
-            >
-              {altLanguage}
-            </button>
-
-            {/* Botón Hamburguesa */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label={isMenuOpen ? "Cerrar menú" : "Abrir menú"}
-              className={`
-                relative w-10 h-10 flex items-center justify-center rounded-md
-                text-[var(--text-primary)]
-                hover:bg-[var(--bg-secondary)]
-                transition-all duration-300
-              `}
-            >
-              {/* Icono Hamburguesa / X (SVG simple para evitar dependencias) */}
-              <svg 
-                className={`w-7 h-7 transition-transform duration-300 ${isMenuOpen ? "rotate-90" : ""}`} 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor" 
-                strokeWidth={2}
-              >
-                {isMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
-          </div>
-
-          {/* =========================
-              MENÚ DESKTOP
-             ========================= */}
-          <div className="hidden md:block">
-            <DesktopMenu />
-          </div>
-
         </div>
-      </header>
 
-      {/* =========================
-          Overlay & Menú Mobile
-         ========================= */}
-      <MenuOverlay isOpen={isMenuOpen} onClose={closeMenu} />
-      
-      <MobileMenu
-        isOpen={isMenuOpen}
-        activeSubmenu={activeSubmenu}
-        onClose={closeMenu}
-        onToggleSubmenu={toggleSubmenu}
-      />
-    </>
-  );
+        {/* SECCIÓN 2: DESKTOP NAV */}
+        <div className='hidden lg:flex flex-1 justify-end px-5'>
+          <NavDesktop lang={normalizedLang} />
+        </div>
+
+        {/* SECCIÓN 3: ACCIONES Y MOBILE NAV */}
+        <div className='flex items-center gap-4'>
+          <div className='hidden md:flex items-center gap-4 border-l border-[var(--border-1)] pl-4'>
+            <LanguageSwitcher lang={normalizedLang} />
+            <div className='h-4 w-[1px] bg-[var(--border-1)]' />
+            <ThemeSwitcher lang={normalizedLang} />
+          </div>
+
+          <div className='h-6 w-[1px] bg-[var(--border-1)] hidden md:block' />
+
+          <Link
+            href={`/${normalizedLang}/login`}
+            className='group relative hidden lg:flex h-11 w-11 items-center justify-center rounded-full bg-[var(--bg-2)] transition-all hover:bg-[var(--bg-brand-hover)] border border-[var(--border-1)] hover:border-[var(--border-brand)] shadow-sm'
+            id='gtm-nav-login'
+          >
+            <User
+              size={22}
+              strokeWidth={2.5}
+              className='text-[var(--text-brand)] transition-transform group-hover:scale-110'
+            />
+            <span className='absolute -bottom-10 scale-0 rounded-lg bg-[var(--bg-1)] px-3 py-1 text-[10px] font-black tracking-widest text-[var(--text-1)] shadow-2xl transition-all group-hover:scale-100 border border-[var(--border-1)] uppercase'>
+              {t.account}
+            </span>
+          </Link>
+
+          <div className='lg:hidden'>
+            <NavMobile lang={normalizedLang} />
+          </div>
+        </div>
+      </div>
+    </header>
+  )
 }

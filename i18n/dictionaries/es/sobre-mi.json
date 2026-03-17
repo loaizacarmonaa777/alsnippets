@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "title": "Sobre mí | Adrián Loaiza - Alsnippets",
+    "description": "Soy Adrián Loaiza (Alsnippets), desarrollador web senior especializado en WordPress, WooCommerce, Shopify y tecnologías modernas (React/Next.js). Ofrezco soluciones de código, seguridad y rendimiento WPO para clientes en España, USA, Europa y Latinoamérica.",
+    "extra_keywords": [
+      "Perfil profesional",
+      "Trayectoria",
+      "Freelance Remoto",
+      "Auditoría Web España",
+      "Desarrollo Web USA",
+      "adrian loaiza",
+      "alsnippets"
+    ],
+    "og_title": "Sobre mí | Adrián Loaiza - Alsnippets",
+    "og_description": "Desarrollo web de alto nivel y optimización de CMS para negocios globales.",
+    "og_alt": "Adrián Loaiza - Alsnippets Tech Stack",
+    "twitter_description": "Experto en WordPress, Shopify y Código a medida para mercados internacionales."
+  },
+  "page": {
+    "hero": {
+      "title": "Ingeniería detrás del código",
+      "subtitle": "Ayudo a empresas y emprendedores a construir productos digitales sólidos, rápidos y seguros. Mi enfoque combina la ingeniería de software con la visión estratégica de negocio."
+    },
+    "intro": {
+      "title": "Más que un desarrollador, <br /> un socio tecnológico",
+      "paragraphs": [
+        "Desde mis inicios con PHP hasta la robustez de React y Next.js, mi carrera se ha centrado en resolver problemas complejos mediante soluciones eficientes.",
+        "Mi metodología se basa en la transparencia, el rendimiento extremo (WPO) y la seguridad por diseño."
+      ],
+      "items": [
+        {
+          "title": "Código Limpio",
+          "description": "Desarrollo mantenible y escalable siguiendo las mejores prácticas de la industria.",
+          "image": "/images/sobre-mi/codigo-limpio.webp"
+        },
+        {
+          "title": "Enfoque en WPO",
+          "description": "La velocidad no es opcional. Optimizo cada milisegundo de carga.",
+          "image": "/images/sobre-mi/enfoque-wpo.webp"
+        },
+        {
+          "title": "Seguridad Proactiva",
+          "description": "Protejo la integridad de los datos y la continuidad de tu negocio.",
+          "image": "/images/sobre-mi/seguridad-proactiva.webp"
+        }
+      ]
+    },
+    "experience": {
+      "title": "Especialización y Tecnologías",
+      "items": [
+        {
+          "title": "Ecosistema WordPress",
+          "description": "Desarrollo a medida de themes y plugins, optimización avanzada y seguridad.",
+          "image": "/images/sobre-mi/ecosistema-wordpress.webp"
+        },
+        {
+          "title": "JavaScript Moderno",
+          "description": "Aplicaciones dinámicas con React y Next.js para una experiencia de usuario superior.",
+          "image": "/images/sobre-mi/javascript-moderno.webp"
+        },
+        {
+          "title": "Backend & Servidores",
+          "description": "Arquitecturas en PHP, despliegues seguros y gestión de servidores hosting.",
+          "image": "/images/sobre-mi/backend-servidores.webp"
+        },
+        {
+          "title": "E-commerce Senior",
+          "description": "Consultoría y desarrollo para WooCommerce y Shopify de alto tráfico.",
+          "image": "/images/sobre-mi/ecommerce-senior.webp"
+        }
+      ]
+    },
+    "bio": {
+      "title": "Mi trayectoria en el mundo digital",
+      "paragraphs": [
+        "A lo largo de los años he tenido la oportunidad de trabajar con clientes de España, Latinoamérica y Estados Unidos, enfrentando retos que van desde sitios corporativos hasta plataformas transaccionales masivas.",
+        "A través de Alsnippets, comparto mi conocimiento y ayudo a otros desarrolladores a elevar sus estándares técnicos mientras ejecuto proyectos de alto impacto."
+      ]
+    },
+    "cta": {
+      "title": "¿Hablamos de tu próximo proyecto?",
+      "description": "Si buscas a alguien que se involucre técnica y estratégicamente en tu visión, estoy listo para ayudar.",
+      "button": "Contactar conmigo",
+      "disclaimer": "Disponibilidad para proyectos selectos."
+    }
+  }
+}

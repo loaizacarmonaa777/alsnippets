@@ -12,396 +12,348 @@ import PinIcon from '@/components/icons/PinIcon'
 import SunIcon from '@/components/icons/SunIcon'
 import MoonIcon from '@/components/icons/MoonIcon'
 import FormNewsletter from '@/components/forms/FormNewsletter'
+import { motion, AnimatePresence } from 'framer-motion'
 
-/* =====================================================
-   Footer — Alsnippets
-   ===================================================== */
+interface FooterProps {
+  lang: string
+  dict: any
+}
 
-export default function Footer () {
+export default function Footer ({ lang, dict }: FooterProps) {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const currentLang = lang || 'es'
+
+  // Acceso seguro con fallback de objeto vacío
+  const f = dict?.footer?.page || {}
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  // Renderizado Condicional Seguro:
+  // Mantenemos la estructura externa siempre para evitar saltos de layout (CLS)
   return (
     <footer
-      className='relative w-full mt-0 pt-16 pb-8'
-      style={{
-        background: 'var(--bg-footer)',
-        // CAMBIO GLOBAL: Aplicamos el color aquí para que se herede en todo el footer
-        color: 'var(--text-white2)'
-      }}
+      className='relative w-full mt-0 pt-16 pb-8 text-[var(--text-1)] dark:text-[var(--text-white-1)]'
+      style={{ background: 'var(--gradient-hero)' }}
     >
-      {/* =====================================================
-          Contenedor principal
-          ===================================================== */}
       <div className='container mx-auto px-6 max-w-[1200px]'>
-        {/* =====================================================
-            Grid principal (3 Columnas)
-            ===================================================== */}
         <div className='grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16'>
-          {/* COLUMNA 1 — Branding & contacto */}
-          <div className='flex flex-col items-center md:items-start space-y-6 text-base md:text-sm'>
-            {/* LOGO DINÁMICO CONTROLADO POR EL ESTADO DE REACT */}
-            <div className='h-24 flex items-center'>
+          {/* ==== COLUMNA 1 — Branding & contacto ==== */}
+          <div className='flex flex-col items-center md:items-start space-y-8 text-base md:text-sm'>
+            <div className='h-32 flex items-center justify-center md:justify-start'>
               {mounted ? (
-                <img
-                  // Aquí le decimos: "Si el tema es oscuro, usa este logo. Si no, usa el otro"
+                <motion.img
+                  key={`footer-logo-${theme}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.4 }}
                   src={
                     theme === 'dark'
-                      ? '/brand/logo-dark-eslogan-es.svg'
-                      : '/brand/logo-light-eslogan-es.svg'
+                      ? '/brand/logo-fondo-dark-menu.svg'
+                      : '/brand/logo-fondo-light-menu.svg'
                   }
                   alt='Alsnippets'
-                  className='h-16 w-auto transition-opacity duration-300'
+                  className='h-20 md:h-24 w-auto object-contain select-none'
+                  onError={e => {
+                    ;(e.target as HTMLImageElement).style.display = 'none'
+                  }}
                 />
               ) : (
-                // Un pequeño esqueleto de carga mientras el navegador detecta el tema
-                <div className="h-24 w-48 bg-white/5 animate-pulse rounded-md" />
+                <div className='h-20 w-48 bg-[var(--bg-3)] animate-pulse rounded-xl' />
               )}
             </div>
 
-            {/* Datos de contacto */}
-            {/* Nota: Al quitar clases de color específicas, heredan --text-white2 del padre */}
-            <ul className='text-base space-y-4 w-full'>
-              <li>
-                <a
-                  href='mailto:contact@alsnippets.com'
-                  className='flex items-center justify-center md:justify-start gap-3 group hover:text-[var(--brand-primary)] transition-colors'
-                >
-                  <MailIcon className='w-9 h-9' />
-                  <span className='group-hover:translate-x-1 transition-transform'>
-                    contact@alsnippets.com
-                  </span>
-                </a>
-              </li>
+            <ul className='space-y-5 w-full'>
+              {[
+                {
+                  href: 'mailto:contact@alsnippets.com',
+                  icon: <MailIcon className='w-6 h-6' />,
+                  text: 'contact@alsnippets.com',
+                  target: '_self'
+                },
+                {
+                  href: `https://wa.me/573246454061?text=${encodeURIComponent(
+                    f?.waMsg || ''
+                  )}`,
+                  icon: <WhatsAppIcon className='w-6 h-6' />,
+                  text: '(+57 324 645 4061)',
+                  target: '_blank'
+                },
+                {
+                  href:
+                    currentLang === 'en'
+                      ? 'https://alsnippets.com/en'
+                      : 'https://alsnippets.com',
+                  icon: <WebIcon className='w-6 h-6' />,
+                  text: 'alsnippets.com',
+                  target: '_self'
+                }
+              ].map((item, idx) => (
+                <motion.li key={idx} whileHover={{ x: 5 }}>
+                  <a
+                    href={item.href}
+                    target={item.target}
+                    rel={item.target === '_blank' ? 'noopener noreferrer' : ''}
+                    className='flex items-center justify-center md:justify-start gap-4 group text-[var(--text-1)] dark:text-[var(--text-white-2)] hover:text-[var(--text-brand)] transition-colors'
+                  >
+                    <div className='p-2 rounded-lg bg-[var(--bg-2)] dark:bg-[var(--bg-3)] border border-[var(--border-1)] dark:border-[var(--border-2)] group-hover:border-[var(--border-brand)] group-hover:shadow-[var(--shadow-brand-glow)] transition-all duration-300'>
+                      {item.icon}
+                    </div>
+                    <span className='font-medium tracking-tight'>
+                      {item.text}
+                    </span>
+                  </a>
+                </motion.li>
+              ))}
 
-              <li>
-                <a
-                  href={`https://wa.me/573246454061?text=${encodeURIComponent(
-                    'Hola, gracias por dar clic en el número de teléfono...'
-                  )}`}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='flex items-center justify-center md:justify-start gap-3 group hover:text-[var(--brand-primary)] transition-colors'
-                >
-                  <WhatsAppIcon className='w-9 h-9' />
-                  <span className='group-hover:translate-x-1 transition-transform'>
-                    (+57 324 645 4061)
-                  </span>
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href='https://alsnippets.com'
-                  className='flex items-center justify-center md:justify-start gap-3 group hover:text-[var(--brand-primary)] transition-colors'
-                >
-                  <WebIcon className='w-9 h-9' />
-                  <span className='group-hover:translate-x-1 transition-transform'>
-                    alsnippets.com
-                  </span>
-                </a>
-              </li>
-
-              <li className='flex items-start justify-center md:justify-start gap-3'>
-                <PinIcon className='w-9 h-9 mt-1 text-[var(--brand-primary)]' />
-                <span className='leading-tight'>
-                  Carrera 50A Santander, Santa Bárbara
+              <li className='flex items-start justify-center md:justify-start gap-4'>
+                <div className='p-2 rounded-lg bg-[var(--bg-brand)] text-[var(--text-inverse)]'>
+                  <PinIcon className='w-6 h-6' />
+                </div>
+                <span className='leading-tight text-[var(--text-2)] dark:text-[var(--text-white-3)]'>
+                  {f?.locationStreet}
                   <br />
-                  <span className='opacity-70 text-xs'>
-                    Antioquia - Colombia
+                  <span className='text-[var(--text-3)] dark:text-[var(--text-white-4)] text-xs font-bold uppercase tracking-wider'>
+                    {f?.locationRegion}
                   </span>
                 </span>
               </li>
             </ul>
 
-            {/* Theme Switcher & Social */}
-            <div className='pt-4 flex flex-col items-center md:items-start gap-4 w-full'>
-              {/* Theme Buttons */}
-              <div className='flex gap-3'>
-                {/* Solo renderizamos los botones si el componente ya se montó (evita errores de SSR) */}
+            <div className='pt-6 flex flex-col items-center md:items-start gap-6 w-full'>
+              <div className='flex p-1.5 bg-[var(--bg-inverse)] dark:bg-[var(--bg-3)] rounded-full gap-1'>
                 {mounted && (
                   <>
                     <button
                       type='button'
                       onClick={() => setTheme('light')}
-                      aria-label='Activar modo claro'
-                      className={`p-2 rounded-full transition-all ${
+                      aria-label={f?.sunAria}
+                      className={`p-2.5 rounded-full transition-all duration-500 ${
                         theme === 'light'
-                          ? 'bg-white/10 text-[var(--brand-primary)]'
-                          : 'hover:bg-white/10 hover:text-[var(--brand-primary)] text-[var(--text-muted)]'
+                          ? 'bg-[var(--bg-brand)] text-[var(--text-inverse)] shadow-lg scale-110'
+                          : 'text-[var(--text-white-4)] hover:text-[var(--text-brand)]'
                       }`}
                     >
-                      <SunIcon className='w-6 h-6' />
+                      <SunIcon className='w-5 h-5' />
                     </button>
-
                     <button
                       type='button'
                       onClick={() => setTheme('dark')}
-                      aria-label='Activar modo oscuro'
-                      className={`p-2 rounded-full transition-all ${
+                      aria-label={f?.moonAria}
+                      className={`p-2.5 rounded-full transition-all duration-500 ${
                         theme === 'dark'
-                          ? 'bg-white/10 text-[var(--brand-primary)]'
-                          : 'hover:bg-white/10 hover:text-[var(--brand-primary)] text-[var(--text-muted)]'
+                          ? 'bg-[var(--bg-brand)] text-[var(--text-inverse)] shadow-lg scale-110'
+                          : 'text-[var(--text-white-4)] hover:text-[var(--text-brand)]'
                       }`}
                     >
-                      <MoonIcon className='w-6 h-6' />
+                      <MoonIcon className='w-5 h-5' />
                     </button>
                   </>
                 )}
               </div>
-
-              {/* Redes Sociales */}
-              <div className='flex gap-4'>
+              <div className='flex gap-4 mt-2'>
                 {SOCIAL_LINKS.map(({ label, href, Icon }) => (
-                  <SocialIcon key={label} href={href} label={label}>
-                    <Icon />
-                  </SocialIcon>
+                  <motion.div
+                    key={label}
+                    whileHover={{ y: -5, scale: 1.1 }}
+                    className='rounded-full transition-all duration-300 hover:shadow-[var(--shadow-brand-glow-hover)]'
+                  >
+                    <SocialIcon href={href} label={label}>
+                      <div className='w-8 h-8 flex items-center justify-center text-[var(--text-1)] dark:text-[var(--text-white-1)]'>
+                        <Icon />
+                      </div>
+                    </SocialIcon>
+                  </motion.div>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* COLUMNA 2 — Enlaces (Card style) */}
-          <div
-            className='
-            bg-white/5 backdrop-blur-md 
-            border border-white/10 rounded-2xl 
-            p-8 shadow-lg
-          '
-          >
-            <h4 className='text-lg font-bold mb-6 text-center md:text-left text-[var(--brand-primary)]'>
-              Enlaces de interés
+          {/* ==== COLUMNA 2 — Enlaces ==== */}
+          <div className='bg-[var(--bg-1)] dark:bg-[var(--bg-2)] border border-[var(--border-brand)] rounded-2xl p-8 shadow-[var(--shadow-2)] dark:shadow-[var(--shadow-brand-glow)] transition-all duration-300'>
+            <h4 className='text-lg font-bold mb-6 text-center md:text-left text-[var(--text-brand)] uppercase tracking-wider'>
+              {f?.quickLinks}
             </h4>
-
-            <div className='grid grid-cols-2 gap-4 text-sm'>
-              {/* Usamos text-[var(--text-white2)] explícitamente o herencia */}
-              <ul className='space-y-3'>
+            <div className='grid grid-cols-2 gap-6 text-sm'>
+              <ul className='space-y-4 font-medium text-[var(--text-2)] dark:text-[var(--text-white-2)]'>
                 <li>
                   <Link
-                    href='/sobre-mi'
-                    className='hover:text-[var(--brand-primary)] transition-colors'
+                    href={`/${currentLang}/sobre-mi`}
+                    className='hover:text-[var(--text-brand)] transition-all hover:translate-x-2 inline-block'
                   >
-                    Sobre mí
+                    {f?.about}
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href='/precios'
-                    className='hover:text-[var(--brand-primary)] transition-colors'
+                    href={`/${currentLang}/proyectos/casos-de-exito`}
+                    className='hover:text-[var(--text-brand)] transition-all hover:translate-x-2 inline-block font-bold text-[var(--text-brand)]'
                   >
-                    Precios
+                    {f?.successStories}
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href='/blog'
-                    className='hover:text-[var(--brand-primary)] transition-colors'
+                    href={`/${currentLang}/servicios/soporte-mantenimiento-wordpress`}
+                    className='hover:text-[var(--text-brand)] transition-all hover:translate-x-2 inline-block'
                   >
-                    Blog
+                    {f?.support}
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href='/servicios/soporte-mantenimiento-wordpress'
-                    className='hover:text-[var(--brand-primary)] transition-colors'
+                    href={`/${currentLang}/servicios/optimizacion-rendimiento`}
+                    className='hover:text-[var(--text-brand)] transition-all hover:translate-x-2 inline-block'
                   >
-                    Soporte
+                    {f?.optimization}
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href='/servicios/seguridad-limpieza'
-                    className='hover:text-[var(--brand-primary)] transition-colors'
+                    href={`/${currentLang}/servicios/seguridad-limpieza`}
+                    className='hover:text-[var(--text-brand)] transition-all hover:translate-x-2 inline-block'
                   >
-                    Seguridad
+                    {f?.security}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href={`/${currentLang}/blog`}
+                    className='hover:text-[var(--text-brand)] transition-all hover:translate-x-2 inline-block'
+                  >
+                    {f?.blog}
                   </Link>
                 </li>
               </ul>
-
-              <ul className='space-y-3'>
+              <ul className='space-y-4 font-medium text-[var(--text-2)] dark:text-[var(--text-white-2)]'>
                 <li>
                   <Link
-                    href='/servicios/optimizacion-rendimiento'
-                    className='hover:text-[var(--brand-primary)] transition-colors'
+                    href={`/${currentLang}/suite-text`}
+                    className='hover:text-[var(--text-brand)] transition-all hover:translate-x-2 inline-block'
                   >
-                    Optimización
+                    {f?.suiteText}
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href='/servicios/seo-geo'
-                    className='hover:text-[var(--brand-primary)] transition-colors'
+                    href={`/${currentLang}/barber-short`}
+                    className='hover:text-[var(--text-brand)] transition-all hover:translate-x-2 inline-block'
                   >
-                    SEO & GEO
+                    {f?.barberShort}
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href='/proyectos/mis-creaciones'
-                    className='hover:text-[var(--brand-primary)] transition-colors'
+                    href={`/${currentLang}/precios`}
+                    className='hover:text-[var(--text-brand)] transition-all hover:translate-x-2 inline-block'
                   >
-                    Creaciones
+                    {f?.pricing}
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href='/qr'
-                    className='hover:text-[var(--brand-primary)] transition-colors'
+                    href={`/${currentLang}/proyectos/mis-creaciones`}
+                    className='hover:text-[var(--text-brand)] transition-all hover:translate-x-2 inline-block'
                   >
-                    QR personal
+                    {f?.creations}
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href='/contacto#faq'
-                    className='hover:text-[var(--brand-primary)] transition-colors'
+                    href={`/${currentLang}/tarjetas/adrianLoaiza`}
+                    className='hover:text-[var(--text-brand)] transition-all hover:translate-x-2 inline-block'
                   >
-                    FAQ
+                    {f?.qr}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href={`/${currentLang}/contacto#faq`}
+                    className='hover:text-[var(--text-brand)] transition-all hover:translate-x-2 inline-block'
+                  >
+                    {f?.faq}
                   </Link>
                 </li>
               </ul>
             </div>
-
-            {/* BOTONES CON HOVER ELEGANTE */}
-            <div className='mt-8 flex flex-col items-center gap-4 w-full'>
-              {/* 1. Botón Auditoría */}
-              <Link href='/auditoria' className='w-full group'>
-                <button
-                  className='
-                    relative w-full py-3 rounded-full 
-                    bg-[var(--brand-primary)] 
-                    text-[var(--text-white2)] font-bold 
-                    shadow-md
-                    overflow-hidden
-                    transition-all duration-300 ease-out
-                    
-                    /* HOVER */
-                    group-hover:-translate-y-1 
-                    group-hover:shadow-[0_10px_20px_-5px_rgba(255,255,255,0.4)]
-                    group-hover:brightness-110
-                    
-                    /* ACTIVE */
-                    active:scale-95
-                  '
+            <div className='mt-10 flex flex-col items-center gap-4 w-full'>
+              <Link
+                href={`/${currentLang}/auditoria#form`}
+                className='w-full group'
+              >
+                <motion.button
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className='relative w-full py-3.5 rounded-full bg-[var(--bg-brand)] text-[var(--text-inverse)] font-bold shadow-[var(--shadow-brand-glow)] overflow-hidden transition-all duration-300'
                 >
-                  <span className='relative z-10 flex items-center justify-center gap-2'>
-                    Auditoría
-                    <svg
-                      className='w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300'
-                      fill='none'
-                      viewBox='0 0 24 24'
-                      stroke='currentColor'
-                      strokeWidth={2.5}
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        d='M14 5l7 7m0 0l-7 7m7-7H3'
-                      />
-                    </svg>
+                  <span className='relative z-10 flex items-center justify-center gap-2 uppercase tracking-widest text-xs'>
+                    {f?.audit}
                   </span>
-                </button>
+                  <div className='absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]' />
+                </motion.button>
               </Link>
-
-              {/* 2. Botón Contacto */}
-              <Link href='/contacto' className='w-full group'>
-                <button
-                  className='
-                    w-full py-3 rounded-full 
-                    border border-white/20 
-                    text-[var(--text-white2)] font-medium
-                    bg-transparent
-                    
-                    transition-all duration-300 ease-out
-                    
-                    /* HOVER */
-                    group-hover:border-[var(--text-white2)]/60
-                    group-hover:bg-white/5 
-                    group-hover:tracking-wider
-                    group-hover:shadow-[0_0_15px_rgba(255,255,255,0.1)]
-                  '
+              <Link href={`/${currentLang}/contacto`} className='w-full group'>
+                <motion.button
+                  whileHover={{ backgroundColor: 'var(--bg-brand-hover)' }}
+                  className='w-full py-3 rounded-full border-2 border-[var(--border-brand)] text-[var(--text-brand)] font-bold text-xs uppercase tracking-widest transition-all duration-300'
                 >
-                  Contacto
-                </button>
+                  {f?.contact}
+                </motion.button>
               </Link>
             </div>
           </div>
 
-          {/* COLUMNA 3 — Newsletter (Card style) */}
-          <div
-            className='
-            bg-white/5 backdrop-blur-md 
-            border border-white/10 rounded-2xl 
-            p-8 shadow-lg
-            flex flex-col
-          '
-          >
-            <h4 className='text-lg font-bold mb-6 text-center md:text-left text-[var(--brand-primary)]'>
-              Suscríbete al boletín
+          {/* ==== COLUMNA 3 — Newsletter ==== */}
+          <div className='bg-[var(--bg-1)] dark:bg-[var(--bg-2)] border border-[var(--border-brand)] rounded-2xl p-8 shadow-[var(--shadow-2)] dark:shadow-[var(--shadow-brand-glow)] flex flex-col'>
+            <h4 className='text-lg font-bold mb-6 text-center md:text-left text-[var(--text-brand)] uppercase tracking-wider'>
+              {f?.newsletter}
             </h4>
-
-            {/* Suscripción a Newsletter */}
-            <FormNewsletter />
-
-            {/* Trust Badges */}
-            <div className='text-base space-y-3 pt-4 opacity-90 text-center md:text-left flex-grow'>
-              <p className='font-medium'>Trabajo WordPress profesional.</p>
-              <ul className='space-y-1.5 text-base opacity-80'>
-                <li>✔️ +6 años de experiencia</li>
-                <li>✔️ Optimización real</li>
-                <li>✔️ Soporte humano directo</li>
+            <FormNewsletter lang={currentLang} />
+            <div className='text-base space-y-4 pt-8 text-center md:text-left flex-grow font-medium'>
+              <p className='text-[var(--text-1)] dark:text-[var(--text-white-2)] font-bold'>
+                {f?.trust}
+              </p>
+              <ul className='space-y-2 text-sm text-[var(--text-2)] dark:text-[var(--text-white-3)]'>
+                <li>{f?.experience}</li>
+                <li>{f?.realOptimization}</li>
+                <li>{f?.humanSupport}</li>
               </ul>
             </div>
-
-            {/* Pagos */}
-            <div
-              className='
-                mt-6 
-                flex justify-center md:justify-start 
-                p-4 
-                rounded-xl 
-                bg-[var(--bg-secondary)]
-              '
-            >
+            <div className='mt-8 flex justify-center items-center p-6 rounded-xl bg-[var(--bg-img-pago)] border border-[var(--border-1)] dark:border-[var(--border-2)]'>
               <img
                 src='/images/footer/formas-de-pago-para-alsnippets.webp'
-                alt='Formas de pago'
-                className='h-22 w-auto opacity-90 hover:opacity-100 transition-opacity'
+                alt={f?.payments || 'Payments'}
+                className='h-14 md:h-16 w-auto object-contain opacity-90 transition-transform duration-300 hover:scale-105'
               />
             </div>
           </div>
         </div>
 
-        {/* =====================================================
-            Copyright & Legal
-            ===================================================== */}
-        <div className='mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs opacity-70'>
-          <p className='text-sm'>
-            © 2023 - {new Date().getFullYear()} Alsnippets. Todos los derechos
-            reservados | Un corazón, una mente, Alsnippets.
+        {/* ==== Copyright & Legal ==== */}
+        <div className='mt-16 pt-8 border-t border-[var(--border-inverse)] flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-medium'>
+          <p className='text-sm text-center md:text-left text-[var(--text-1)]'>
+            {f?.rights?.replace('{year}', new Date().getFullYear().toString())}
           </p>
-
-          <div className='flex gap-6'>
+          <div className='flex flex-wrap justify-center gap-4 md:gap-6 text-[var(--text-2)] dark:text-[var(--text-white-3)]'>
             <Link
-              href='/privacidad'
-              className='hover:text-[var(--brand-primary)] hover:underline'
+              href={`/${currentLang}/privacidad`}
+              className='hover:text-[var(--text-brand)] dark:hover:text-[var(--bg-brand)] transition-colors hover:underline'
             >
-              Privacidad
+              {f?.privacy}
             </Link>
             <Link
-              href='/terminos'
-              className='hover:text-[var(--brand-primary)] hover:underline'
+              href={`/${currentLang}/terminos`}
+              className='hover:text-[var(--text-brand)] dark:hover:text-[var(--bg-brand)] transition-colors hover:underline'
             >
-              Términos
+              {f?.terms}
             </Link>
             <Link
-              href='/devoluciones'
-              className='hover:text-[var(--brand-primary)] hover:underline'
+              href={`/${currentLang}/devoluciones`}
+              className='hover:text-[var(--text-brand)] dark:hover:text-[var(--bg-brand)] transition-colors hover:underline'
             >
-              Devoluciones
+              {f?.refunds}
             </Link>
           </div>
         </div>

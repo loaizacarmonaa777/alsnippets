@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "title_prefix": "Alsnippets -",
+    "description": "Professional WordPress development, speed optimization, and security. One heart, one mind, Alsnippets.",
+    "og_title": "Alsnippets Expert",
+    "og_description": "Expert WordPress services and high-performance digital solutions."
+  },
+  "page": {
+    "waMsg": "Hello Adrian! I am contacting you from the website regarding...",
+    "sunAria": "Activate light mode",
+    "moonAria": "Activate dark mode",
+    "quickLinks": "Quick Links",
+    "about": "About me",
+    "pricing": "Pricing",
+    "support": "Support",
+    "security": "Security",
+    "optimization": "Optimization",
+    "creations": "Creations",
+    "qr": "Personal QR",
+    "newsletter": "Subscribe to newsletter",
+    "trust": "Professional WordPress work.",
+    "experience": "✔️ +6 years of experience",
+    "realOptimization": "✔️ Real optimization",
+    "humanSupport": "✔️ Direct human support",
+    "payments": "Payment methods",
+    "rights": "© 2023 - {year} Alsnippets. All rights reserved | One heart, one mind, Alsnippets.",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "refunds": "Refunds",
+    "successStories": "Success Stories",
+    "blog": "Blog",
+    "suiteText": "Suite Text",
+    "barberShort": "Barber Short",
+    "faq": "FAQ",
+    "audit": "Audit",
+    "contact": "Contact",
+    "locationStreet": "Carrera 50A Santander, Santa Bárbara",
+    "locationRegion": "Antioquia - Colombia"
+  }
+}

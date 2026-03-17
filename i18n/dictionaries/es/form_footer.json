@@ -1,0 +1,13 @@
+{
+  "placeholders": {
+    "email": "Ingresa tu correo@"
+  },
+  "buttons": {
+    "subscribe": "Suscribirme"
+  },
+  "messages": {
+    "success": "¡Gracias por suscribirte!",
+    "err_sub": "Hubo un error al suscribirte.",
+    "err_conn": "Error de conexión."
+  }
+}

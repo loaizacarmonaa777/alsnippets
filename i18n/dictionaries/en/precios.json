@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "title": "Pricing & Quotes - Alsnippets",
+    "description": "Every project is different. Discover my work methodology and get a custom quote.",
+    "keywords": [
+      "Web development pricing",
+      "WordPress quote",
+      "SEO rates"
+    ],
+    "og_title": "Pricing & Work Methodology | Adrián Loaiza",
+    "og_description": "Audits and quotes based on real value for your business.",
+    "twitter_title": "Alsnippets Pricing",
+    "twitter_description": "Total transparency in development and SEO services."
+  },
+  "schema": {
+    "name": "Pricing & Work Methodology - Alsnippets",
+    "description": "Work methodology and personalized quotes."
+  },
+  "page": {
+    "hero": {
+      "title": "Pricing and working method",
+      "subtitle": "Every project is different. I don't work with fixed packages without understanding the real context first."
+    },
+    "philosophy": {
+      "title": "How is the price defined?",
+      "description": "Value depends on current status, complexity, and goals.",
+      "cards": [
+        {
+          "title": "Site status",
+          "description": "We evaluate current technical debt and server health.",
+          "image": "/images/precios/estado-sitio-web.webp"
+        },
+        {
+          "title": "Customization",
+          "description": "Custom solutions vs pre-made templates.",
+          "image": "/images/precios/nivel-personalizacion.webp"
+        },
+        {
+          "title": "Complexity",
+          "description": "API integrations and payment gateways.",
+          "image": "/images/precios/complejidad-tecnica.webp"
+        },
+        {
+          "title": "Manual work",
+          "description": "Deep optimization and data cleaning.",
+          "image": "/images/precios/trabajo-manual.webp"
+        },
+        {
+          "title": "Responsibility",
+          "description": "Strict protocols for sites with active traffic.",
+          "image": "/images/precios/riesgos-responsabilidad.webp"
+        },
+        {
+          "title": "Custom code",
+          "description": "Unique features without relying on standard plugins.",
+          "image": "/images/precios/implementacion-codigo-personalizado.webp"
+        }
+      ]
+    },
+    "transparency": {
+      "title": "Transparency from the start",
+      "p1": "I perform a technical review to propose a realistic solution.",
+      "p2": "This prevents budget surprises during the process."
+    },
+    "methods": {
+      "title": "Ways of working",
+      "custom": {
+        "title": "Custom services",
+        "description": "Ideal for specific projects, specific improvements, or developments with unique requirements."
+      },
+      "audit": {
+        "title": "WordPress Audit",
+        "description": "The recommended first step to understand the real status of your site before intervening."
+      }
+    },
+    "cta": {
+      "title": "Start with an audit",
+      "description": "We analyze the real status of your CMS to define the best path forward.",
+      "button": "Request audit",
+      "disclaimer": "Available for Spain, USA, and Latin America."
+    }
+  }
+}

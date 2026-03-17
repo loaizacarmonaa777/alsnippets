@@ -1,97 +1,122 @@
-import React from "react";
-import Image from "next/image";
-import Link from "next/link";
+'use client'
+
+import React from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
 
 /* =====================================================
    TIPOS DE DATOS
    ===================================================== */
 export type CardTag = {
-  text: string;
-  variant?: "success" | "error" | "neutral" | "brand";
-};
+  text: string
+  variant?: 'success' | 'error' | 'neutral' | 'brand'
+}
 
 interface VerticalCardProps {
-  title: string;
-  description: string;
-  image?: string;
-  tags?: CardTag[];
-  href?: string;
-  className?: string;
+  title: string
+  description: string
+  image?: string
+  tags?: CardTag[]
+  href?: string
+  className?: string
+  highlight?: boolean
+  lang?: string // Inyectado para consistencia de rutas si fuera necesario
 }
 
 /* =====================================================
-   HELPER: Estilos de los Tags
+   HELPER: Estilos de los Tags (Lógica Sensible)
    ===================================================== */
-function getTagStyles(variant: CardTag["variant"] = "neutral") {
+function getTagStyles (variant: CardTag['variant'] = 'neutral') {
   switch (variant) {
-    case "success":
-      return "border-green-200 bg-green-50 text-green-700 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300";
-    case "error":
-      return "border-red-200 bg-red-50 text-red-700 dark:bg-red-900/30 dark:border-red-800 dark:text-red-300";
-    case "brand":
-      return "border-[var(--brand-primary)]/30 bg-[var(--brand-primary)]/10 text-[var(--brand-primary)]";
-    case "neutral":
+    case 'success':
+      return 'border-[var(--bg-success)]/30 bg-[var(--bg-success)]/10 text-[var(--text-success)]'
+    case 'error':
+      return 'border-red-500/20 bg-red-500/10 text-red-600 dark:text-red-400'
+    case 'brand':
+      return 'border-[var(--border-brand)] bg-[var(--bg-brand)]/10 text-[var(--text-brand)]'
+    case 'neutral':
     default:
-      return "border-[var(--border-subtle)] bg-[var(--bg-tertiary)] text-[var(--text-secondary)]";
+      return 'border-[var(--border-1)] bg-[var(--bg-3)] text-[var(--text-2)]'
   }
 }
 
 /* =====================================================
    VerticalCard (Componente UI)
+   - PROTOCOLO ALSNIPPETS: Blindaje Visual y Estructural
    ===================================================== */
-export default function VerticalCard({
+export default function VerticalCard ({
   title,
   description,
   image,
   tags = [],
   href,
-  className = "",
+  className = '',
+  highlight = false,
+  lang
 }: VerticalCardProps) {
   
-  // Clases base compartidas
+  // Normalización de ruta si existe lang (Lógica Sensible)
+  const localizedHref = href && lang ? (href.startsWith('/') ? `/${lang}${href}` : href) : href;
+
+  // Clases base (Blindaje Visual Absoluto)
   const containerClasses = `
     group relative flex flex-col w-full h-full
-    bg-[var(--bg-card)] border border-[var(--border-subtle)]
-    rounded-2xl overflow-hidden
-    shadow-sm transition-all duration-300 ease-out
-    hover:border-[var(--brand-primary)]/30
-    ${href ? "hover:shadow-xl hover:-translate-y-1 cursor-pointer" : "hover:-translate-y-1"}
+    bg-[var(--bg-1)] border border-[var(--border-1)]
+    rounded-2xl
+    shadow-[var(--shadow-1)] transition-all duration-300 ease-out
+    
+    /* Efecto de elevación corporativo */
+    hover:border-[var(--border-brand)]
+    hover:-translate-y-1
+    
+    /* Aura dinámica: shadow-2 en luz, Aura Amarilla en Dark */
+    hover:shadow-[var(--shadow-2)]
+    dark:hover:shadow-[var(--shadow-brand-glow-hover)]
+
+    /* Lógica condicional de resaltado (Highlight) */
+    ${
+      highlight
+        ? 'bg-[var(--bg-brand-hover)] border-2 border-[var(--border-brand)] shadow-[var(--shadow-brand-glow)]'
+        : 'bg-[var(--bg-1)] border border-[var(--border-1)] shadow-[var(--shadow-1)]'
+    }
+    
+    ${href ? 'cursor-pointer' : ''}
     ${className}
-  `;
+  `
 
   const cardContent = (
     <>
-      {/* 1. IMAGEN (Solo se renderiza si pasas un link de imagen válido) */}
-      {image && image.trim() !== "" && (
-        <div className="relative h-56 w-full bg-[var(--bg-tertiary)] overflow-hidden shrink-0">
+      {/* 1. IMAGEN */}
+      {image && image.trim() !== '' && (
+        <div className='relative h-56 w-full bg-[var(--bg-3)] overflow-hidden shrink-0 rounded-t-2xl'>
           <Image
             src={image}
             alt={title}
             fill
-            className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className='object-cover transition-transform duration-700 ease-in-out group-hover:scale-105'
+            sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
           />
         </div>
       )}
 
       {/* 2. BODY */}
-      <div className="flex flex-col flex-grow p-5 md:p-6 text-center">
-        <h3 className="text-xl md:text-2xl font-bold text-[var(--text-primary)] mb-3 group-hover:text-[var(--brand-primary)] transition-colors">
+      <div className='flex flex-col flex-grow p-5 md:p-6 text-center'>
+        <h3 className='text-xl md:text-2xl font-bold text-[var(--text-1)] mb-3 group-hover:text-[var(--text-brand)] transition-colors !my-0'>
           {title}
         </h3>
 
-        <p className="text-base text-[var(--text-secondary)] leading-relaxed mb-6">
+        <p className='text-base text-[var(--text-2)] leading-relaxed mb-6'>
           {description}
         </p>
 
         {/* 3. FOOTER (Tags) */}
         {tags && tags.length > 0 && (
-          <div className="mt-auto flex flex-wrap justify-center gap-2">
+          <div className='mt-auto flex flex-wrap justify-center gap-2'>
             {tags.map((tag, index) => (
               <span
                 key={index}
                 className={`
-                  px-2.5 py-1 rounded-full text-xs font-medium border cursor-default
+                  px-2.5 py-1 rounded-full text-sm font-bold border cursor-default
                   transition-colors duration-200
                   ${getTagStyles(tag.variant)}
                 `}
@@ -103,25 +128,17 @@ export default function VerticalCard({
         )}
       </div>
     </>
-  );
+  )
 
-  /* =====================================================
-     LA REGLA DE LINK vs ARTICLE
-     ===================================================== */
-  const isValidLink = href && href.trim() !== "";
+  const isValidLink = localizedHref && localizedHref.trim() !== ''
 
   if (isValidLink) {
     return (
-      <Link href={href as string} className={containerClasses}>
+      <Link href={localizedHref as string} className={containerClasses}>
         {cardContent}
       </Link>
-    );
+    )
   }
 
-  // Si no hay link, renderizamos un contenedor estático
-  return (
-    <article className={containerClasses}>
-      {cardContent}
-    </article>
-  );
+  return <article className={containerClasses}>{cardContent}</article>
 }
