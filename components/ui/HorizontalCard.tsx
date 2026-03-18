@@ -43,11 +43,9 @@ export default function HorizontalCard ({
 
   // Localizamos el href si existe y es una ruta interna (Blindaje de Lógica)
   const localizedHref = href?.startsWith('http')
-    ? href // Enlaces externos se quedan igual
-    : href?.startsWith('/')
-    ? href // ✅ Enlaces internos con / se usan tal cual
+    ? href
     : href
-    ? `/${normalizedLang}/${href}` // Solo si es un slug sin /
+    ? `/${normalizedLang}${href.startsWith('/') ? '' : '/'}${href}`
     : undefined
 
   const cardClasses = `

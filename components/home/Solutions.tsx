@@ -34,7 +34,7 @@ export default function Solutions ({ lang }: { lang: string }) {
               description={item.description}
               image={item.image}
               href={item.link}
-              linkText='Leer más'
+              linkText={dict.read_more}
               target='_blank'
               lang={lang}
             />

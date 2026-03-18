@@ -66,9 +66,8 @@ export default async function OptimizacionPage({ params }: { params: Promise<{ l
                 title={item.title}
                 description={item.description}
                 image={item.image}
-                href={item.slug}
+                href={`/blog/${item.slug}`}
                 target="_blank"
-                // ✅ PASAMOS lang a HorizontalCard
                 lang={lang}
               />
             ))}
@@ -88,9 +87,8 @@ export default async function OptimizacionPage({ params }: { params: Promise<{ l
                 title={item.title}
                 description={item.description}
                 image={item.image}
-                href={item.slug}
+                href={`/blog/${item.slug}`}
                 target="_blank"
-                // ✅ PASAMOS lang a HorizontalCard
                 lang={lang}
               />
             ))}

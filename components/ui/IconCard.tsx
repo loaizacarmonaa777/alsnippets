@@ -24,9 +24,17 @@ export default function IconCard ({
   href,
   lang
 }: IconCardProps) {
-  
   // Localizamos el href si existe y es una ruta interna (Lógica Sensible Blindada)
-  const localizedHref = href?.startsWith('/') ? `/${lang}${href}` : href
+  const normalizedLang = lang.replace(/^\//, '')
+  const localizedHref = href?.startsWith('http')
+    ? href 
+    : href?.startsWith(`/${normalizedLang}`)
+    ? href 
+    : href?.startsWith('/')
+    ? `/${normalizedLang}${href}`
+    : href 
+    ? `/${normalizedLang}/${href}`
+    : undefined
 
   // Guardamos el diseño de la tarjeta (Blindaje Visual intacto)
   const cardContent = (

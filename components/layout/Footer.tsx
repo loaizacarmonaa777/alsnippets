@@ -41,7 +41,7 @@ export default function Footer ({ lang, dict }: FooterProps) {
       <div className='container mx-auto px-6 max-w-[1200px]'>
         <div className='grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16'>
           {/* ==== COLUMNA 1 — Branding & contacto ==== */}
-          <div className='flex flex-col items-center md:items-start space-y-8 text-base md:text-sm'>
+          <div className='flex flex-col items-start md:items-start space-y-8 text-base md:text-sm'>
             <div className='h-32 flex items-center justify-center md:justify-start'>
               {mounted ? (
                 <motion.img
@@ -96,7 +96,7 @@ export default function Footer ({ lang, dict }: FooterProps) {
                     href={item.href}
                     target={item.target}
                     rel={item.target === '_blank' ? 'noopener noreferrer' : ''}
-                    className='flex items-center justify-center md:justify-start gap-4 group text-[var(--text-1)] dark:text-[var(--text-white-2)] hover:text-[var(--text-brand)] transition-colors'
+                    className='flex items-start justify-start md:justify-start gap-4 group text-[var(--text-1)] dark:text-[var(--text-white-2)] hover:text-[var(--text-brand)] transition-colors'
                   >
                     <div className='p-2 rounded-lg bg-[var(--bg-2)] dark:bg-[var(--bg-3)] border border-[var(--border-1)] dark:border-[var(--border-2)] group-hover:border-[var(--border-brand)] group-hover:shadow-[var(--shadow-brand-glow)] transition-all duration-300'>
                       {item.icon}
@@ -108,7 +108,7 @@ export default function Footer ({ lang, dict }: FooterProps) {
                 </motion.li>
               ))}
 
-              <li className='flex items-start justify-center md:justify-start gap-4'>
+              <li className='flex items-start justify-start md:justify-start gap-4'>
                 <div className='p-2 rounded-lg bg-[var(--bg-brand)] text-[var(--text-inverse)]'>
                   <PinIcon className='w-6 h-6' />
                 </div>
@@ -122,8 +122,8 @@ export default function Footer ({ lang, dict }: FooterProps) {
               </li>
             </ul>
 
-            <div className='pt-6 flex flex-col items-center md:items-start gap-6 w-full'>
-              <div className='flex p-1.5 bg-[var(--bg-inverse)] dark:bg-[var(--bg-3)] rounded-full gap-1'>
+            <div className='pt-6 flex flex-col items-start md:items-start gap-6 w-full'>
+              <div className='flex p-1.5 rounded-full gap-1'>
                 {mounted && (
                   <>
                     <button
@@ -133,7 +133,7 @@ export default function Footer ({ lang, dict }: FooterProps) {
                       className={`p-2.5 rounded-full transition-all duration-500 ${
                         theme === 'light'
                           ? 'bg-[var(--bg-brand)] text-[var(--text-inverse)] shadow-lg scale-110'
-                          : 'text-[var(--text-white-4)] hover:text-[var(--text-brand)]'
+                          : 'text-[var(--text-white-1)] hover:text-[var(--text-brand)]'
                       }`}
                     >
                       <SunIcon className='w-5 h-5' />
@@ -161,7 +161,7 @@ export default function Footer ({ lang, dict }: FooterProps) {
                     className='rounded-full transition-all duration-300 hover:shadow-[var(--shadow-brand-glow-hover)]'
                   >
                     <SocialIcon href={href} label={label}>
-                      <div className='w-8 h-8 flex items-center justify-center text-[var(--text-1)] dark:text-[var(--text-white-1)]'>
+                      <div className='w-8 h-8 flex items-center justify-center text-[var(--text-4)] dark:text-[var(--text-white-1)]'>
                         <Icon />
                       </div>
                     </SocialIcon>

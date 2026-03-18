@@ -64,9 +64,8 @@ export default async function SeguridadLimpiezaPage({ params }: { params: Promis
                 title={item.title}
                 description={item.description}
                 image={item.image}
-                href={item.slug}
+                href={`/blog/${item.slug}`}
                 target='_blank'
-                // ✅ PASAMOS lang a HorizontalCard (lo requiere)
                 lang={lang}
               />
             ))}
@@ -86,9 +85,8 @@ export default async function SeguridadLimpiezaPage({ params }: { params: Promis
                 title={item.title}
                 description={item.description}
                 image={item.image}
-                href={item.slug}
+                href={`/blog/${item.slug}`}
                 target='_blank'
-                // ✅ PASAMOS lang a HorizontalCard (lo requiere)
                 lang={lang}
               />
             ))}

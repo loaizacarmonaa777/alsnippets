@@ -87,9 +87,8 @@ export default async function SeoPage({ params }: { params: Promise<{ lang: stri
                 title={item.title}
                 description={item.description}
                 image={item.image}
-                href={item.slug}
+                href={`/blog/${item.slug}`}
                 target="_blank"
-                // ✅ PASAMOS lang a HorizontalCard
                 lang={lang}
               />
             ))}
@@ -133,7 +132,6 @@ export default async function SeoPage({ params }: { params: Promise<{ lang: stri
             buttonText={t.cta.button}
             buttonHref={`/${lang}/auditoria`}
             disclaimer={t.cta.disclaimer}
-            // ✅ PASAMOS lang a GlassCTA
             lang={lang}
           />
         </div>

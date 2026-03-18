@@ -41,7 +41,7 @@ export default function StackLogos ({ lang }: { lang?: string }) {
       <div className='absolute top-0 left-0 w-full h-[1px] bg-[var(--border-1)] z-20' />
 
       {/* CONTENEDOR PRINCIPAL - CARRUSEL INFINITO */}
-      <div className='relative z-10 w-full bg-white dark:bg-[var(--bg-brand)] py-12 overflow-hidden'>
+      <div className='relative z-10 w-full bg-white py-12 overflow-hidden'>
         {/* 👇 ANIMACIÓN CON CLASE TAILWIND */}
         <div className='flex gap-16 animate-scroll w-max min-w-full items-center hover:[animation-play-state:paused]'>
           {/* Duplicamos los logos para loop infinito */}

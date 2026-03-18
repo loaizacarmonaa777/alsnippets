@@ -23,6 +23,14 @@ export async function generateMetadata ({
   }
 }
 
+export const viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' }
+  ],
+  colorScheme: 'light dark'
+}
+
 export default async function LangLayout ({
   children,
   params
@@ -31,11 +39,11 @@ export default async function LangLayout ({
   params: Promise<{ lang: string }>
 }) {
   // 1. OBTENEMOS EL LANG CRUDO Y NORMALIZAMOS
-  const { lang: rawLang } = await params;
-  const lang = rawLang.replace(/^\//, '') as 'es' | 'en';
-  
+  const { lang: rawLang } = await params
+  const lang = rawLang.replace(/^\//, '') as 'es' | 'en'
+
   // 👇 2. CARGAMOS EL DICCIONARIO AQUÍ (Esto es lo que faltaba)
-  const dict = await getDictionary(lang);
+  const dict = await getDictionary(lang)
 
   return (
     <>
@@ -44,7 +52,7 @@ export default async function LangLayout ({
         <MainNav lang={lang} />
       </header>
       <main className='relative w-full'>{children}</main>
-      
+
       {/* 👇 3. PASAMOS EL DICCIONARIO AL FOOTER */}
       <Footer lang={lang} dict={dict} />
     </>

@@ -34,16 +34,38 @@ export function middleware (request: NextRequest) {
   // =====================================================
   // 3. PROTECCIÓN DE RUTA PRIVADA (NUEVA SECCIÓN)
   // =====================================================
-  // Verificamos si la ruta es la de auditoría privada
-  const isAuditRoute = pathname.includes('/audit')
+  // Verificamos si la ruta es la de auditoría privada (exactamente 'audit')
+  const isAuditRoute = pathname.split('/').some(segment => segment === 'audit')
   const isLoggedIn = request.cookies.get('isLoggedIn')?.value === 'true'
 
+  // Caso A: Intenta entrar a ruta privada SIN estar logueado
   if (isAuditRoute && !isLoggedIn) {
     // Detectamos el idioma actual desde la URL (es o en)
     const lang = pathname.split('/')[1] || 'es'
     // Redirigir al login del idioma actual
     const loginUrl = new URL(`/${lang}/login`, request.url)
     return NextResponse.redirect(loginUrl)
+  }
+
+  // Caso B: Está logueado y en ruta privada -> Refrescamos la sesión (1 hora de inactividad)
+  if (isAuditRoute && isLoggedIn) {
+    // Continuamos con la respuesta (incluyendo el nonce y headers previos)
+    const responseNext = NextResponse.next()
+
+    // Sincronizamos los headers de seguridad ya configurados
+    response.headers.forEach((value, key) => {
+      responseNext.headers.set(key, value)
+    })
+
+    // Renovamos la cookie por 1 hora (3600 segundos) para persistencia y control de inactividad
+    responseNext.cookies.set('isLoggedIn', 'true', {
+      path: '/',
+      maxAge: 60 * 60,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production'
+    })
+
+    return responseNext
   }
 
   // =====================================================
@@ -62,7 +84,7 @@ export function middleware (request: NextRequest) {
     return NextResponse.redirect(request.nextUrl)
   }
 
-  return response 
+  return response
 }
 
 // Configuración para que el middleware no gaste recursos en imágenes o APIs

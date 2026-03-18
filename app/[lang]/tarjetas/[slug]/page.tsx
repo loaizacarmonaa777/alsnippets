@@ -23,7 +23,7 @@ import {
    ===================================================== */
 const mockDatabase: Record<string, any> = {
   adrianLoaiza: {
-    name: 'Adrián Loaiza',
+    name: 'Adrián Loaiza Carmona',
     title: {
       es: 'Consultor & Desarrollador WordPress',
       en: 'WordPress Consultant & Developer'
@@ -49,7 +49,7 @@ const mockDatabase: Record<string, any> = {
   yeseniaSanmartin: {
     name: 'Yesenia Sanmartín Sánchez',
     title: { es: 'Diseñadora Gráfica', en: 'Graphic Designer' },
-    company: 'ALC Diseño',
+    company: 'Alsnippets',
     phone: '+573246454062',
     email: 'yesenniasan2@hotmail.com',
     location: 'Colombia',
@@ -61,8 +61,9 @@ const mockDatabase: Record<string, any> = {
       facebook: 'https://www.facebook.com/yesenia.sanmartinsanchez',
       instagram: 'https://www.instagram.com/alc.diseno/'
     },
-    profileImage: '/images/contacto-adrian-loaiza.png',
-    coverColor: 'bg-gradient-to-r from-pink-500 to-rose-400'
+    profileImage: '/images/tarjetas/yesenia.webp',
+    coverImg: '/images/tarjetas/backgorund-tarjeta-contacto-yesenia.webp'
+    // overColor: 'bg-gradient-to-r from-pink-500 to-rose-400' para poner un color de fondo 
   }
   // ... (Resto de perfiles mantenidos con la misma estructura de traducción interna)
 }
@@ -125,7 +126,7 @@ export default function DigitalBusinessCard ({
         className='min-h-screen w-full flex flex-col items-center justify-center p-5 text-center'
         style={{ background: 'var(--gradient-hero)' }}
       >
-        <h1 className='text-4xl font-bold mb-4'>{t.notFound}</h1>
+        <h1 className='text-4xl mb-4'>{t.notFound}</h1>
         <p className='opacity-80'>{t.notFoundDesc}</p>
       </div>
     )
@@ -206,8 +207,8 @@ export default function DigitalBusinessCard ({
 
   return (
     <main
-      className='min-h-screen w-full flex items-center justify-center py-12 px-4 relative overflow-hidden'
-      style={{ background: 'var(--gradient-hero)' }}
+      className='min-h-screen w-full flex items-center justify-center py-40 px-4 relative overflow-hidden'
+      style={{ background: 'var(--bg-body)' }}
     >
       {/* ... (tu JSX existente) */}
       <div className='absolute top-[-10%] left-[-10%] w-96 h-96 bg-[var(--bg-brand)]/20 rounded-full blur-3xl animate-pulse'></div>
@@ -236,8 +237,8 @@ export default function DigitalBusinessCard ({
           </button>
         </div>
 
-        <div className='px-8 pb-8 pt-0 relative flex flex-col items-center text-center mt-[-3rem]'>
-          <div className='relative w-28 h-28 rounded-full border-4 border-[var(--bg-1)] overflow-hidden shadow-[var(--shadow-1)] bg-[var(--bg-3)] mb-4 z-20'>
+        <div className='px-8 pb-8 pt-0 relative flex flex-col items-center text-center mt-[-5rem]'>
+          <div className='relative w-36 h-36 rounded-full border-4 border-[var(--bg-1)] overflow-hidden shadow-[var(--shadow-1)] bg-[var(--bg-3)] mb-4 z-20'>
             <Image
               src={contactInfo.profileImage}
               alt={contactInfo.name}
@@ -246,7 +247,7 @@ export default function DigitalBusinessCard ({
             />
           </div>
 
-          <h1 className='text-2xl font-black text-[var(--text-1)] !my-0'>
+          <h1 className='text-2xl text-[var(--text-1)] !my-0'>
             {contactInfo.name}
           </h1>
           <p className='text-[var(--text-brand)] font-semibold text-sm uppercase tracking-wider mt-1 mb-2'>
@@ -361,7 +362,7 @@ export default function DigitalBusinessCard ({
             >
               <X className='w-5 h-5' />
             </button>
-            <h3 className='text-2xl font-bold text-[var(--text-1)] mb-2'>
+            <h3>
               {t.scan}
             </h3>
             <p className='text-sm text-[var(--text-2)] mb-6'>

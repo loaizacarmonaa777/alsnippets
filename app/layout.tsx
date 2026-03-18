@@ -19,17 +19,38 @@ const outfit = Outfit({
   display: 'swap'
 })
 
-export default async function RootLayout({
-  children,
+export const viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' }
+  ],
+  colorScheme: 'light dark'
+}
+
+export default async function RootLayout ({
+  children
 }: {
   children: React.ReactNode
 }) {
   return (
-    <html suppressHydrationWarning>
+    // ✅ Añadimos lang="es" por defecto (aunque el otro layout lo sobreescriba) y forzamos el esquema
+    <html
+      lang='es'
+      suppressHydrationWarning
+      style={{ colorScheme: 'light dark' }}
+    >
+      <head>
+        {/* ✅ Meta tags para evitar que iOS "invente" colores o ignore iconos */}
+        <meta name='supported-color-schemes' content='light dark' />
+        <meta name='apple-mobile-web-app-capable' content='yes' />
+        <meta name='apple-mobile-web-app-status-bar-style' content='default' />
+      </head>
       <body className={`${inter.variable} ${outfit.variable} antialiased`}>
+        {/* ✅ Cambiamos defaultTheme a 'light' o 'dark' si quieres evitar el amarillo del sistema, 
+            o lo dejamos en 'system' pero con los metas anteriores ya debería respetarte */}
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
           <AuthProvider>
-            <Tracking lang="es" />
+            <Tracking lang='es' />
             {children}
             <CookieConsent />
           </AuthProvider>

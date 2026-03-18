@@ -137,7 +137,38 @@
      ===================================================== */
   .dark {
     /* ===== Backgrounds ===== */
-    --bg-body: linear-gradient(to bottom right, #0b1120, #030712);
+    /* --bg-body: linear-gradient(to bottom right, #172a5c, #02091b);*/
+    /*--bg-body: linear-gradient(
+      to right top,
+      #02091b,
+      #04081c,
+      #07081d,
+      #0b071e,
+      #0e061f,
+      #110a24,
+      #140e28,
+      #16112d,
+      #191738,
+      #1a1d44,
+      #1a2350,
+      #172a5c
+    );*/
+
+    --bg-body: linear-gradient(
+      to right top,
+      #05112e,
+      #081030,
+      #0d0f32,
+      #120d33,
+      #170b34,
+      #1a0e39,
+      #1d113e,
+      #211343,
+      #231b4e,
+      #23245a,
+      #222c65,
+      #1f3571
+    );
 
     --bg-1: #0b0f19; /* Tarjetas en modo oscuro */
     --bg-2: #111827;
@@ -188,7 +219,7 @@
     --text-inverse: #000000; /* Texto oscuro puro sobre fondos claros */
     --text-success: #4ade80;
 
-      /* ===== Texto fondo oscuro ===== */
+    /* ===== Texto fondo oscuro ===== */
     --text-white-1: #ffffff;
     --text-white-2: #e5e7eb;
     --text-white-3: #d1d5db;

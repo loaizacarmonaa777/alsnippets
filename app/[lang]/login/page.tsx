@@ -35,13 +35,14 @@ export default function LoginPage({ params: { lang } }: { params: { lang: string
     e.preventDefault()
     setIsLoading(true)
     setError(false)
+    const ONE_HOUR = 60 * 60;
 
     // Simulación de delay profesional
     await new Promise(resolve => setTimeout(resolve, 1500))
 
     if (formData.email === ADMIN_EMAIL && formData.password === ADMIN_PASS) {
       // Aquí podrías setear una cookie o localStorage para el Middleware
-      document.cookie = "isLoggedIn=true; path=/; max-age=3600" // Sesión por 1 hora
+      document.cookie = `isLoggedIn=true; path=/; max-age=${ONE_HOUR}; SameSite=Lax;`;
       router.push(`/${lang}/audit`)
     } else {
       setError(true)
