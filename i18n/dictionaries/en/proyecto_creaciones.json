@@ -1,24 +1,48 @@
 {
-  "meta": {
-    "title": "My Creations",
-    "description": "Projects developed from scratch, custom WordPress plugins, personalized themes, and proprietary web solutions by Adrián Loaiza.",
-    "keywords": [
-      "Web development portfolio",
-      "Custom WordPress plugins",
-      "Personalized WordPress themes",
-      "React Next.js development",
-      "Adrián Loaiza projects",
-      "Alsnippets creations",
-      "Custom web solutions"
-    ],
-    "og_title": "My Creations | Plugins and Web Development | Alsnippets",
-    "og_description": "Explore my projects developed from scratch: plugins, themes, and custom web platforms.",
-    "og_alt": "Creations Portfolio - Alsnippets",
-    "twitter_title": "My Creations | Alsnippets",
-    "twitter_description": "Projects developed from scratch, plugins, themes, and proprietary solutions."
+  "hero": {
+    "title": "My creations",
+    "subtitle": "Independent platforms, SEO tools, and my personal WordPress development lab."
   },
-  "schema": {
-    "name": "My Creations - Alsnippets",
-    "description": "Gallery of proprietary projects, WordPress plugins, and web applications developed by Adrián Loaiza."
+  "meta": {
+    "title": "My Creations | Alsnippets",
+    "description": "Explore my independent platforms, SEO tools, and the personal WordPress development lab of Adrián Loaiza.",
+    "keywords": "WordPress, Plugins, Next.js, SEO Tools, Suite Text, Barber Short",
+    "og_title": "My Creations | Alsnippets",
+    "og_description": "Independent platforms and custom-built development tools.",
+    "og_alt": "My Creations - Alsnippets",
+    "twitter_title": "My Creations | Alsnippets",
+    "twitter_description": "Independent platforms and custom-built development tools."
+  },
+  "intro": "Beyond consulting and client work, I dedicate part of my time to creating my own solutions. Here I collect my independent platforms and the code I'm currently working on.",
+  "section1": {
+    "title": "Platforms & Products",
+    "cards": {
+      "suite": {
+        "title": "Suite Text",
+        "desc": "Tool under development focused on optimizing, analyzing, and structuring texts oriented towards SEO results."
+      },
+      "barber": {
+        "title": "Barber Short",
+        "desc": "Comprehensive web platform for barbershops, specialized in managing bookings, services, and online payments."
+      },
+      "alsnippets": {
+        "title": "Alsnippets",
+        "desc": "My personal website, created using React, Next.js and Tailwind."
+      }
+    }
+  },
+  "lab": {
+    "title": "WordPress Lab",
+    "typewriter": [
+      "Creating Plugins",
+      "Creating Themes",
+      "Creating new applications"
+    ],
+    "description": "I am currently cooking up new components optimized for maximum performance (WPO). This space will soon grow as a repository of technical solutions for the community."
+  },
+  "cta": {
+    "title": "Do you have an idea for a plugin or platform?",
+    "description": "If you need a custom development that doesn't exist in the standard market, we can build it together.",
+    "button": "Let's talk about your idea"
   }
 }

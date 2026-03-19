@@ -6,6 +6,7 @@ import CookieConsent from '@/components/ui/CookieConsent'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { AuthProvider } from '@/components/providers/AuthProvider'
 import Tracking from '@/components/Tracking'
+import { headers } from 'next/headers'
 
 const inter = Inter({
   variable: '--font-inter',
@@ -32,6 +33,7 @@ export default async function RootLayout ({
 }: {
   children: React.ReactNode
 }) {
+  const nonce = (await headers()).get('x-nonce') || ''
   return (
     // ✅ Añadimos lang="es" por defecto (aunque el otro layout lo sobreescriba) y forzamos el esquema
     <html
@@ -50,7 +52,7 @@ export default async function RootLayout ({
             o lo dejamos en 'system' pero con los metas anteriores ya debería respetarte */}
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
           <AuthProvider>
-            <Tracking lang='es' />
+            <Tracking lang='es' nonce={nonce} />
             {children}
             <CookieConsent />
           </AuthProvider>

@@ -97,7 +97,7 @@ export default function CTA ({ lang }: { lang: string }) {
               </svg>
             </Link>
 
-            <p className='text-sm text-[var(--text-2)] dark:text-[var(--text-brand)] font-medium opacity-80 pt-2'>
+            <p className='text-sm text-[var(--text-1)] font-medium pt-2'>
               {dict.footer_note}
             </p>
           </div>

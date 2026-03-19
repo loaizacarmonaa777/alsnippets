@@ -22,7 +22,7 @@
     --bg-success: #22c55e; /* Verde específico para validaciones */
     --bg-inverse: #0f172a; /* Fondo oscuro puro para contrastes en modo luz */
     --bg-menu: #fffdf8; /* Fondo específico para el menú en modo luz */
-    --bg-img-pago: #ebdfc6;
+    --bg-img-pago: #f7f1e5;
 
     /* ===== Gradients ===== */
     --gradient-footer: linear-gradient(
@@ -72,6 +72,8 @@
     --text-1: #0f172a; /* Títulos y texto principal */
     --text-2: #334155; /* Párrafos y subtítulos */
     --text-3: #64748b; /* Textos silenciados */
+    --text-4: #ffffff;
+    --text-5: #9b7014;
     --text-brand: #c9a34e;
     --text-inverse: #ffffff; /* Texto blanco puro sobre fondos oscuros */
     --text-success: #15803d; /* Verde para textos de éxito */
@@ -93,6 +95,7 @@
     /* ===== Border ===== */
     --border-1: #e5e7eb;
     --border-2: #d1d5db;
+    --border-3: #c9a34e;
     --border-brand: rgba(201, 163, 78, 0.5);
     --border-inverse: rgba(0, 0, 0, 0.2);
 
@@ -102,6 +105,11 @@
     --shadow-brand-glow: 0 0 24px rgba(201, 163, 78, 0.35);
     --shadow-brand-glow-hover: 0 0 38px rgba(201, 163, 78, 0.55);
     --focus-ring: 0 0 0 3px rgba(201, 163, 78, 0.35);
+    /* Sombra de alto impacto para efecto de iluminación neón */
+    --shadow-brand-glow-intense: 0 0 45px rgba(255, 255, 255, 0.781),
+      0 0 20px rgba(12, 2, 48, 0.3);
+    --shadow-brand-glow-intense-2: 0 0 45px rgba(29, 24, 1, 0.945),
+      0 0 20px rgba(12, 2, 48, 0.932);
 
     /* ===== Spectrum (Logos) ===== */
     --spectrum-red: #ed1c24;
@@ -179,7 +187,7 @@
     --bg-success: #22c55e;
     --bg-inverse: #ffffff; /* Fondo claro puro para contrastes en modo oscuro */
     --bg-menu: #050d2e; /* Fondo específico para el menú en modo oscuro */
-    --bg-img-pago: #dac8a3;
+    --bg-img-pago: #e9e3d6;
 
     /* ===== Gradients ===== */
     --gradient-footer: linear-gradient(
@@ -215,6 +223,8 @@
     --text-1: #f8fafc;
     --text-2: #cbd5e1;
     --text-3: #94a3b8;
+    --text-4: #ffffff;
+    --text-5: #e9b23b;
     --text-brand: #f5d27a;
     --text-inverse: #000000; /* Texto oscuro puro sobre fondos claros */
     --text-success: #4ade80;
@@ -236,6 +246,7 @@
     /* ===== Border ===== */
     --border-1: #1f2937;
     --border-2: #374151;
+    --border-3: #a07b2a;
     --border-brand: rgba(245, 210, 122, 0.5);
     --border-inverse: rgba(255, 255, 255, 0.25);
 
@@ -246,7 +257,9 @@
     --shadow-brand-glow-hover: 0 0 38px rgba(245, 210, 122, 0.45);
     --focus-ring: 0 0 0 3px rgba(245, 210, 122, 0.35);
     /* Sombra de alto impacto para efecto de iluminación neón */
-    --shadow-brand-glow-intense: 0 0 45px rgba(245, 210, 122, 0.945),
+    --shadow-brand-glow-intense: 0 0 45px rgba(245, 210, 122, 0.1),
+      0 0 20px rgba(245, 210, 122, 0.3);
+    --shadow-brand-glow-intense-2: 0 0 45px rgba(245, 210, 122, 0.945),
       0 0 20px rgba(245, 210, 122, 0.932);
 
     /* Spectrum Colors se mantienen iguales por contraste natural */

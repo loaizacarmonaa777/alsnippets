@@ -4,9 +4,10 @@ import Script from 'next/script'
 
 interface TrackingProps {
   lang: string // Recibimos el idioma para informar a las plataformas
+  nonce?: string
 }
 
-export default function Tracking ({ lang }: TrackingProps) {
+export default function Tracking ({ lang, nonce }: TrackingProps) {
   // CONFIGURACIÓN DE IDs (Cámbialos por tus IDs reales)
   const GTM_ID = 'GTM-NMM22HG'
   const META_PIXEL_ID = '1828608694503506'
@@ -15,10 +16,7 @@ export default function Tracking ({ lang }: TrackingProps) {
     <>
       {/* ---------------- GOOGLE TAG MANAGER ---------------- */}
       {/* PROTOCOLO ALSNIPPETS: Inyectamos el idioma en el dataLayer antes del script principal */}
-      <Script
-        id='gtm-datalayer'
-        strategy='beforeInteractive'
-      >
+      <Script id='gtm-datalayer' nonce={nonce} strategy='beforeInteractive'>
         {`
           window.dataLayer = window.dataLayer || [];
           window.dataLayer.push({
@@ -30,21 +28,23 @@ export default function Tracking ({ lang }: TrackingProps) {
 
       <Script
         id='gtm-script'
+        nonce={nonce}
         strategy='afterInteractive'
         dangerouslySetInnerHTML={{
           __html: `
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer', '${GTM_ID}');
-          `
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer', '${GTM_ID}');
+    `
         }}
       />
 
       {/* ---------------- META PIXEL ---------------- */}
       <Script
         id='meta-pixel'
+        nonce={nonce}
         strategy='afterInteractive'
         dangerouslySetInnerHTML={{
           __html: `

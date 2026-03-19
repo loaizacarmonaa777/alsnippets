@@ -17,11 +17,16 @@ export function middleware (request: NextRequest) {
   response.headers.set('x-nonce', nonce)
 
   // =====================================================
-  // 2. APLICAR HEADERS DE SEGURIDAD EN PRODUCCIÓN
+  // 2. APLICAR HEADERS DE SEGURIDAD
   // =====================================================
+  // Lista blanca de dominios de confianza (Google, Meta y Cloudflare)
+  const googleDomains = "https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com https://www.gstatic.com"
+  const metaDomains = "https://connect.facebook.net https://www.facebook.com"
+  const cloudflareDomains = "https://challenges.cloudflare.com"
+
   if (process.env.NODE_ENV === 'production') {
     const cspHeader =
-      `default-src 'self'; script-src 'self' https://challenges.cloudflare.com 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline'; frame-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests;`
+      `default-src 'self'; script-src 'self' ${cloudflareDomains} ${googleDomains} ${metaDomains} 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline'; frame-src 'self' ${cloudflareDomains} https://www.facebook.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: ${googleDomains} ${metaDomains}; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; connect-src 'self' ${googleDomains} ${metaDomains}; frame-ancestors 'none'; upgrade-insecure-requests;`
         .replace(/\s{2,}/g, ' ')
         .trim()
 
