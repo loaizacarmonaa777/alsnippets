@@ -43,7 +43,9 @@ const dictionaries = {
       cotizador_step3_seo,
       cotizador_step3_horas,
       cotizador_step4,
-      login
+      login,
+      // 👇 NUEVOS ARCHIVOS PARA AUDITORIA PRO
+      audit_pro
     ] = await Promise.all([
       import('./dictionaries/es/auditoria.json').then(m => m.default),
       import('./dictionaries/es/blog.json').then(m => m.default),
@@ -93,7 +95,9 @@ const dictionaries = {
         m => m.default
       ),
       import('./dictionaries/es/cotizador_step4.json').then(m => m.default),
-      import('./dictionaries/es/login.json').then(m => m.default)
+      import('./dictionaries/es/login.json').then(m => m.default), 
+      // 👇 IMPORTS AUDITORIA PRO
+      import('./dictionaries/es/audit-pro.json').then(m => m.default), 
 
     ])
 
@@ -131,7 +135,7 @@ const dictionaries = {
       form_footer,
       wizard_barber_short,
       footer,
-      // 👇 EXPORTS COTIZADOR
+      // 👇 RETURN COTIZADOR
       cotizador,
       cotizador_step1,
       cotizador_step2,
@@ -140,7 +144,9 @@ const dictionaries = {
       cotizador_step3_seo,
       cotizador_step3_horas,
       cotizador_step4,
-      login
+      login,
+      // 👇 RETURN AUDITORIA PRO 
+      audit_pro
     }
   },
 
@@ -188,7 +194,9 @@ const dictionaries = {
       cotizador_step3_seo,
       cotizador_step3_horas,
       cotizador_step4,
-      login
+      login,
+      // 👇 NUEVOS ARCHIVOS PARA AUDITORIA PRO
+      audit_pro
     ] = await Promise.all([
       import('./dictionaries/en/auditoria.json').then(m => m.default),
       import('./dictionaries/en/blog.json').then(m => m.default),
@@ -238,7 +246,10 @@ const dictionaries = {
         m => m.default
       ),
       import('./dictionaries/en/cotizador_step4.json').then(m => m.default),
-      import('./dictionaries/en/login.json').then(m => m.default)
+      import('./dictionaries/en/login.json').then(m => m.default), 
+      // 👇 IMPORTS AUDITORIA PRO
+      import('./dictionaries/en/audit-pro.json').then(m => m.default), 
+
 
     ])
 
@@ -276,7 +287,7 @@ const dictionaries = {
       form_footer,
       wizard_barber_short,
       footer,
-      // 👇 EXPORTS COTIZADOR
+      // 👇 RETURN COTIZADOR
       cotizador,
       cotizador_step1,
       cotizador_step2,
@@ -285,7 +296,9 @@ const dictionaries = {
       cotizador_step3_seo,
       cotizador_step3_horas,
       cotizador_step4,
-      login
+      login,
+      // 👇 RETURN AUDITORIA PRO
+      audit_pro
     }
   }
 }

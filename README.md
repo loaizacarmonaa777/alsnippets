@@ -26,6 +26,35 @@ alsnippets
 │  ├─ [...not_found]
 │  │  └─ page.tsx
 │  └─ [lang]
+│     ├─ (dashboard)
+│     │  └─ audit
+│     │     ├─ components
+│     │     │  ├─ analysis
+│     │     │  │  ├─ AnalyticsDetailView.tsx
+│     │     │  │  ├─ ConflictViewer.tsx
+│     │     │  │  ├─ GeoDetailView.tsx
+│     │     │  │  ├─ IssueAccordion.tsx
+│     │     │  │  ├─ PerformanceDetailView.tsx
+│     │     │  │  ├─ SecurityDetailView.tsx
+│     │     │  │  ├─ SeoDetailView.tsx
+│     │     │  │  ├─ TechDetailView.tsx
+│     │     │  │  └─ TechStackList.tsx
+│     │     │  ├─ charts
+│     │     │  │  ├─ DistributionBar.tsx
+│     │     │  │  ├─ RadarMetrics.tsx
+│     │     │  │  └─ ScoreGuage.tsx
+│     │     │  ├─ input
+│     │     │  │  ├─ AnalysisSelector.tsx
+│     │     │  │  ├─ CodeEditor.tsx
+│     │     │  │  └─ SourceCodeEditor.tsx
+│     │     │  ├─ layout
+│     │     │  │  ├─ AuditDashboard.tsx
+│     │     │  │  ├─ AuditGrid.tsx
+│     │     │  │  └─ AuditSidebar.tsx
+│     │     │  └─ output
+│     │     │     ├─ AIBusinessImpact.tsx
+│     │     │     └─ ExportPanel.tsx
+│     │     └─ page.tsx
 │     ├─ auditoria
 │     │  ├─ layout.tsx
 │     │  └─ page.tsx
@@ -46,6 +75,8 @@ alsnippets
 │     │  ├─ layout.tsx
 │     │  └─ page.tsx
 │     ├─ layout.tsx
+│     ├─ login
+│     │  └─ page.tsx
 │     ├─ page.tsx
 │     ├─ precios
 │     │  ├─ layout.tsx
@@ -263,12 +294,26 @@ alsnippets
 ├─ i18n
 │  ├─ dictionaries
 │  │  ├─ en
+│  │  │  ├─ audit-pro.json
 │  │  │  ├─ auditoria.json
 │  │  │  ├─ blog.json
 │  │  │  ├─ cafe.json
 │  │  │  ├─ common.json
 │  │  │  ├─ contacto.json
+│  │  │  ├─ cotizador.json
+│  │  │  ├─ cotizador_step1.json
+│  │  │  ├─ cotizador_step2.json
+│  │  │  ├─ cotizador_step3_horas.json
+│  │  │  ├─ cotizador_step3_seo.json
+│  │  │  ├─ cotizador_step3_soporte.json
+│  │  │  ├─ cotizador_step3_web.json
+│  │  │  ├─ cotizador_step4.json
 │  │  │  ├─ devoluciones.json
+│  │  │  ├─ footer.json
+│  │  │  ├─ form_auditoria.json
+│  │  │  ├─ form_barber.json
+│  │  │  ├─ form_contact.json
+│  │  │  ├─ form_footer.json
 │  │  │  ├─ gracias.json
 │  │  │  ├─ home.json
 │  │  │  ├─ home_authority.json
@@ -277,6 +322,7 @@ alsnippets
 │  │  │  ├─ home_cta.json
 │  │  │  ├─ home_projects.json
 │  │  │  ├─ home_solutions.json
+│  │  │  ├─ login.json
 │  │  │  ├─ precios.json
 │  │  │  ├─ privacidad.json
 │  │  │  ├─ proyecto_barber.json
@@ -289,14 +335,29 @@ alsnippets
 │  │  │  ├─ servicios_soporte.json
 │  │  │  ├─ sobre-mi.json
 │  │  │  ├─ tarjetas.json
-│  │  │  └─ terminos.json
+│  │  │  ├─ terminos.json
+│  │  │  └─ wizard_barber_short.json
 │  │  └─ es
+│  │     ├─ audit-pro.json
 │  │     ├─ auditoria.json
 │  │     ├─ blog.json
 │  │     ├─ cafe.json
 │  │     ├─ common.json
 │  │     ├─ contacto.json
+│  │     ├─ cotizador.json
+│  │     ├─ cotizador_step1.json
+│  │     ├─ cotizador_step2.json
+│  │     ├─ cotizador_step3_horas.json
+│  │     ├─ cotizador_step3_seo.json
+│  │     ├─ cotizador_step3_soporte.json
+│  │     ├─ cotizador_step3_web.json
+│  │     ├─ cotizador_step4.json
 │  │     ├─ devoluciones.json
+│  │     ├─ footer.json
+│  │     ├─ form_auditoria.json
+│  │     ├─ form_barber.json
+│  │     ├─ form_contact.json
+│  │     ├─ form_footer.json
 │  │     ├─ gracias.json
 │  │     ├─ home.json
 │  │     ├─ home_authority.json
@@ -305,6 +366,7 @@ alsnippets
 │  │     ├─ home_cta.json
 │  │     ├─ home_projects.json
 │  │     ├─ home_solutions.json
+│  │     ├─ login.json
 │  │     ├─ precios.json
 │  │     ├─ privacidad.json
 │  │     ├─ proyecto_barber.json
@@ -317,10 +379,17 @@ alsnippets
 │  │     ├─ servicios_soporte.json
 │  │     ├─ sobre-mi.json
 │  │     ├─ tarjetas.json
-│  │     └─ terminos.json
+│  │     ├─ terminos.json
+│  │     └─ wizard_barber_short.json
 │  ├─ get-dictionary.ts
 │  └─ messages.ts
 ├─ lib
+│  ├─ audit
+│  │  ├─ calculator.ts
+│  │  ├─ formatter.ts
+│  │  ├─ scanner.ts
+│  │  ├─ seo-engine.ts
+│  │  └─ types.ts
 │  └─ blog
 │     ├─ categoryLabels.ts
 │     ├─ ctaByCategory.ts
@@ -424,6 +493,7 @@ alsnippets
 │  │  │  ├─ transcendent-psychology.webp
 │  │  │  └─ viva-empresa-vivienda-de-antioquia.webp
 │  │  ├─ contact
+│  │  │  ├─ adrian-loaiza-contacto-adrian-sentado.webp
 │  │  │  ├─ adrian-loaiza-contacto.webp
 │  │  │  ├─ alsnippets-hero-contact-desktop.webp
 │  │  │  └─ alsnippets-hero-contact-mobile.webp
@@ -491,6 +561,7 @@ alsnippets
 │  │  │  ├─ auditoria-wordpress.webp
 │  │  │  ├─ complejidad-tecnica.webp
 │  │  │  ├─ estado-sitio-web.webp
+│  │  │  ├─ firma-adrian.png
 │  │  │  ├─ implementacion-codigo-personalizado.webp
 │  │  │  ├─ nivel-personalizacion.webp
 │  │  │  ├─ riesgos-responsabilidad.webp
@@ -553,7 +624,9 @@ alsnippets
 │  │     ├─ adrian-loaiza.webp
 │  │     ├─ adrian.webp
 │  │     ├─ backgorund-tarjeta-contacto-adrian-loaiza.webp
-│  │     └─ contacto-adrian-loaiza.png
+│  │     ├─ backgorund-tarjeta-contacto-yesenia.webp
+│  │     ├─ contacto-adrian-loaiza.png
+│  │     └─ yesenia.webp
 │  ├─ logos
 │  │  └─ stack
 │  │     ├─ 01-wordpress.svg

@@ -3,6 +3,8 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { QRCodeCanvas } from 'qrcode.react'
+import { TypeAnimation } from 'react-type-animation' // Corregido según tu package.json
+
 import {
   AlertCircle,
   AlertTriangle,
@@ -16,6 +18,7 @@ import {
   Code,
   Contrast,
   Copy,
+  PlayCircle,
   Download,
   Eraser,
   FileText,
@@ -36,10 +39,14 @@ import {
   RefreshCw,
   Search,
   Settings,
+  Sparkles, // <--- Añadido y verificado
   Strikethrough,
+  TextCursorInput,
+  Trash2,
   Type,
   Underline as UnderlineIcon,
   UploadCloud,
+  Wand2,
   X,
   XCircle,
   Zap
@@ -334,7 +341,7 @@ function WhatsAppModule ({ lang }: { lang: string }) {
 }
 
 /* =====================================================
-   MÓDULO 2: GENERADOR DE CÓDIGO QR (SÓLIDO & DINÁMICO)
+    MÓDULO 2: GENERADOR DE CÓDIGO QR (OPTIMIZADO)
 ===================================================== */
 function QrGeneratorModule ({ lang }: { lang: string }) {
   const t = {
@@ -342,9 +349,10 @@ function QrGeneratorModule ({ lang }: { lang: string }) {
       title: 'Generador de Código QR',
       desc: 'Crea códigos QR personalizados, añade tu logo y ajusta las esquinas.',
       label_url: 'URL de destino',
-      label_qr_color: 'Color del QR',
-      label_bg_color: 'Color de Fondo',
+      label_qr_color: 'Color QR',
+      label_bg_color: 'Color Fondo (RGBA)',
       label_logo: 'Logo Central',
+      label_filename: 'Nombre del archivo',
       btn_logo_upload: 'Subir Logo',
       btn_logo_change: 'Cambiar Logo',
       btn_logo_remove: 'Quitar Logo',
@@ -352,15 +360,17 @@ function QrGeneratorModule ({ lang }: { lang: string }) {
       label_radius: 'Forma de las esquinas',
       btn_download: 'Descargar',
       btn_downloaded: 'Descargado con éxito ✓',
-      placeholder_url: 'https://alsnippets.com'
+      placeholder_url: 'https://alsnippets.com',
+      placeholder_filename: 'mi-codigo-qr'
     },
     en: {
       title: 'QR Code Generator',
       desc: 'Create custom QR codes, add your logo, and adjust the corners.',
       label_url: 'Destination URL',
       label_qr_color: 'QR Color',
-      label_bg_color: 'Background Color',
+      label_bg_color: 'Bg Color (RGBA)',
       label_logo: 'Center Logo',
+      label_filename: 'File Name',
       btn_logo_upload: 'Upload Logo',
       btn_logo_change: 'Change Logo',
       btn_logo_remove: 'Remove Logo',
@@ -368,14 +378,17 @@ function QrGeneratorModule ({ lang }: { lang: string }) {
       label_radius: 'Corner Shape',
       btn_download: 'Download',
       btn_downloaded: 'Downloaded successfully ✓',
-      placeholder_url: 'https://alsnippets.com'
+      placeholder_url: 'https://alsnippets.com',
+      placeholder_filename: 'my-qr-code'
     }
   }[lang as 'es' | 'en']
 
   const [url, setUrl] = useState('https://alsnippets.com')
+  const [fileName, setFileName] = useState('alsnippets-qr')
   const [qrColor, setQrColor] = useState('#0f172a')
   const [bgColor, setBgColor] = useState('#ffffff')
-  const [size, setSize] = useState(500)
+  const [bgOpacity, setBgOpacity] = useState(100) // Nueva opacidad
+  const [size] = useState(500)
   const [margin, setMargin] = useState(16)
   const [containerRadius, setContainerRadius] = useState(16)
   const [format, setFormat] = useState<'png' | 'webp'>('png')
@@ -385,23 +398,36 @@ function QrGeneratorModule ({ lang }: { lang: string }) {
   const qrRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  // Corregido: Lógica de carga de logo con validación de estado
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      const imgUrl = URL.createObjectURL(file)
-      const img = new Image()
-      img.onload = () => {
-        setLogoRatio(img.width / img.height)
-        setLogo(imgUrl)
+      const reader = new FileReader()
+      reader.onload = event => {
+        const imgUrl = event.target?.result as string
+        const img = new Image()
+        img.onload = () => {
+          setLogoRatio(img.width / img.height)
+          setLogo(imgUrl)
+        }
+        img.src = imgUrl
       }
-      img.src = imgUrl
+      reader.readAsDataURL(file)
     }
+  }
+
+  // Convertir HEX a RGBA para el fondo
+  const getFullBgColor = () => {
+    const r = parseInt(bgColor.slice(1, 3), 16)
+    const g = parseInt(bgColor.slice(3, 5), 16)
+    const b = parseInt(bgColor.slice(5, 7), 16)
+    return `rgba(${r}, ${g}, ${b}, ${bgOpacity / 100})`
   }
 
   const downloadQR = () => {
     const qrCanvas = qrRef.current?.querySelector('canvas')
     if (!qrCanvas) return
-    const visualSize = 200
+    const visualSize = 220
     const scaleFactor = size / visualSize
     const exportMargin = margin * scaleFactor
     const exportRadius = containerRadius * scaleFactor
@@ -413,40 +439,25 @@ function QrGeneratorModule ({ lang }: { lang: string }) {
     const ctx = finalCanvas.getContext('2d')
     if (!ctx) return
 
-    ctx.fillStyle = bgColor
+    // Fondo con soporte de transparencia
+    ctx.clearRect(0, 0, totalExportSize, totalExportSize)
+    ctx.fillStyle = getFullBgColor()
     ctx.beginPath()
-    ctx.moveTo(exportRadius, 0)
-    ctx.lineTo(totalExportSize - exportRadius, 0)
-    ctx.quadraticCurveTo(totalExportSize, 0, totalExportSize, exportRadius)
-    ctx.lineTo(totalExportSize, totalExportSize - exportRadius)
-    ctx.quadraticCurveTo(
-      totalExportSize,
-      totalExportSize,
-      totalExportSize - exportRadius,
-      totalExportSize
-    )
-    ctx.lineTo(exportRadius, totalExportSize)
-    ctx.quadraticCurveTo(0, totalExportSize, 0, totalExportSize - exportRadius)
-    ctx.lineTo(0, exportRadius)
-    ctx.quadraticCurveTo(0, 0, exportRadius, 0)
-    ctx.closePath()
+    ctx.roundRect(0, 0, totalExportSize, totalExportSize, exportRadius)
     ctx.fill()
 
     ctx.drawImage(qrCanvas, exportMargin, exportMargin, size, size)
 
     const mimeType = format === 'webp' ? 'image/webp' : 'image/png'
-    const finalImgUrl = finalCanvas
-      .toDataURL(mimeType)
-      .replace(mimeType, 'image/octet-stream')
+    const finalImgUrl = finalCanvas.toDataURL(mimeType)
 
     const downloadLink = document.createElement('a')
     downloadLink.href = finalImgUrl
-    downloadLink.download = `alsnippets-qr.${format}`
+    downloadLink.download = `${fileName || 'alsnippets-qr'}.${format}`
     document.body.appendChild(downloadLink)
     downloadLink.click()
     document.body.removeChild(downloadLink)
 
-    // Feedback visual de descarga
     setIsDownloaded(true)
     setTimeout(() => setIsDownloaded(false), 2500)
   }
@@ -473,16 +484,33 @@ function QrGeneratorModule ({ lang }: { lang: string }) {
       <div className='grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8'>
         {/* PANEL DE CONFIGURACIÓN */}
         <div className='lg:col-span-7 rounded-2xl p-6 space-y-6 shadow-[var(--shadow-2)] bg-[var(--bg-1)] border border-[var(--border-1)]'>
-          <div className='space-y-2'>
-            <label className='text-sm font-semibold text-[var(--text-1)]'>
-              {t.label_url}
-            </label>
-            <input
-              type='text'
-              value={url}
-              onChange={e => setUrl(e.target.value)}
-              className='w-full rounded-xl px-4 py-3 outline-none transition-colors bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)] focus:border-[var(--border-brand)] font-medium'
-            />
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            <div className='space-y-2'>
+              <label className='text-sm font-semibold text-[var(--text-1)]'>
+                {t.label_url}
+              </label>
+              <input
+                type='text'
+                value={url}
+                onChange={e => setUrl(e.target.value)}
+                className='w-full rounded-xl px-4 py-3 outline-none bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)] focus:border-[var(--border-brand)] font-medium'
+              />
+            </div>
+            {/* TAREA 1: Campo Nombre del archivo */}
+            <div className='space-y-2'>
+              <label className='text-sm font-semibold text-[var(--text-1)]'>
+                {t.label_filename}
+              </label>
+              <input
+                type='text'
+                value={fileName}
+                onChange={e =>
+                  setFileName(e.target.value.replace(/[^a-z0-9-_]/gi, ''))
+                }
+                placeholder={t.placeholder_filename}
+                className='w-full rounded-xl px-4 py-3 outline-none bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)] focus:border-[var(--border-brand)] font-medium'
+              />
+            </div>
           </div>
 
           <div className='grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-[var(--border-1)]'>
@@ -501,12 +529,23 @@ function QrGeneratorModule ({ lang }: { lang: string }) {
               <label className='text-sm font-semibold text-[var(--text-1)]'>
                 {t.label_bg_color}
               </label>
-              <input
-                type='color'
-                value={bgColor}
-                onChange={e => setBgColor(e.target.value)}
-                className='w-full h-12 cursor-pointer rounded-lg bg-[var(--bg-2)] border border-[var(--border-1)] p-1'
-              />
+              <div className='flex gap-2'>
+                <input
+                  type='color'
+                  value={bgColor}
+                  onChange={e => setBgColor(e.target.value)}
+                  className='flex-grow h-12 cursor-pointer rounded-lg bg-[var(--bg-2)] border border-[var(--border-1)] p-1'
+                />
+                {/* TAREA 2: Opacidad del fondo */}
+                <input
+                  type='number'
+                  min='0'
+                  max='100'
+                  value={bgOpacity}
+                  onChange={e => setBgOpacity(Number(e.target.value))}
+                  className='w-16 h-12 text-center rounded-lg bg-[var(--bg-2)] border border-[var(--border-1)] text-xs font-bold text-[var(--text-1)]'
+                />
+              </div>
             </div>
             <div className='space-y-2 flex flex-col'>
               <label className='text-sm font-semibold text-[var(--text-1)]'>
@@ -571,21 +610,22 @@ function QrGeneratorModule ({ lang }: { lang: string }) {
         </div>
 
         {/* VISTA PREVIA Y DESCARGA */}
-        <div className='lg:col-span-5 rounded-2xl p-6 flex flex-col items-center justify-center min-h-[450px] bg-[var(--bg-2)] border-2 border-[var(--bg-brand)] shadow-xl'>
+        <div className='lg:col-span-5 rounded-2xl p-6 flex flex-col items-center justify-center min-h-[450px] bg-[var(--bg-2)] border-2 border-[var(--border-brand)] shadow-xl'>
           <motion.div
             ref={qrRef}
             layout
             className='mb-8 transition-all duration-500 shadow-2xl overflow-hidden'
             style={{
               padding: `${margin}px`,
-              backgroundColor: bgColor,
+              backgroundColor: getFullBgColor(),
               borderRadius: `${containerRadius}px`
             }}
           >
+            {/* TAREA 3: Logo central funcional */}
             <QRCodeCanvas
               value={url || 'https://alsnippets.com'}
               size={size}
-              bgColor={bgColor}
+              bgColor={'rgba(0,0,0,0)'} // Canvas transparente para dejar ver el fondo del div
               fgColor={qrColor}
               level='H'
               includeMargin={false}
@@ -667,7 +707,7 @@ function QrGeneratorModule ({ lang }: { lang: string }) {
 }
 
 /* =====================================================
-   MÓDULO 3: OPTIMIZADOR MULTIMEDIA (SÓLIDO & POTENTE)
+   MÓDULO 3: OPTIMIZADOR MULTIMEDIA (OPTIMIZADO)
 ===================================================== */
 interface ProcessedFile {
   id: string
@@ -676,6 +716,7 @@ interface ProcessedFile {
   newName: string
   blob: Blob | null
   isConverting: boolean
+  originalSize: number
 }
 
 function ImageOptimizerModule ({ lang }: { lang: string }) {
@@ -691,6 +732,7 @@ function ImageOptimizerModule ({ lang }: { lang: string }) {
       label_calculating: 'Procesando...',
       label_saving: 'Ahorro',
       btn_download_all: 'Descargar Lote',
+      btn_download_single: 'Descargar',
       btn_downloaded: 'Descargado con éxito ✓',
       settings_title: 'Ajustes de Salida',
       label_format: 'Formato de destino',
@@ -715,6 +757,7 @@ function ImageOptimizerModule ({ lang }: { lang: string }) {
       label_calculating: 'Processing...',
       label_saving: 'Saved',
       btn_download_all: 'Download Batch',
+      btn_download_single: 'Download',
       btn_downloaded: 'Downloaded successfully ✓',
       settings_title: 'Output Settings',
       label_format: 'Target Format',
@@ -737,15 +780,12 @@ function ImageOptimizerModule ({ lang }: { lang: string }) {
   const [isDownloaded, setIsDownloaded] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Lógica de conversión compatible con HEIC
   const processSingleImage = async (
     file: File,
     fmt: string,
     qual: number
   ): Promise<Blob | null> => {
     let currentFile = file
-
-    // Soporte para HEIC (iPhone)
     if (file.name.toLowerCase().endsWith('.heic')) {
       try {
         const heic2any = (await import('heic2any')).default
@@ -786,7 +826,7 @@ function ImageOptimizerModule ({ lang }: { lang: string }) {
     if (files.length === 0) return
     const timeout = setTimeout(() => {
       files.forEach(async f => {
-        if (f.blob && !f.isConverting) return // Evitar re-procesar lo ya listo
+        if (!f.isConverting && f.blob) return
         const newBlob = await processSingleImage(
           f.originalFile,
           format,
@@ -800,7 +840,7 @@ function ImageOptimizerModule ({ lang }: { lang: string }) {
           )
         )
       })
-    }, 500)
+    }, 400)
     return () => clearTimeout(timeout)
   }, [quality, format, files.length])
 
@@ -810,34 +850,54 @@ function ImageOptimizerModule ({ lang }: { lang: string }) {
     const filesToAdd = validArray.slice(0, spaceLeft)
     if (validArray.length > spaceLeft) alert(t.error_limit)
 
-    const newProcessedFiles: ProcessedFile[] = filesToAdd.map(f => ({
-      id: Math.random().toString(36).substring(7),
-      originalFile: f,
-      previewUrl: f.name.toLowerCase().endsWith('.heic')
-        ? ''
-        : URL.createObjectURL(f),
-      newName: f.name.split('.').slice(0, -1).join('.'),
-      blob: null,
-      isConverting: true
-    }))
-    setFiles(prev => [...prev, ...newProcessedFiles])
+    filesToAdd.forEach(f => {
+      const reader = new FileReader()
+      const id = Math.random().toString(36).substring(7)
+
+      // TAREA 1: Generar Preview Robusto (Base64)
+      reader.onload = e => {
+        const base64Preview = e.target?.result as string
+
+        const newFile: ProcessedFile = {
+          id,
+          originalFile: f,
+          originalSize: f.size,
+          previewUrl: f.name.toLowerCase().endsWith('.heic')
+            ? ''
+            : base64Preview,
+          newName: f.name.split('.').slice(0, -1).join('.'),
+          blob: null,
+          isConverting: true
+        }
+        setFiles(prev => [...prev, newFile])
+      }
+
+      // Leemos como DataURL para que el preview sea persistente
+      reader.readAsDataURL(f)
+    })
+  }
+
+  // TAREA 5: Descarga individual
+  const downloadSingle = (file: ProcessedFile) => {
+    if (!file.blob) return
+    const url = URL.createObjectURL(file.blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `${file.newName}.${format}`
+    link.click()
+    URL.revokeObjectURL(url)
   }
 
   const downloadAll = () => {
     files.forEach((f, index) => {
       if (!f.blob) return
-      setTimeout(() => {
-        const url = URL.createObjectURL(f.blob!)
-        const link = document.createElement('a')
-        link.href = url
-        link.download = `${f.newName || 'alsnippets-img'}.${format}`
-        link.click()
-        URL.revokeObjectURL(url)
-      }, index * 250)
+      setTimeout(() => downloadSingle(f), index * 250)
     })
     setIsDownloaded(true)
     setTimeout(() => setIsDownloaded(false), 3000)
   }
+
+  const formatSize = (bytes: number) => (bytes / 1024).toFixed(1) + ' KB'
 
   return (
     <div className='animate-fade-in space-y-6'>
@@ -919,78 +979,106 @@ function ImageOptimizerModule ({ lang }: { lang: string }) {
                 key={file.id}
                 className='flex items-center gap-4 p-4 rounded-2xl bg-[var(--bg-2)] border border-[var(--border-1)] group hover:border-[var(--bg-brand)] transition-all'
               >
-                <div className='w-16 h-16 rounded-xl overflow-hidden bg-[var(--bg-3)] border border-[var(--border-1)] flex-shrink-0 relative'>
+                {/* CONTENEDOR DE IMAGEN CORREGIDO */}
+                <div className='w-20 h-20 rounded-xl overflow-hidden bg-[var(--bg-3)] border border-[var(--border-1)] flex-shrink-0 relative flex items-center justify-center'>
                   {file.previewUrl ? (
                     <img
                       src={file.previewUrl}
-                      className='w-full h-full object-cover'
+                      className='w-full h-full object-cover animate-fade-in'
                       alt='preview'
+                      onError={e => {
+                        // Fallback si la imagen falla
+                        e.currentTarget.style.display = 'none'
+                      }}
                     />
                   ) : (
-                    <div className='w-full h-full flex items-center justify-center text-[var(--text-3)] text-[10px] font-bold'>
-                      HEIC
+                    <div className='text-[10px] font-black opacity-40 text-[var(--text-1)]'>
+                      {file.originalFile.name.toLowerCase().endsWith('.heic')
+                        ? 'HEIC'
+                        : 'IMG'}
                     </div>
                   )}
+
                   {file.isConverting && (
-                    <div className='absolute inset-0 bg-[var(--bg-inverse)] flex items-center justify-center'>
+                    <div className='absolute inset-0 bg-[var(--bg-inverse)]/20 backdrop-blur-[2px] flex items-center justify-center'>
                       <RefreshCw className='w-5 h-5 text-white animate-spin' />
                     </div>
                   )}
                 </div>
-                <div className='flex-grow min-w-0'>
-                  <input
-                    type='text'
-                    value={file.newName}
-                    onChange={e =>
-                      setFiles(prev =>
-                        prev.map(f =>
-                          f.id === file.id
-                            ? { ...f, newName: e.target.value }
-                            : f
+
+                <div className='flex-grow min-w-0 space-y-1'>
+                  <div className='flex items-center gap-2'>
+                    <input
+                      type='text'
+                      value={file.newName}
+                      onChange={e =>
+                        setFiles(prev =>
+                          prev.map(f =>
+                            f.id === file.id
+                              ? { ...f, newName: e.target.value }
+                              : f
+                          )
                         )
-                      )
-                    }
-                    className='w-full bg-transparent font-bold text-sm text-[var(--text-1)] border-b border-transparent focus:border-[var(--bg-brand)] outline-none truncate'
-                  />
-                  <div className='flex items-center gap-2 mt-1'>
-                    <span className='text-[10px] font-bold text-[var(--text-3)] uppercase'>
-                      {file.blob
-                        ? (file.blob.size / 1024).toFixed(0) + ' KB'
-                        : t.label_calculating}
+                      }
+                      className='w-full bg-transparent font-bold text-sm text-[var(--text-1)] border-b border-transparent focus:border-[var(--bg-brand)] outline-none truncate'
+                    />
+                    <span className='text-[10px] font-bold opacity-40'>
+                      .{format}
                     </span>
-                    {file.blob && (
-                      <span className='text-[10px] font-black text-[var(--bg-success)] uppercase'>
-                        Ready
-                      </span>
-                    )}
+                  </div>
+
+                  <div className='flex items-center gap-3'>
+                    <span className='text-[10px] font-bold text-[var(--text-3)] line-through'>
+                      {(file.originalSize / 1024).toFixed(1)} KB
+                    </span>
+                    <span className='text-[10px] font-black text-[var(--text-brand)] bg-[var(--bg-brand-hover)] px-1.5 py-0.5 rounded'>
+                      {file.blob
+                        ? (file.blob.size / 1024).toFixed(1) + ' KB'
+                        : '...'}
+                    </span>
                   </div>
                 </div>
-                <button
-                  onClick={() =>
-                    setFiles(prev => prev.filter(f => f.id !== file.id))
-                  }
-                  className='p-2 text-red-500 hover:bg-red-50 transition-colors rounded-lg'
-                >
-                  <X className='w-5 h-5' />
-                </button>
+
+                {/* BOTONES DE ACCIÓN */}
+                <div className='flex items-center gap-2'>
+                  <button
+                    onClick={() => downloadSingle(file)}
+                    disabled={!file.blob}
+                    className='p-2.5 bg-[var(--bg-1)] text-[var(--text-brand)] hover:bg-[var(--bg-brand)] hover:text-white rounded-xl border border-[var(--border-1)] transition-all disabled:opacity-20'
+                  >
+                    <Download className='w-4 h-4' />
+                  </button>
+                  <button
+                    onClick={() =>
+                      setFiles(prev => prev.filter(f => f.id !== file.id))
+                    }
+                    className='p-2.5 text-red-500 hover:bg-red-50 transition-colors rounded-xl'
+                  >
+                    <X className='w-5 h-5' />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
 
           <div className='lg:col-span-4 space-y-6'>
-            <div className='rounded-3xl p-6 bg-[var(--bg-2)] border-2 border-[var(--bg-brand)] shadow-lg space-y-6'>
+            <div className='rounded-3xl p-6 bg-[var(--bg-2)] border-2 border-[var(--border-brand)] shadow-lg space-y-6'>
               <h3 className='font-bold text-[var(--text-1)] flex items-center gap-2'>
                 <Settings className='w-5 h-5 text-[var(--text-brand)]' />{' '}
                 {t.settings_title}
               </h3>
-
               <div className='space-y-2'>
                 <label className='text-xs font-black uppercase text-[var(--text-2)]'>
                   {t.label_format}
                 </label>
                 <select
                   value={format}
-                  onChange={e => setFormat(e.target.value as any)}
+                  onChange={e => {
+                    setFormat(e.target.value as any)
+                    setFiles(prev =>
+                      prev.map(f => ({ ...f, isConverting: true }))
+                    ) // Forzar re-procesamiento
+                  }}
                   className='w-full p-3 rounded-xl bg-[var(--bg-1)] border border-[var(--border-1)] text-sm font-bold text-[var(--text-1)] outline-none focus:ring-2 ring-[var(--bg-brand)]'
                 >
                   <option value='webp'>{t.formats.webp}</option>
@@ -999,7 +1087,6 @@ function ImageOptimizerModule ({ lang }: { lang: string }) {
                   <option value='ico'>{t.formats.ico}</option>
                 </select>
               </div>
-
               <div className='space-y-3'>
                 <div className='flex justify-between'>
                   <label className='text-xs font-black uppercase text-[var(--text-2)]'>
@@ -1014,7 +1101,12 @@ function ImageOptimizerModule ({ lang }: { lang: string }) {
                   min='10'
                   max='100'
                   value={quality}
-                  onChange={e => setQuality(Number(e.target.value))}
+                  onChange={e => {
+                    setQuality(Number(e.target.value))
+                    setFiles(prev =>
+                      prev.map(f => ({ ...f, isConverting: true }))
+                    ) // Forzar re-procesamiento
+                  }}
                   disabled={format === 'png' || format === 'ico'}
                   className='w-full accent-[var(--bg-brand)] disabled:opacity-20'
                 />
@@ -1061,15 +1153,12 @@ function ImageOptimizerModule ({ lang }: { lang: string }) {
 }
 
 /* =====================================================
-   MÓDULO 4: PINTURA Y SOMBRAS
-===================================================== */
-/* =====================================================
    MÓDULO 4: PINTURA Y SOMBRAS (POTENTE & SÓLIDO)
 ===================================================== */
 
 function PaintAndShadowsModule ({ lang }: { lang: string }) {
   const [activeSubTab, setActiveSubTab] = useState<
-    'shadows' | 'contrast' | 'palettes' | 'mesh'
+    'shadows' | 'contrast' | 'palettes' | 'mesh' | 'animated'
   >('shadows')
   const [isCopied, setIsCopied] = useState(false)
 
@@ -1079,18 +1168,204 @@ function PaintAndShadowsModule ({ lang }: { lang: string }) {
         shadows: 'Sombras CSS',
         contrast: 'Contraste WCAG',
         palettes: 'Paletas Pro',
-        mesh: 'Degradado Malla'
+        mesh: 'Degradado Malla',
+        animated: 'Fondo Animado'
       },
-      common: { copy: 'Copiar CSS', copied: 'Copiado ✓' }
+      common: {
+        copy: 'Copiar CSS',
+        copied: 'Copiado ✓'
+      },
+      contrast: {
+        title: 'Configuración de Color',
+        bg_label: 'Color de Fondo',
+        fg_label: 'Color de Texto',
+        btn_invert: 'Invertir Colores',
+        sample_normal:
+          'Texto Normal (16px) - Accesibilidad garantizada con la Suite.',
+        sample_large: 'Diseño Inclusivo y Potente.',
+        ratio_label: 'Ratio Contraste',
+        ai_title: 'SuiteText AI Recomienda',
+        ai_desc: 'Para este fondo, usa este color de texto:',
+        status_aaa: 'Excelente contraste (Web Pro)',
+        status_aa: 'Contraste óptimo',
+        status_large: 'Solo para textos grandes',
+        status_fail: 'Contraste insuficiente'
+      },
+      shadows: {
+        config_title: 'Configuración Pro',
+        mode_standard: 'Estándar / Neón',
+        mode_neumorph: 'Neumorfismo',
+        label_inset: 'Interna (Inset)',
+        label_neon: 'Efecto Neón',
+        label_x: 'Eje X',
+        label_y: 'Eje Y',
+        label_blur: 'Desenfoque',
+        label_spread: 'Extensión',
+        label_radius: 'Bordes',
+        label_opacity: 'Opacidad',
+        label_light: 'Pico de Luz',
+        label_dark: 'Profundidad',
+        color_shadow: 'Sombra',
+        color_object: 'Objeto',
+        color_bg: 'Fondo',
+        preview: 'Previsualización'
+      },
+      palettes: {
+        title: 'Generador de Paletas IA',
+        input_hex: 'Color primario',
+        input_prompt: '¿De qué trata tu sitio web?',
+        placeholder_prompt:
+          'Ej: Clínica dental, tienda de mascotas, blog de viajes...',
+        btn_generate: 'Generar paletas pro',
+        suggestions_title: 'Otras propuestas',
+        preview_title: 'Análisis de contraste y aplicación',
+        label_bg: 'Fondo',
+        label_text: 'Texto',
+        label_accent: 'Acento',
+        label_light: 'Suave / Claro',
+        label_harmony: 'Regla de armonía',
+        export_title: 'Exportar recursos',
+        export_desc: 'Copia el código para tu proyecto',
+        copy_css: 'Variables CSS',
+        copy_tailwind: 'Configuración Tailwind',
+        copy_json: 'Datos JSON',
+        rule_60_30_10: 'Distribución 60-30-10 (diseño)',
+        harmonies: {
+          analogous: 'Análoga',
+          monochromatic: 'Monocromática',
+          triad: 'Tríada',
+          complementary: 'Complementaria',
+          split: 'Complementaria dividida'
+        }
+      },
+      mesh: {
+        // <--- AHORA ESTÁ FUERA DE PALETTES
+        title: 'Motor de Degradados Pro',
+        type_linear: 'Lineal',
+        type_radial: 'Radial',
+        label_bg: 'Fondo Base',
+        label_opacity: 'Opacidad del Degradado',
+        label_direction: 'Dirección / Posición',
+        label_colors_count: 'Cantidad de Colores',
+        btn_add: 'Añadir Color',
+        btn_remove: 'Quitar'
+      },
+      animated_bg: {
+        title: 'Generador de Fondos Animados',
+        label_type: 'Tipo de Animación',
+        label_speed: 'Velocidad',
+        label_amount: 'Cantidad',
+        label_size: 'Tamaño',
+        label_color: 'Color Partículas',
+        types: {
+          snow: 'Nieve (Navidad)',
+          hearts: 'Corazones (San Valentín)',
+          bubbles: 'Burbujas Flotantes'
+        },
+        export_desc: 'Copia este código y pégalo donde quieras un fondo top'
+      }
     },
     en: {
       tabs: {
         shadows: 'CSS Shadows',
         contrast: 'WCAG Contrast',
         palettes: 'Pro Palettes',
-        mesh: 'Mesh Gradient'
+        mesh: 'Mesh Gradient',
+        animated: 'Animated BG'
       },
-      common: { copy: 'Copy CSS', copied: 'Copied ✓' }
+      common: {
+        copy: 'Copy CSS',
+        copied: 'Copied ✓'
+      },
+      contrast: {
+        title: 'Color Configuration',
+        bg_label: 'Background Color',
+        fg_label: 'Text Color',
+        btn_invert: 'Invert Colors',
+        sample_normal:
+          'Normal Text (16px) - Accessibility guaranteed with the Suite.',
+        sample_large: 'Inclusive and Powerful Design.',
+        ratio_label: 'Contrast Ratio',
+        ai_title: 'SuiteText AI Recomienda',
+        ai_desc: 'For this background, use this text color:',
+        status_aaa: 'Excellent contrast (Web Pro)',
+        status_aa: 'Optimal contrast',
+        status_large: 'Large text only',
+        status_fail: 'Insufficient contrast'
+      },
+      shadows: {
+        config_title: 'Pro Configuration',
+        mode_standard: 'Standard / Neon',
+        mode_neumorph: 'Neumorphism',
+        label_inset: 'Inner (Inset)',
+        label_neon: 'Neon Effect',
+        label_x: 'X Axis',
+        label_y: 'Y Axis',
+        label_blur: 'Blur',
+        label_spread: 'Spread',
+        label_radius: 'Radius',
+        label_opacity: 'Opacity',
+        label_light: 'Light Peak',
+        label_dark: 'Depth',
+        color_shadow: 'Shadow',
+        color_object: 'Object',
+        color_bg: 'Background',
+        preview: 'Preview'
+      },
+      palettes: {
+        title: 'AI Palette Generator',
+        input_hex: 'Primary Color',
+        input_prompt: 'What is your website about?',
+        placeholder_prompt: 'e.g. Dental clinic, pet store, travel blog...',
+        btn_generate: 'Generate Pro Palettes',
+        suggestions_title: 'Other Suggestions',
+        preview_title: 'Contrast Analysis & Application',
+        label_bg: 'Background',
+        label_text: 'Text',
+        label_accent: 'Accent',
+        label_light: 'Soft / Light',
+        label_harmony: 'Harmony Rule',
+        export_title: 'Export Assets',
+        export_desc: 'Copy the code for your project',
+        copy_css: 'CSS Variables',
+        copy_tailwind: 'Tailwind Config',
+        copy_json: 'JSON Data',
+        rule_60_30_10: '60-30-10 Distribution (Design)',
+        harmonies: {
+          analogous: 'Analogous',
+          monochromatic: 'Monochromatic',
+          triad: 'Triad',
+          complementary: 'Complementary',
+          split: 'Split Complementary'
+        }
+      },
+      mesh: {
+        // <--- AHORA ESTÁ FUERA DE PALETTES
+        title: 'Pro Gradient Engine',
+        type_linear: 'Linear',
+        type_radial: 'Radial',
+        label_bg: 'Base Background',
+        label_opacity: 'Gradient Opacity',
+        label_direction: 'Direction / Position',
+        label_colors_count: 'Number of Colors',
+        btn_add: 'Add Color',
+        btn_remove: 'Remove'
+      },
+      animated_bg: {
+        title: 'Animated Background Generator',
+        label_type: 'Animation Type',
+        label_speed: 'Speed',
+        label_amount: 'Amount',
+        label_size: 'Size',
+        label_color: 'Particle Color',
+        types: {
+          snow: 'Snow (Christmas)',
+          hearts: 'Hearts (Valentine’s Day)',
+          bubbles: 'Floating Bubbles'
+        },
+        export_desc:
+          'Copy this code and paste it wherever you want a top background'
+      }
     }
   }[lang as 'es' | 'en']
 
@@ -1124,25 +1399,45 @@ function PaintAndShadowsModule ({ lang }: { lang: string }) {
           <ShadowGenerator
             key='sh'
             lang={lang}
+            t={t}
             onCopy={handleCopy}
             isCopied={isCopied}
           />
         )}
+
         {activeSubTab === 'contrast' && (
-          <ContrastChecker key='ct' lang={lang} />
+          <ContrastChecker
+            key='ct'
+            lang={lang}
+            t={t} // <--- Corregido: Ahora se pasa la prop 't' para evitar el error de undefined
+          />
         )}
+
         {activeSubTab === 'palettes' && (
           <PaletteGenerator
             key='pl'
             lang={lang}
+            t={t}
             onCopy={handleCopy}
             isCopied={isCopied}
           />
         )}
+
         {activeSubTab === 'mesh' && (
           <MeshGradientGenerator
             key='mg'
             lang={lang}
+            t={t}
+            onCopy={handleCopy}
+            isCopied={isCopied}
+          />
+        )}
+
+        {activeSubTab === 'animated' && (
+          <AnimatedBgGenerator
+            key='abg'
+            lang={lang}
+            t={t}
             onCopy={handleCopy}
             isCopied={isCopied}
           />
@@ -1152,370 +1447,43 @@ function PaintAndShadowsModule ({ lang }: { lang: string }) {
   )
 }
 
-/* 1. GENERADOR DE SOMBRAS (ESTÁNDAR + NEUMORPHISM) */
-function ShadowGenerator ({ lang, onCopy, isCopied }: any) {
-  const [type, setType] = useState<'box' | 'neumorph'>('box')
-  const [config, setConfig] = useState({
-    x: 10,
-    y: 10,
-    blur: 20,
-    spread: 0,
-    opacity: 0.2,
-    color: '#0f172a',
-    inset: false,
-    distance: 20,
-    intensity: 0.15,
-    shape: '145deg'
-  })
+/* =====================================================
+   COMPONENTES AUXILIARES (DEFINIR SOLO UNA VEZ AL FINAL DEL ARCHIVO)
+   ===================================================== */
 
-  const cssCode = useMemo(() => {
-    if (type === 'box') {
-      const hex = config.color
-      const r = parseInt(hex.slice(1, 3), 16),
-        g = parseInt(hex.slice(3, 5), 16),
-        b = parseInt(hex.slice(5, 7), 16)
-      return `box-shadow: ${config.inset ? 'inset ' : ''}${config.x}px ${
-        config.y
-      }px ${config.blur}px ${config.spread}px rgba(${r}, ${g}, ${b}, ${
-        config.opacity
-      });`
-    } else {
-      // Lógica Neumorphism Simplificada
-      return `border-radius: 50px;\nbackground: #e0e0e0;\nbox-shadow: ${config.distance}px ${config.distance}px ${config.blur}px #bebebe, \n            -${config.distance}px -${config.distance}px ${config.blur}px #ffffff;`
-    }
-  }, [config, type])
-
+// 1. Selector de Color Único
+function ColorField ({
+  label,
+  val,
+  set
+}: {
+  label: string
+  val: string
+  set: (v: string) => void
+}) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className='grid grid-cols-1 lg:grid-cols-2 gap-6'
-    >
-      <div className='p-6 bg-[var(--bg-1)] rounded-3xl border border-[var(--border-1)] space-y-4'>
-        <div className='flex gap-2 mb-4'>
-          <button
-            onClick={() => setType('box')}
-            className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase border ${
-              type === 'box'
-                ? 'bg-[var(--bg-inverse)] text-white border-[var(--bg-inverse)]'
-                : 'border-[var(--border-1)]'
-            }`}
-          >
-            Standard
-          </button>
-          <button
-            onClick={() => setType('neumorph')}
-            className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase border ${
-              type === 'neumorph'
-                ? 'bg-[var(--bg-inverse)] text-white border-[var(--bg-inverse)]'
-                : 'border-[var(--border-1)]'
-            }`}
-          >
-            Neumorphism
-          </button>
-        </div>
-
-        {type === 'box' ? (
-          <div className='space-y-3'>
-            <ControlRange
-              label='X Offset'
-              val={config.x}
-              min={-50}
-              max={50}
-              set={v => setConfig({ ...config, x: v })}
-            />
-            <ControlRange
-              label='Y Offset'
-              val={config.y}
-              min={-50}
-              max={50}
-              set={v => setConfig({ ...config, y: v })}
-            />
-            <ControlRange
-              label='Blur'
-              val={config.blur}
-              min={0}
-              max={100}
-              set={v => setConfig({ ...config, blur: v })}
-            />
-            <ControlRange
-              label='Opacity'
-              val={config.opacity}
-              min={0}
-              max={1}
-              step={0.01}
-              set={v => setConfig({ ...config, opacity: v })}
-            />
-            <input
-              type='color'
-              value={config.color}
-              onChange={e => setConfig({ ...config, color: e.target.value })}
-              className='w-full h-10 rounded-lg cursor-pointer bg-[var(--bg-2)] border-none'
-            />
-          </div>
-        ) : (
-          <div className='space-y-3'>
-            <ControlRange
-              label='Distance'
-              val={config.distance}
-              min={5}
-              max={50}
-              set={v => setConfig({ ...config, distance: v })}
-            />
-            <ControlRange
-              label='Intensity'
-              val={config.intensity}
-              min={0.01}
-              max={0.6}
-              step={0.01}
-              set={v => setConfig({ ...config, intensity: v })}
-            />
-            <ControlRange
-              label='Blur'
-              val={config.blur}
-              min={0}
-              max={100}
-              set={v => setConfig({ ...config, blur: v })}
-            />
-          </div>
-        )}
-      </div>
-
-      <div className='flex flex-col gap-6'>
-        <div className='h-64 rounded-3xl bg-[var(--bg-2)] flex items-center justify-center border border-[var(--border-1)]'>
-          <div
-            style={{
-              width: '120px',
-              height: '120px',
-              backgroundColor: type === 'neumorph' ? '#e0e0e0' : 'white',
-              borderRadius: type === 'neumorph' ? '30px' : '16px',
-              boxShadow:
-                type === 'box'
-                  ? cssCode.replace('box-shadow: ', '').replace(';', '')
-                  : `${config.distance}px ${config.distance}px ${config.blur}px #bebebe, -${config.distance}px -${config.distance}px ${config.blur}px #ffffff`
-            }}
-          />
-        </div>
-        <CodeBox code={cssCode} onCopy={onCopy} isCopied={isCopied} />
-      </div>
-    </motion.div>
+    <div className='space-y-1.5 flex-1'>
+      <label className='text-[9px] font-black uppercase text-[var(--text-3)] ml-1'>
+        {label}
+      </label>
+      <input
+        type='color'
+        value={val}
+        onChange={e => set(e.target.value)}
+        className='w-full h-10 rounded-xl cursor-pointer bg-[var(--bg-2)] border border-[var(--border-1)] p-1 transition-transform active:scale-95'
+      />
+    </div>
   )
 }
 
-/* 2. COMPROBADOR DE CONTRASTE Y CONVERSOR */
-function ContrastChecker ({ lang }: any) {
-  const [bg, setBg] = useState('#ffffff')
-  const [fg, setFg] = useState('#0f172a')
-
-  const getContrast = (f: string, b: string) => {
-    const getL = (c: string) => {
-      let rgb = c.startsWith('#')
-        ? [
-            parseInt(c.slice(1, 3), 16),
-            parseInt(c.slice(3, 5), 16),
-            parseInt(c.slice(5, 7), 16)
-          ]
-        : [0, 0, 0]
-      let a = rgb.map(v => {
-        v /= 255
-        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
-      })
-      return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722
-    }
-    const l1 = getL(f),
-      l2 = getL(b)
-    return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05)
-  }
-
-  const ratio = getContrast(fg, bg).toFixed(2)
-  const status =
-    Number(ratio) >= 7 ? 'AAA' : Number(ratio) >= 4.5 ? 'AA' : 'FAIL'
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className='space-y-6'
-    >
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-        <div className='p-6 bg-[var(--bg-1)] rounded-3xl border border-[var(--border-1)] space-y-4'>
-          <label className='text-[10px] font-black uppercase tracking-widest text-[var(--text-3)]'>
-            Color de Fondo
-          </label>
-          <div className='flex gap-4 items-center'>
-            <input
-              type='color'
-              value={bg}
-              onChange={e => setBg(e.target.value)}
-              className='w-20 h-20 rounded-2xl cursor-pointer bg-[var(--bg-2)] p-1'
-            />
-            <input
-              type='text'
-              value={bg}
-              onChange={e => setBg(e.target.value)}
-              className='flex-1 bg-[var(--bg-2)] border border-[var(--border-1)] p-4 rounded-xl font-mono font-bold'
-            />
-          </div>
-          <label className='text-[10px] font-black uppercase tracking-widest text-[var(--text-3)]'>
-            Color de Texto
-          </label>
-          <div className='flex gap-4 items-center'>
-            <input
-              type='color'
-              value={fg}
-              onChange={e => setFg(e.target.value)}
-              className='w-20 h-20 rounded-2xl cursor-pointer bg-[var(--bg-2)] p-1'
-            />
-            <input
-              type='text'
-              value={fg}
-              onChange={e => setFg(e.target.value)}
-              className='flex-1 bg-[var(--bg-2)] border border-[var(--border-1)] p-4 rounded-xl font-mono font-bold'
-            />
-          </div>
-        </div>
-
-        <div
-          className='flex flex-col justify-center items-center p-10 rounded-3xl border-4 border-dashed border-[var(--border-1)]'
-          style={{ backgroundColor: bg }}
-        >
-          <p
-            style={{ color: fg }}
-            className='text-3xl font-black text-center mb-4'
-          >
-            Muestra de Lectura
-          </p>
-          <div
-            className={`px-6 py-2 rounded-full font-black text-white ${
-              status === 'FAIL' ? 'bg-red-500' : 'bg-green-600'
-            }`}
-          >
-            Contrast Ratio: {ratio} ({status})
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  )
-}
-
-/* 3. GENERADOR DE PALETAS PSICOLÓGICAS */
-function PaletteGenerator ({ lang, onCopy, isCopied }: any) {
-  const [main, setMain] = useState('#c9a34e')
-  const [category, setCategory] = useState('salud')
-
-  const psychology = {
-    salud: { name: 'Salud', colors: ['#e0f2f1', '#4db6ac', '#00796b'] },
-    deporte: { name: 'Deporte', colors: ['#fff3e0', '#ff9800', '#e65100'] },
-    misterio: { name: 'Misterio', colors: ['#f3e5f5', '#9c27b0', '#4a148c'] },
-    paz: { name: 'Paz', colors: ['#e3f2fd', '#42a5f5', '#1565c0'] }
-  }
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className='space-y-6'
-    >
-      <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
-        {Object.entries(psychology).map(([id, info]) => (
-          <button
-            key={id}
-            onClick={() => setCategory(id)}
-            className={`p-4 rounded-2xl border transition-all ${
-              category === id
-                ? 'bg-[var(--bg-inverse)] text-white border-[var(--bg-inverse)]'
-                : 'bg-[var(--bg-1)] border-[var(--border-1)]'
-            }`}
-          >
-            <span className='text-[10px] font-black uppercase tracking-widest'>
-              {info.name}
-            </span>
-          </button>
-        ))}
-      </div>
-      <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4'>
-        {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
-          <div key={i} className='space-y-2 group'>
-            <div
-              className='h-32 rounded-2xl shadow-sm border border-[var(--border-1)] bg-[var(--bg-brand)]'
-              style={{
-                filter: `hue-rotate(${i * 15}deg) brightness(${1.2 - i * 0.1})`
-              }}
-            ></div>
-            <p className='text-[8px] font-black uppercase text-center text-[var(--text-3)]'>
-              Color {i}
-            </p>
-          </div>
-        ))}
-      </div>
-    </motion.div>
-  )
-}
-
-/* 4. GENERADOR DE DEGRADADOS MALLA */
-function MeshGradientGenerator ({ lang, onCopy, isCopied }: any) {
-  const [colors, setColors] = useState([
-    '#c9a34e',
-    '#0f172a',
-    '#22c55e',
-    '#ed1c24'
-  ])
-
-  const css = `background-color: ${colors[0]};\nbackground-image:\n  radial-gradient(at 0% 0%, ${colors[1]} 0px, transparent 50%),\n  radial-gradient(at 100% 0%, ${colors[2]} 0px, transparent 50%),\n  radial-gradient(at 100% 100%, ${colors[3]} 0px, transparent 50%);`
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className='grid grid-cols-1 lg:grid-cols-2 gap-8'
-    >
-      <div className='space-y-6'>
-        <div
-          className='h-80 rounded-[40px] shadow-2xl border-8 border-white overflow-hidden relative'
-          style={{ backgroundColor: colors[0] }}
-        >
-          <div
-            className='absolute inset-0'
-            style={{
-              backgroundImage: `radial-gradient(at 0% 0%, ${colors[1]} 0px, transparent 50%), radial-gradient(at 100% 0%, ${colors[2]} 0px, transparent 50%), radial-gradient(at 100% 100%, ${colors[3]} 0px, transparent 50%)`
-            }}
-          />
-        </div>
-      </div>
-      <div className='space-y-6'>
-        <div className='grid grid-cols-2 gap-4'>
-          {colors.map((c, i) => (
-            <div key={i} className='space-y-1'>
-              <label className='text-[9px] font-black uppercase text-[var(--text-3)] pl-1'>
-                Punto {i + 1}
-              </label>
-              <input
-                type='color'
-                value={c}
-                onChange={e => {
-                  const newColors = [...colors]
-                  newColors[i] = e.target.value
-                  setColors(newColors)
-                }}
-                className='w-full h-12 rounded-xl cursor-pointer bg-[var(--bg-2)] p-1 border border-[var(--border-1)]'
-              />
-            </div>
-          ))}
-        </div>
-        <CodeBox code={css} onCopy={onCopy} isCopied={isCopied} />
-      </div>
-    </motion.div>
-  )
-}
-
-/* COMPONENTES REUTILIZABLES AUXILIARES */
+// 2. Control de Rangos (Sliders)
 interface ControlRangeProps {
   label: string
   val: number
   min: number
   max: number
   step?: number
-  set: (v: number) => void // Esto quita el error de la 'v'
+  set: (v: number) => void
 }
 
 function ControlRange ({
@@ -1527,12 +1495,12 @@ function ControlRange ({
   set
 }: ControlRangeProps) {
   return (
-    <div className='space-y-1'>
+    <div className='space-y-1.5'>
       <div className='flex justify-between items-center px-1'>
-        <label className='text-[9px] font-black uppercase tracking-widest text-[var(--text-2)]'>
+        <label className='text-[9px] font-black uppercase tracking-widest text-[var(--text-3)]'>
           {label}
         </label>
-        <span className='text-[10px] font-bold text-[var(--text-brand)]'>
+        <span className='text-[10px] font-mono font-bold text-[var(--text-brand)]'>
           {val}
         </span>
       </div>
@@ -1543,28 +1511,30 @@ function ControlRange ({
         step={step}
         value={val}
         onChange={e => set(Number(e.target.value))}
-        className='w-full accent-[var(--bg-brand)] h-1.5 bg-[var(--bg-3)] rounded-lg appearance-none cursor-pointer'
+        className='w-full accent-[var(--bg-brand)] h-1.5 bg-[var(--bg-3)] rounded-lg appearance-none cursor-pointer hover:opacity-80 transition-opacity'
       />
     </div>
   )
 }
 
-// Definimos qué datos recibe CodeBox
-interface CodeBoxProps {
+// 3. Caja de Código para Copiar
+function CodeBox ({
+  code,
+  onCopy,
+  isCopied
+}: {
   code: string
-  onCopy: (text: string) => void
+  onCopy: (t: string) => void
   isCopied: boolean
-}
-
-function CodeBox ({ code, onCopy, isCopied }: CodeBoxProps) {
+}) {
   return (
     <div className='relative group'>
-      <pre className='p-5 bg-[var(--bg-inverse)] text-blue-300 rounded-2xl text-[11px] font-mono overflow-x-auto border border-white/10 leading-relaxed shadow-2xl'>
+      <pre className='p-6 bg-[var(--bg-inverse)] text-blue-300 rounded-[2rem] text-[11px] font-mono overflow-x-auto border border-white/10 leading-relaxed shadow-2xl'>
         {code}
       </pre>
       <button
         onClick={() => onCopy(code)}
-        className={`absolute top-3 right-3 p-3 rounded-xl transition-all ${
+        className={`absolute top-4 right-4 p-3 rounded-xl transition-all shadow-lg ${
           isCopied
             ? 'bg-green-500 text-white'
             : 'bg-white/10 text-white hover:bg-[var(--bg-brand)]'
@@ -1579,110 +1549,1347 @@ function CodeBox ({ code, onCopy, isCopied }: CodeBoxProps) {
     </div>
   )
 }
+
 /* =====================================================
-   MÓDULO 5: CONTADOR Y CORRECTOR (CON PROTOCOLO i18n)
-===================================================== */
+   1 GENERADOR DE SOMBRAS
+   ===================================================== */
+function ShadowGenerator ({ lang, onCopy, isCopied, t }: any) {
+  const sh = t.shadows
+  const [mode, setMode] = useState<'standard' | 'neumorph'>('standard')
+  const [config, setConfig] = useState({
+    x: 12,
+    y: 12,
+    blur: 35,
+    spread: -5,
+    opacity: 0.25,
+    color: '#c9a34e', // Usado en Standard
+    targetColor: '#ffffff',
+    bgColor: '#f7f8fa',
+    radius: 32,
+    inset: false,
+    isNeon: false,
+    // Nuevos estados para Neumorph Independiente
+    neuLightColor: '#ffffff',
+    neuLightOpacity: 0.8,
+    neuDarkColor: '#000000',
+    neuDarkOpacity: 0.15
+  })
+
+  const cssCode = useMemo(() => {
+    const type = config.inset ? 'inset ' : ''
+
+    if (mode === 'standard') {
+      const hex = config.color
+      const r = parseInt(hex.slice(1, 3), 16),
+        g = parseInt(hex.slice(3, 5), 16),
+        b = parseInt(hex.slice(5, 7), 16)
+
+      if (config.isNeon) {
+        const neonValue = `${type}0 0 10px rgba(${r}, ${g}, ${b}, ${
+          config.opacity
+        }), ${type}0 0 25px rgba(${r}, ${g}, ${b}, ${
+          config.opacity * 0.6
+        }), ${type}0 0 50px rgba(${r}, ${g}, ${b}, ${config.opacity * 0.3})`
+        return `border-radius: ${config.radius}px;\nbackground: ${config.targetColor};\nbox-shadow: ${neonValue};`
+      }
+
+      const shadowValue = `${type}${config.x}px ${config.y}px ${config.blur}px ${config.spread}px rgba(${r}, ${g}, ${b}, ${config.opacity})`
+      return `border-radius: ${config.radius}px;\nbackground: ${config.targetColor};\nbox-shadow: ${shadowValue};`
+    } else {
+      // LÓGICA NEUMORPH INDEPENDIENTE
+      const hexL = config.neuLightColor
+      const rL = parseInt(hexL.slice(1, 3), 16),
+        gL = parseInt(hexL.slice(3, 5), 16),
+        bL = parseInt(hexL.slice(5, 7), 16)
+
+      const hexD = config.neuDarkColor
+      const rD = parseInt(hexD.slice(1, 3), 16),
+        gD = parseInt(hexD.slice(3, 5), 16),
+        bD = parseInt(hexD.slice(5, 7), 16)
+
+      const lightShadow = `-${config.x}px -${config.y}px ${config.blur}px rgba(${rL}, ${gL}, ${bL}, ${config.neuLightOpacity})`
+      const darkShadow = `${config.x}px ${config.y}px ${config.blur}px rgba(${rD}, ${gD}, ${bD}, ${config.neuDarkOpacity})`
+
+      return `border-radius: ${config.radius}px;\nbackground: ${config.targetColor};\nbox-shadow: ${type}${lightShadow}, ${type}${darkShadow};`
+    }
+  }, [config, mode])
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className='grid grid-cols-1 lg:grid-cols-12 gap-8'
+    >
+      {/* PANEL DE CONTROLES */}
+      <div className='lg:col-span-5 p-8 bg-[var(--bg-1)] rounded-[2.5rem] border border-[var(--border-1)] space-y-6 shadow-sm'>
+        <div className='flex p-1.5 bg-[var(--bg-2)] rounded-2xl border border-[var(--border-1)]'>
+          {(['standard', 'neumorph'] as const).map(m => (
+            <button
+              key={m}
+              onClick={() => setMode(m)}
+              className={`flex-1 py-2.5 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${
+                mode === m
+                  ? 'bg-[var(--bg-1)] text-[var(--text-brand)] shadow-sm'
+                  : 'text-[var(--text-3)]'
+              }`}
+            >
+              {m}
+            </button>
+          ))}
+        </div>
+
+        <div className='space-y-5'>
+          {/* SWITCHES */}
+          <div className='flex flex-wrap gap-4 pt-2'>
+            <label className='flex items-center gap-3 cursor-pointer group'>
+              <div className='relative'>
+                <input
+                  type='checkbox'
+                  className='sr-only'
+                  checked={config.inset}
+                  onChange={e =>
+                    setConfig({ ...config, inset: e.target.checked })
+                  }
+                />
+                <div
+                  className={`w-10 h-6 rounded-full transition-colors ${
+                    config.inset ? 'bg-[var(--bg-brand)]' : 'bg-[var(--bg-3)]'
+                  }`}
+                />
+                <div
+                  className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                    config.inset ? 'translate-x-4' : ''
+                  }`}
+                />
+              </div>
+              <span className='text-[11px] font-black uppercase text-[var(--text-2)]'>
+                Interna (Inset)
+              </span>
+            </label>
+
+            {mode === 'standard' && (
+              <label className='flex items-center gap-3 cursor-pointer group'>
+                <div className='relative'>
+                  <input
+                    type='checkbox'
+                    className='sr-only'
+                    checked={config.isNeon}
+                    onChange={e =>
+                      setConfig({ ...config, isNeon: e.target.checked })
+                    }
+                  />
+                  <div
+                    className={`w-10 h-6 rounded-full transition-colors ${
+                      config.isNeon
+                        ? 'bg-[var(--bg-brand)]'
+                        : 'bg-[var(--bg-3)]'
+                    }`}
+                  />
+                  <div
+                    className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                      config.isNeon ? 'translate-x-4' : ''
+                    }`}
+                  />
+                </div>
+                <span className='text-[11px] font-black uppercase text-[var(--text-2)]'>
+                  Efecto Neón
+                </span>
+              </label>
+            )}
+          </div>
+
+          <div className='grid grid-cols-2 gap-4'>
+            <ControlRange
+              label='Eje X'
+              val={config.x}
+              min={-100}
+              max={100}
+              set={v => setConfig({ ...config, x: v })}
+            />
+            <ControlRange
+              label='Eje Y'
+              val={config.y}
+              min={-100}
+              max={100}
+              set={v => setConfig({ ...config, y: v })}
+            />
+          </div>
+
+          <ControlRange
+            label='Desenfoque'
+            val={config.blur}
+            min={0}
+            max={200}
+            set={v => setConfig({ ...config, blur: v })}
+          />
+          <ControlRange
+            label='Bordes'
+            val={config.radius}
+            min={0}
+            max={100}
+            set={v => setConfig({ ...config, radius: v })}
+          />
+
+          {/* CONTROLES DINÁMICOS SEGÚN MODO */}
+          {mode === 'standard' ? (
+            <div className='space-y-4 pt-2'>
+              <ControlRange
+                label='Opacidad'
+                val={config.opacity}
+                min={0}
+                max={1}
+                step={0.01}
+                set={v => setConfig({ ...config, opacity: v })}
+              />
+              <div className='grid grid-cols-3 gap-3'>
+                <ColorField
+                  label='Sombra'
+                  val={config.color}
+                  set={v => setConfig({ ...config, color: v })}
+                />
+                <ColorField
+                  label='Objeto'
+                  val={config.targetColor}
+                  set={v => setConfig({ ...config, targetColor: v })}
+                />
+                <ColorField
+                  label='Fondo'
+                  val={config.bgColor}
+                  set={v => setConfig({ ...config, bgColor: v })}
+                />
+              </div>
+            </div>
+          ) : (
+            <div className='space-y-4 pt-4 border-t border-[var(--border-1)]'>
+              <div className='grid grid-cols-2 gap-6'>
+                <div className='space-y-3'>
+                  <p className='text-[10px] font-black text-[var(--text-brand)] uppercase'>
+                    Pico de Luz
+                  </p>
+                  <ControlRange
+                    label='Opacidad Luz'
+                    val={config.neuLightOpacity}
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    set={v => setConfig({ ...config, neuLightOpacity: v })}
+                  />
+                  <ColorField
+                    label='Color Luz'
+                    val={config.neuLightColor}
+                    set={v => setConfig({ ...config, neuLightColor: v })}
+                  />
+                </div>
+                <div className='space-y-3'>
+                  <p className='text-[10px] font-black text-[var(--text-brand)] uppercase'>
+                    Profundidad
+                  </p>
+                  <ControlRange
+                    label='Opacidad Sombra'
+                    val={config.neuDarkOpacity}
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    set={v => setConfig({ ...config, neuDarkOpacity: v })}
+                  />
+                  <ColorField
+                    label='Color Sombra'
+                    val={config.neuDarkColor}
+                    set={v => setConfig({ ...config, neuDarkColor: v })}
+                  />
+                </div>
+              </div>
+              <div className='grid grid-cols-2 gap-3'>
+                <ColorField
+                  label='Color Objeto'
+                  val={config.targetColor}
+                  set={v => setConfig({ ...config, targetColor: v })}
+                />
+                <ColorField
+                  label='Color Fondo'
+                  val={config.bgColor}
+                  set={v => setConfig({ ...config, bgColor: v })}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* PREVISUALIZACIÓN */}
+      <div className='lg:col-span-7 flex flex-col gap-6'>
+        <div
+          className='flex-1 min-h-[400px] rounded-[3rem] flex items-center justify-center border border-[var(--border-1)] transition-all duration-500 relative overflow-hidden'
+          style={{ backgroundColor: config.bgColor }}
+        >
+          <div
+            className='absolute inset-0 opacity-[0.03]'
+            style={{
+              backgroundImage: `radial-gradient(var(--text-1) 1px, transparent 1px)`,
+              backgroundSize: '24px 24px'
+            }}
+          />
+          <motion.div
+            layout
+            style={{
+              width: '210px',
+              height: '210px',
+              backgroundColor: config.targetColor,
+              borderRadius: `${config.radius}px`,
+              boxShadow: cssCode.split('box-shadow: ')[1].replace(';', '')
+            }}
+            className='z-10 relative flex items-center justify-center transition-all duration-300'
+          >
+            <span className='text-[var(--text-3)] text-[10px] font-black uppercase opacity-20'>
+              Preview
+            </span>
+          </motion.div>
+        </div>
+        <CodeBox code={cssCode} onCopy={onCopy} isCopied={isCopied} />
+      </div>
+    </motion.div>
+  )
+}
+
+/* =====================================================
+   2. COMPROBADOR DE CONTRASTE WCAG CON IA (PRO + I18N)
+   ===================================================== */
+function ContrastChecker ({ lang, t }: any) {
+  // Aquí llamamos a las traducciones específicas definidas arriba
+  // (Asumiendo que pasas 't' o lo reconstruyes aquí)
+  const ct = t.contrast
+
+  const [bg, setBg] = useState('#f7f8fa')
+  const [fg, setFg] = useState('#0f172a')
+  const [copiedField, setCopiedField] = useState<string | null>(null)
+
+  const getLuminance = (hex: string) => {
+    const rgb = hex.startsWith('#')
+      ? [
+          parseInt(hex.slice(1, 3), 16),
+          parseInt(hex.slice(3, 5), 16),
+          parseInt(hex.slice(5, 7), 16)
+        ]
+      : [0, 0, 0]
+    const a = rgb.map(v => {
+      v /= 255
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
+    })
+    return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722
+  }
+
+  const calculateRatio = (f: string, b: string) => {
+    const l1 = getLuminance(f)
+    const l2 = getLuminance(b)
+    return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05)
+  }
+
+  const ratio = useMemo(() => calculateRatio(fg, bg), [fg, bg])
+
+  const suggestedFg = useMemo(() => {
+    // 1. Extraemos los canales RGB del fondo actual
+    const r = parseInt(bg.slice(1, 3), 16)
+    const g = parseInt(bg.slice(3, 5), 16)
+    const b = parseInt(bg.slice(5, 7), 16)
+    const bgLum = getLuminance(bg)
+
+    // 2. Lógica de Optimización Cromática
+    if (bgLum > 0.5) {
+      /* FONDO CLARO: Buscamos el "Ancla Oscura". 
+         Reducimos los canales al 10-15% para crear un color profundo (como el #00123d que pediste) 
+         que mantenga una relación sutil con el matiz del fondo pero maximice el ratio.
+      */
+      const newR = Math.max(0, Math.floor(r * 0.05))
+        .toString(16)
+        .padStart(2, '0')
+      const newG = Math.max(0, Math.floor(g * 0.08))
+        .toString(16)
+        .padStart(2, '0')
+      const newB = Math.max(0, Math.floor(b * 0.22))
+        .toString(16)
+        .padStart(2, '0') // Favorecemos azul para contraste frío
+      return `#${newR}${newG}${newB}`
+    } else {
+      /* FONDO OSCURO: Buscamos el "Punto de Luz".
+         Si el fondo es muy oscuro, el contraste más limpio y profesional siempre será 
+         un blanco puro o el dorado vibrante de la Suite si el ratio lo permite (>7).
+      */
+      const brandRatio = calculateRatio('#f5d27a', bg) // Usamos el dorado brillante de modo oscuro
+      return brandRatio >= 7 ? '#f5d27a' : '#ffffff'
+    }
+  }, [bg])
+
+  const suggestedRatio = useMemo(
+    () => calculateRatio(suggestedFg, bg),
+    [suggestedFg, bg]
+  )
+
+  const getStatus = (r: number) => {
+    if (r >= 7)
+      return { label: 'AAA', color: 'var(--bg-success)', desc: ct.status_aaa }
+    if (r >= 4.5)
+      return { label: 'AA', color: 'var(--bg-brand)', desc: ct.status_aa }
+    if (r >= 3) return { label: 'Lrg', color: '#eab308', desc: ct.status_large }
+    return { label: 'FAIL', color: '#ef4444', desc: ct.status_fail }
+  }
+
+  const status = getStatus(ratio)
+  const suggestedStatus = getStatus(suggestedRatio)
+
+  const handleCopyHex = (text: string, field: string) => {
+    navigator.clipboard.writeText(text)
+    setCopiedField(field)
+    setTimeout(() => setCopiedField(null), 1500)
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className='space-y-8'
+    >
+      <div className='grid grid-cols-1 lg:grid-cols-12 gap-8'>
+        {/* PANEL DE CONTROL */}
+        <div className='lg:col-span-5 p-8 bg-[var(--bg-1)] rounded-[2.5rem] border border-[var(--border-1)] space-y-8 shadow-sm'>
+          <div className='flex items-center gap-3'>
+            <Zap className='w-6 h-6 text-[var(--text-brand)]' />
+            <h3 className='text-lg font-black uppercase tracking-tighter text-[var(--text-1)]'>
+              {ct.title}
+            </h3>
+          </div>
+
+          <div className='space-y-6'>
+            <div className='space-y-3'>
+              <label className='text-[11px] font-black uppercase text-[var(--text-3)] tracking-widest pl-1'>
+                {ct.bg_label}
+              </label>
+              <div className='flex gap-3'>
+                <input
+                  type='color'
+                  value={bg}
+                  onChange={e => setBg(e.target.value)}
+                  className='w-16 h-16 rounded-2xl cursor-pointer bg-[var(--bg-2)] border-2 border-[var(--border-1)] p-1'
+                />
+                <input
+                  type='text'
+                  value={bg}
+                  onChange={e => setBg(e.target.value)}
+                  className='flex-1 bg-[var(--bg-2)] border border-[var(--border-1)] px-4 rounded-2xl font-mono font-bold text-[var(--text-1)] uppercase outline-none'
+                />
+              </div>
+            </div>
+
+            <div className='space-y-3'>
+              <label className='text-[11px] font-black uppercase text-[var(--text-3)] tracking-widest pl-1'>
+                {ct.fg_label}
+              </label>
+              <div className='flex gap-3'>
+                <input
+                  type='color'
+                  value={fg}
+                  onChange={e => setFg(e.target.value)}
+                  className='w-16 h-16 rounded-2xl cursor-pointer bg-[var(--bg-2)] border-2 border-[var(--border-1)] p-1'
+                />
+                <input
+                  type='text'
+                  value={fg}
+                  onChange={e => setFg(e.target.value)}
+                  className='flex-1 bg-[var(--bg-2)] border border-[var(--border-1)] px-4 rounded-2xl font-mono font-bold text-[var(--text-1)] uppercase outline-none'
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                const temp = bg
+                setBg(fg)
+                setFg(temp)
+              }}
+              className='w-full py-4 rounded-2xl border border-[var(--border-1)] bg-[var(--bg-2)] text-[var(--text-1)] text-[10px] font-black uppercase hover:bg-[var(--bg-brand)] hover:text-white transition-all flex items-center justify-center gap-3 active:scale-95'
+            >
+              <ArrowRightLeft className='w-4 h-4' /> {ct.btn_invert}
+            </button>
+          </div>
+        </div>
+
+        {/* ÁREA DE PREVISUALIZACIÓN E IA */}
+        <div className='lg:col-span-7 flex flex-col gap-6'>
+          <div
+            className='flex-1 rounded-[3rem] p-10 flex flex-col justify-center gap-8 border border-[var(--border-1)] transition-colors duration-500 shadow-xl'
+            style={{ backgroundColor: bg }}
+          >
+            <div className='space-y-1.5'>
+              <p style={{ color: fg }} className='text-sm font-medium'>
+                {ct.sample_normal}
+              </p>
+            </div>
+            <div className='space-y-1.5'>
+              <p
+                style={{ color: fg }}
+                className='text-3xl font-black tracking-tighter'
+              >
+                {ct.sample_large}
+              </p>
+            </div>
+          </div>
+
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            {/* RATIO LIMPIO */}
+            <div className='p-6 rounded-[2rem] bg-[var(--bg-1)] border border-[var(--border-1)] flex items-center justify-between shadow-sm'>
+              <div className='space-y-1'>
+                <p className='text-[10px] font-black uppercase text-[var(--text-3)]'>
+                  {ct.ratio_label}
+                </p>
+                <p className='text-3xl font-black text-[var(--text-1)]'>
+                  {ratio.toFixed(2)}
+                </p>
+              </div>
+              <div
+                className='p-4 rounded-2xl text-white font-black text-lg flex items-center justify-center min-w-[70px]'
+                style={{ backgroundColor: status.color }}
+              >
+                {status.label}
+              </div>
+            </div>
+
+            {/* SUGERENCIA IA CON TRADUCCIÓN */}
+            <div className='p-6 rounded-[2rem] bg-[var(--bg-inverse)] border border-[var(--border-inverse)] flex flex-col justify-center relative shadow-2xl overflow-hidden'>
+              <div
+                className='absolute top-0 right-0 w-24 h-24 rounded-full -translate-y-6 translate-x-6 border-4 border-white/10 flex items-center justify-center'
+                style={{ backgroundColor: bg }}
+              >
+                <div
+                  className='text-2xl font-black'
+                  style={{ color: suggestedFg }}
+                >
+                  Aa
+                </div>
+              </div>
+
+              <div className='flex items-center gap-2 mb-1'>
+                <Wand2 className='w-4 h-4 text-[var(--text-brand)]' />
+                <p className='text-[10px] font-black uppercase text-[var(--text-white-3)] tracking-widest'>
+                  {ct.ai_title}
+                </p>
+              </div>
+              <p className='text-[11px] font-medium text-[var(--text-white-2)] mb-3'>
+                {ct.ai_desc}
+              </p>
+
+              <div className='flex gap-2 items-center'>
+                <span className='font-mono font-bold text-sm text-[var(--text-brand)] uppercase p-2 px-3 rounded-lg bg-white/5'>
+                  {suggestedFg}
+                </span>
+                <button
+                  onClick={() => handleCopyHex(suggestedFg, 'suggested_fg')}
+                  className={`p-2 rounded-lg ${
+                    copiedField === 'suggested_fg'
+                      ? 'bg-[var(--bg-success)] text-white'
+                      : 'bg-[var(--bg-inverse)] text-[var(--text-white-3)] border border-white/10 hover:border-white/30'
+                  }`}
+                >
+                  {copiedField === 'suggested_fg' ? (
+                    <Check className='w-4 h-4' />
+                  ) : (
+                    <Copy className='w-4 h-4' />
+                  )}
+                </button>
+                <div
+                  className='px-3 py-1.5 rounded-full font-black text-[10px] text-white flex items-center justify-center gap-2'
+                  style={{ backgroundColor: suggestedStatus.color }}
+                >
+                  <Heart className='w-3 h-3 fill-white' />{' '}
+                  {suggestedStatus.label}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+/* =====================================================
+   3. GENERADOR DE PALETAS PRO (UNIFICADO: ADOBE + COOLORS + IA)
+   ===================================================== */
+function PaletteGenerator ({ lang, t, onCopy, isCopied }: any) {
+  const pt = t.palettes
+  const [primary, setPrimary] = useState('#c9a34e')
+  const [harmony, setHarmony] = useState('analogous')
+  const [prompt, setPrompt] = useState('')
+  const [proposals, setProposals] = useState<string[][]>([])
+  const [selectedPalette, setSelectedPalette] = useState<string[] | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+
+  function ExportPanel ({ palette, onCopy, isCopied, t }: any) {
+    const [format, setFormat] = useState<'css' | 'tailwind' | 'json'>('css')
+
+    const generatedCode = useMemo(() => {
+      if (format === 'css') {
+        return `
+:root {
+  --color-primary: ${palette[0]};
+  --color-secondary: ${palette[1]};
+  --color-accent: ${palette[2]};
+  --color-bg-soft: ${palette[3]};
+  --color-text-main: ${palette[4]};
+}`.trim()
+      } else if (format === 'tailwind') {
+        return `
+colors: {
+  brand: {
+    primary: '${palette[0]}',
+    secondary: '${palette[1]}',
+    accent: '${palette[2]}',
+    surface: '${palette[3]}',
+    content: '${palette[4]}',
+  }
+}`.trim()
+      }
+      return JSON.stringify(
+        {
+          primary: palette[0],
+          secondary: palette[1],
+          accent: palette[2],
+          bg: palette[3],
+          text: palette[4]
+        },
+        null,
+        2
+      )
+    }, [palette, format])
+
+    return (
+      <div className='mt-8 p-8 bg-[var(--bg-inverse)] rounded-[2.5rem] border border-[var(--border-inverse)] shadow-2xl relative overflow-hidden'>
+        {/* Background Decor */}
+        <div className='absolute top-0 right-0 w-32 h-32 bg-[var(--bg-brand)] opacity-5 blur-[60px] rounded-full' />
+
+        <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 relative z-10'>
+          <div className='flex items-center gap-3'>
+            <Code className='w-5 h-5 text-[var(--text-brand)]' />
+            <h4 className='text-[11px] font-black uppercase text-[var(--text-white-1)] tracking-[0.2em]'>
+              Export Assets
+            </h4>
+          </div>
+
+          <div className='flex p-1 bg-white/5 rounded-xl border border-white/10'>
+            {(['css', 'tailwind', 'json'] as const).map(f => (
+              <button
+                key={f}
+                onClick={() => setFormat(f)}
+                className={`px-4 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${
+                  format === f
+                    ? 'bg-[var(--bg-brand)] text-white'
+                    : 'text-[var(--text-white-3)] hover:text-white'
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className='relative group'>
+          <pre className='p-6 bg-black/40 rounded-2xl border border-white/5 font-mono text-[11px] text-[var(--text-white-2)] leading-relaxed overflow-x-auto max-h-[200px]'>
+            {generatedCode}
+          </pre>
+          <button
+            onClick={() => onCopy(generatedCode)}
+            className='absolute top-4 right-4 p-3 bg-[var(--bg-brand)] text-white rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all'
+          >
+            {isCopied ? (
+              <Check className='w-4 h-4' />
+            ) : (
+              <Copy className='w-4 h-4' />
+            )}
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  // --- UTILIDADES MATEMÁTICAS DE COLOR ---
+  const hexToHsl = (hex: string) => {
+    let r = parseInt(hex.slice(1, 3), 16) / 255
+    let g = parseInt(hex.slice(3, 5), 16) / 255
+    let b = parseInt(hex.slice(5, 7), 16) / 255
+    const max = Math.max(r, g, b),
+      min = Math.min(r, g, b)
+    let h = 0,
+      s,
+      l = (max + min) / 2
+    if (max === min) h = s = 0
+    else {
+      const d = max - min
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+      if (max === r) h = (g - b) / d + (g < b ? 6 : 0)
+      else if (max === g) h = (b - r) / d + 2
+      else if (max === b) h = (r - g) / d + 4
+      h /= 6
+    }
+    return { h: h * 360, s: s * 100, l: l * 100 }
+  }
+
+  const hslToHex = (h: number, s: number, l: number) => {
+    l /= 100
+    const a = (s * Math.min(l, 1 - l)) / 100
+    const f = (n: number) => {
+      const k = (n + h / 30) % 12
+      const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1)
+      return Math.round(255 * color)
+        .toString(16)
+        .padStart(2, '0')
+    }
+    return `#${f(0)}${f(8)}${f(4)}`
+  }
+
+  // --- GENERADOR DE ECOSISTEMA PSICOLÓGICO REAL ---
+  const generateEcosystem = () => {
+    setIsLoading(true)
+    const base = hexToHsl(primary)
+    const input = prompt.toLowerCase()
+
+    setTimeout(() => {
+      // 1. DEFINIMOS "PERSONALIDADES" DE COLOR SEGÚN EL PROMPT
+      let saturationBase = base.s
+      let lightnessBase = base.l
+      let hueShift = 0
+
+      const isZen =
+        input.includes('retiro') ||
+        input.includes('paz') ||
+        input.includes('yoga') ||
+        input.includes('meditacion')
+      const isTech =
+        input.includes('software') ||
+        input.includes('tech') ||
+        input.includes('app') ||
+        input.includes('ia')
+      const isPet =
+        input.includes('mascota') ||
+        input.includes('perro') ||
+        input.includes('animal')
+      const isMedical =
+        input.includes('medico') ||
+        input.includes('salud') ||
+        input.includes('clinica')
+
+      const newProposals = Array.from({ length: 6 }, (_, i) => {
+        let colors = []
+
+        // 2. VARIACIÓN RADICAL POR PROPUESTA
+        // Cada propuesta (i) ahora cambia el ángulo del color de forma agresiva
+        let h = (base.h + hueShift) % 360
+        let s = saturationBase
+        let l = lightnessBase
+
+        // Ajustes por psicología
+        if (isZen) {
+          s = 20 + i * 5 // Muy desaturado (Tierra/Paz)
+          l = 30 + i * 10 // Variaciones de profundidad
+          h = (base.h + i * 15) % 360 // Cambios de tono sutiles pero reales
+        } else if (isTech) {
+          s = 80 // Muy saturado (Energía digital)
+          l = 10 + i * 12 // De negro total a azul brillante
+          h = (base.h + i * 40) % 360 // Saltos grandes en el círculo cromático
+        } else if (isPet) {
+          s = 60 + i * 5
+          l = 40 + i * 5
+          h = (base.h + i * 25) % 360 // Colores vivos y diversos
+        } else {
+          // Estilo Adobe Color estándar: Saltos de 30 grados
+          h = (base.h + i * 60) % 360
+          s = Math.max(30, base.s - i * 5)
+          l = Math.max(20, base.l + i * 5)
+        }
+
+        // Color 1: El color base de la propuesta
+        colors.push(hslToHex(h, s, l))
+
+        // Color 2 y 3: Armonía real (Depende del selector de armonía)
+        if (harmony === 'analogous') {
+          colors.push(hslToHex((h + 30) % 360, s, l + 10))
+          colors.push(hslToHex((h + 60) % 360, s - 10, l - 10))
+        } else if (harmony === 'triad') {
+          colors.push(hslToHex((h + 120) % 360, s, l))
+          colors.push(hslToHex((h + 240) % 360, s, l))
+        } else {
+          // Complementario directo para máximo contraste visual
+          colors.push(hslToHex((h + 180) % 360, s + 10, l))
+          colors.push(hslToHex((h + 180) % 360, s - 20, l + 20))
+        }
+
+        // 3. COLORES DE SOPORTE (UI KIT)
+        // Fondo: Alternamos entre "Crema/Papel" y "Gris Pro" para ver versatilidad
+        const bgH = isZen ? 40 : base.h // Fondos cálidos para Zen
+        colors.push(hslToHex(bgH, 10, i % 2 === 0 ? 98 : 94))
+
+        // Texto: Siempre ultra-contrastado
+        colors.push(hslToHex(h, 20, 12))
+
+        return colors
+      })
+
+      setProposals(newProposals)
+      setSelectedPalette(newProposals[0])
+      setIsLoading(false)
+    }, 800)
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className='grid grid-cols-1 lg:grid-cols-12 gap-8'
+    >
+      {/* COLUMNA 1: CONTROL (Izquierda) */}
+      <div className='lg:col-span-4'>
+        <div className='p-8 bg-[var(--bg-1)] rounded-[2.5rem] border border-[var(--border-1)] space-y-6 shadow-sm'>
+          <div className='flex items-center gap-3 mb-2'>
+            <Wand2 className='w-5 h-5 text-[var(--text-brand)]' />
+            <h3 className='text-lg font-black uppercase tracking-tighter text-[var(--text-1)]'>
+              {pt.title}
+            </h3>
+          </div>
+
+          <div className='space-y-4'>
+            <div className='space-y-2'>
+              <label className='text-[10px] font-black uppercase text-[var(--text-3)]'>
+                {pt.input_hex}
+              </label>
+              <div className='flex gap-2'>
+                <input
+                  type='color'
+                  value={primary}
+                  onChange={e => setPrimary(e.target.value)}
+                  className='w-12 h-12 rounded-xl cursor-pointer bg-[var(--bg-2)] p-1 border border-[var(--border-1)]'
+                />
+                <input
+                  type='text'
+                  value={primary}
+                  onChange={e => setPrimary(e.target.value)}
+                  className='flex-1 bg-[var(--bg-2)] border border-[var(--border-1)] px-4 rounded-xl font-mono font-bold uppercase text-xs'
+                />
+              </div>
+            </div>
+
+            <div className='space-y-2'>
+              <label className='text-[10px] font-black uppercase text-[var(--text-3)]'>
+                {pt.label_harmony}
+              </label>
+              <select
+                value={harmony}
+                onChange={e => setHarmony(e.target.value)}
+                className='w-full p-3 bg-[var(--bg-2)] border border-[var(--border-1)] rounded-xl text-xs font-bold outline-none cursor-pointer'
+              >
+                <option value='analogous'>{pt.harmonies.analogous}</option>
+                <option value='triad'>{pt.harmonies.triad}</option>
+                <option value='complementary'>
+                  {pt.harmonies.complementary}
+                </option>
+              </select>
+            </div>
+
+            <div className='space-y-2'>
+              <label className='text-[10px] font-black uppercase text-[var(--text-3)]'>
+                {pt.input_prompt}
+              </label>
+              <textarea
+                value={prompt}
+                onChange={e => setPrompt(e.target.value)}
+                placeholder={pt.placeholder_prompt}
+                className='w-full p-4 bg-[var(--bg-2)] border border-[var(--border-1)] rounded-2xl text-xs font-medium min-h-[100px] resize-none focus:border-[var(--border-brand)] outline-none'
+              />
+            </div>
+
+            <button
+              onClick={generateEcosystem}
+              disabled={isLoading || !prompt}
+              className='w-full py-4 rounded-2xl bg-[var(--bg-brand)] text-white text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center justify-center gap-2'
+            >
+              {isLoading ? (
+                <RefreshCw className='w-4 h-4 animate-spin' />
+              ) : (
+                <Sparkles className='w-4 h-4' />
+              )}
+              {pt.btn_generate}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* COLUMNA 2 Y 3: PROPUESTAS Y APLICACIÓN (Derecha) */}
+      <div className='lg:col-span-8 space-y-8'>
+        {/* 6 PROPUESTAS (TIPO ADOBE) */}
+        <div className='p-8 bg-[var(--bg-1)] rounded-[2.5rem] border border-[var(--border-1)] shadow-sm'>
+          <p className='text-[10px] font-black uppercase text-[var(--text-3)] mb-6 tracking-widest'>
+            {pt.suggestions_title}
+          </p>
+          <div className='grid grid-cols-2 md:grid-cols-3 gap-6'>
+            {proposals.map((p, i) => (
+              <button
+                key={i}
+                onClick={() => setSelectedPalette(p)}
+                className={`p-1.5 rounded-2xl border-2 transition-all flex gap-0.5 hover:scale-105 ${
+                  selectedPalette === p
+                    ? 'border-[var(--text-brand)] bg-[var(--bg-2)]'
+                    : 'border-transparent'
+                }`}
+              >
+                {p.map((c, ic) => (
+                  <div
+                    key={ic}
+                    style={{ backgroundColor: c }}
+                    className='flex-1 h-10 first:rounded-l-lg last:rounded-r-lg shadow-inner'
+                  />
+                ))}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* ESTUDIO DE APLICACIÓN Y CÓDIGO */}
+        {selectedPalette && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className='space-y-8'
+          >
+            {/* Barras de Color Coolors Style (Interactivas) */}
+            <div className='flex h-40 rounded-[3rem] overflow-hidden border border-[var(--border-1)] shadow-2xl bg-[var(--bg-1)]'>
+              {selectedPalette.map((c, i) => (
+                <div
+                  key={i}
+                  style={{ backgroundColor: c }}
+                  className='flex-1 group relative flex items-center justify-center cursor-pointer transition-all hover:flex-[1.5]'
+                  onClick={() => onCopy(c)}
+                >
+                  <div className='opacity-0 group-hover:opacity-100 transition-all flex flex-col items-center gap-2'>
+                    <span className='text-[10px] font-black text-white mix-blend-difference uppercase tracking-tighter bg-black/20 p-2 rounded-lg backdrop-blur-md border border-white/10'>
+                      {c}
+                    </span>
+                    <Copy className='w-4 h-4 text-white mix-blend-difference' />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Regla 60-30-10 (Visualización de Proporciones) */}
+            <div className='space-y-3 px-2'>
+              <p className='text-[9px] font-black uppercase text-[var(--text-3)] tracking-widest'>
+                {pt.rule_60_30_10}
+              </p>
+              <div className='h-4 w-full flex rounded-full overflow-hidden border border-[var(--border-1)] shadow-sm'>
+                <div
+                  style={{
+                    backgroundColor:
+                      selectedPalette[selectedPalette.length - 2],
+                    width: '60%'
+                  }}
+                />
+                <div
+                  style={{ backgroundColor: selectedPalette[0], width: '30%' }}
+                />
+                <div
+                  style={{
+                    backgroundColor: selectedPalette[2] || selectedPalette[1],
+                    width: '10%'
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Preview Tipográfico Real (Layout de Página) */}
+            <div
+              className='p-12 rounded-[4rem] border border-[var(--border-1)] relative overflow-hidden transition-colors duration-700'
+              style={{
+                backgroundColor: selectedPalette[selectedPalette.length - 2]
+              }}
+            >
+              {/* Decoración sutil de fondo para realismo UI */}
+              <div
+                className='absolute -top-24 -right-24 w-64 h-64 rounded-full opacity-[0.07]'
+                style={{ backgroundColor: selectedPalette[0] }}
+              />
+
+              <div className='max-w-3xl space-y-6 relative z-10'>
+                <div
+                  className='inline-flex items-center gap-2 px-4 py-1.5 rounded-full'
+                  style={{ backgroundColor: selectedPalette[0] }}
+                >
+                  <div className='w-1.5 h-1.5 rounded-full bg-white animate-pulse' />
+                  <span className='text-[10px] font-black uppercase tracking-widest text-white'>
+                    Live Preview
+                  </span>
+                </div>
+
+                <h1
+                  className='text-6xl font-normal tracking-tighter leading-[1.1]'
+                  style={{ color: selectedPalette[selectedPalette.length - 1] }}
+                >
+                  H1 Texto Titulo
+                </h1>
+                <h2
+                  className='text-3xl font-normal opacity-90'
+                  style={{ color: selectedPalette[0] }}
+                >
+                  H2 Texto Subtitulo
+                </h2>
+                <h3
+                  className='text-xl font-normal opacity-75'
+                  style={{ color: selectedPalette[1] || selectedPalette[0] }}
+                >
+                  H3 Texto Subtitulo
+                </h3>
+
+                <div
+                  className='w-24 h-1 rounded-full'
+                  style={{
+                    backgroundColor: selectedPalette[2] || selectedPalette[0]
+                  }}
+                />
+
+                <p
+                  className='text-lg font-normal leading-relaxed opacity-85 max-w-xl'
+                  style={{ color: selectedPalette[selectedPalette.length - 1] }}
+                >
+                  Este es un texto de párrafo normal. La paleta generada por la
+                  IA para <b>"{prompt || '...'}"</b> asegura que la jerarquía
+                  visual sea clara y el contraste sea óptimo para la lectura
+                  profesional.
+                </p>
+              </div>
+            </div>
+
+            {/* Panel de Exportación de Activos (CSS, Tailwind, JSON) */}
+            <ExportPanel
+              palette={selectedPalette}
+              onCopy={onCopy}
+              isCopied={isCopied}
+              t={pt}
+            />
+          </motion.div>
+        )}
+      </div>
+    </motion.div>
+  )
+}
+
+/* =====================================================
+   4. GENERADOR DE DEGRADADOS MULTIDIMENSIONAL (COMPLETO)
+   ===================================================== */
+function MeshGradientGenerator ({ lang, t, onCopy, isCopied }: any) {
+  const mt = t.mesh
+  const [type, setType] = useState<'linear' | 'radial'>('linear')
+  const [direction, setDirection] = useState('to right')
+  const [bgBase, setBgBase] = useState('#ffffff')
+  const [opacity, setOpacity] = useState(1)
+  const [colors, setColors] = useState(['#c9a34e', '#0f172a'])
+
+  const directions = [
+    { id: 'to top left', icon: '↖' },
+    { id: 'to top', icon: '↑' },
+    { id: 'to top right', icon: '↗' },
+    { id: 'to left', icon: '←' },
+    { id: 'center', icon: '•' },
+    { id: 'to right', icon: '→' },
+    { id: 'to bottom left', icon: '↙' },
+    { id: 'to bottom', icon: '↓' },
+    { id: 'to bottom right', icon: '↘' }
+  ]
+
+  // 1. Generamos los colores con opacidad (Alpha Channel)
+  const colorsCss = useMemo(() => {
+    const alpha = Math.round(opacity * 255)
+      .toString(16)
+      .padStart(2, '0')
+    return colors
+      .map(c => {
+        const clean = c.trim()
+        return opacity < 1 && clean.length === 7 ? `${clean}${alpha}` : clean
+      })
+      .join(', ')
+  }, [colors, opacity])
+
+  // 2. Construimos el gradiente puro para el Style Inline
+  const gradientValue = useMemo(() => {
+    let finalDir = direction
+    let gType = type === 'linear' ? 'linear-gradient' : 'radial-gradient'
+    if (type === 'radial') {
+      finalDir =
+        direction === 'center'
+          ? 'circle at center'
+          : direction.replace('to ', 'at ')
+    }
+    return `${gType}(${finalDir}, ${colorsCss})`
+  }, [type, direction, colorsCss])
+
+  // 3. String final para el CodeBox
+  const generatedCss = `background-color: ${bgBase};\nbackground-image: ${gradientValue};`
+
+  const addColor = () => {
+    if (colors.length < 4) setColors([...colors, '#22c55e'])
+  }
+  const removeColor = () => {
+    if (colors.length > 2) setColors(colors.slice(0, -1))
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className='grid grid-cols-1 lg:grid-cols-12 gap-8'
+    >
+      {/* PANEL DE CONTROL (Izquierda) */}
+      <div className='lg:col-span-5 p-8 bg-[var(--bg-1)] rounded-[2.5rem] border border-[var(--border-1)] space-y-6 shadow-sm'>
+        <div className='flex items-center gap-3'>
+          <Layers className='w-6 h-6 text-[var(--text-brand)]' />
+          <h3 className='text-lg font-black uppercase tracking-tighter text-[var(--text-1)]'>
+            {mt.title}
+          </h3>
+        </div>
+
+        {/* TIPO: LINEAL / RADIAL */}
+        <div className='flex p-1.5 bg-[var(--bg-2)] rounded-2xl border border-[var(--border-1)]'>
+          {['linear', 'radial'].map(m => (
+            <button
+              key={m}
+              onClick={() => setType(m as any)}
+              className={`flex-1 py-2.5 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${
+                type === m
+                  ? 'bg-[var(--bg-1)] text-[var(--text-brand)] shadow-sm'
+                  : 'text-[var(--text-3)]'
+              }`}
+            >
+              {m === 'linear' ? mt.type_linear : mt.type_radial}
+            </button>
+          ))}
+        </div>
+
+        {/* DIRECCIONES */}
+        <div className='space-y-3'>
+          <label className='text-[10px] font-black uppercase text-[var(--text-3)] ml-1'>
+            {mt.label_direction}
+          </label>
+          <div className='grid grid-cols-3 gap-2 w-40 mx-auto'>
+            {directions.map(d => (
+              <button
+                key={d.id}
+                onClick={() => setDirection(d.id)}
+                className={`h-10 rounded-xl border transition-all flex items-center justify-center font-bold ${
+                  direction === d.id
+                    ? 'bg-[var(--bg-brand)] text-white border-[var(--bg-brand)]'
+                    : 'bg-[var(--bg-2)] text-[var(--text-2)] border-[var(--border-1)] hover:border-[var(--border-brand)]'
+                }`}
+              >
+                {d.icon}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* COLORES INDIVIDUALES */}
+        <div className='space-y-4 pt-4 border-t border-[var(--border-1)]'>
+          <div className='flex justify-between items-center'>
+            <label className='text-[10px] font-black uppercase text-[var(--text-3)]'>
+              {mt.label_colors_count}
+            </label>
+            <div className='flex gap-2'>
+              <button
+                onClick={removeColor}
+                className='p-2 bg-[var(--bg-3)] rounded-lg text-xs hover:bg-red-100 hover:text-red-600 transition-colors'
+              >
+                <Eraser className='w-4 h-4' />
+              </button>
+              <button
+                onClick={addColor}
+                className='p-2 bg-[var(--bg-brand)] rounded-lg text-white text-xs hover:opacity-80'
+              >
+                <Sparkles className='w-4 h-4' />
+              </button>
+            </div>
+          </div>
+
+          <div className='grid grid-cols-2 gap-4'>
+            {colors.map((colorValue, index) => (
+              <div key={`color-slot-${index}`} className='space-y-2'>
+                <p className='text-[8px] font-black uppercase text-[var(--text-3)] opacity-50 ml-1'>
+                  Color {index + 1}
+                </p>
+                <div className='flex items-center gap-2 p-2 bg-[var(--bg-2)] rounded-2xl border border-[var(--border-1)]'>
+                  <div className='relative w-8 h-8 shrink-0'>
+                    <input
+                      type='color'
+                      value={colorValue}
+                      onChange={e => {
+                        const newColors = [...colors]
+                        newColors[index] = e.target.value
+                        setColors(newColors)
+                      }}
+                      className='absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10'
+                    />
+                    <div
+                      className='w-full h-full rounded-lg border border-black/10'
+                      style={{ backgroundColor: colorValue }}
+                    />
+                  </div>
+                  <input
+                    type='text'
+                    value={colorValue}
+                    onChange={e => {
+                      const newColors = [...colors]
+                      newColors[index] = e.target.value
+                      setColors(newColors)
+                    }}
+                    className='flex-1 bg-transparent border-none outline-none font-mono font-bold text-[10px] uppercase text-[var(--text-1)]'
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* FONDO Y OPACIDAD */}
+        <div className='space-y-4 pt-4 border-t border-[var(--border-1)]'>
+          <div className='flex items-center gap-4'>
+            <div className='flex-1 space-y-2'>
+              <label className='text-[10px] font-black uppercase text-[var(--text-3)]'>
+                {mt.label_bg}
+              </label>
+              <input
+                type='color'
+                value={bgBase}
+                onChange={e => setBgBase(e.target.value)}
+                className='w-full h-10 rounded-xl cursor-pointer bg-[var(--bg-2)] p-1'
+              />
+            </div>
+            <div className='flex-[2]'>
+              <ControlRange
+                label={mt.label_opacity}
+                val={opacity}
+                min={0}
+                max={1}
+                step={0.01}
+                set={setOpacity}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* PREVISUALIZACIÓN (DERECHA) */}
+      <div className='lg:col-span-7 space-y-6'>
+        <div
+          className='h-[450px] rounded-[3rem] shadow-2xl border-[12px] border-[var(--bg-1)] relative transition-all duration-300'
+          style={{
+            backgroundColor: bgBase,
+            backgroundImage: gradientValue
+          }}
+        >
+          {/* Vacío: Solo muestra el fondo generado */}
+        </div>
+
+        <CodeBox code={generatedCss} onCopy={onCopy} isCopied={isCopied} />
+      </div>
+    </motion.div>
+  )
+}
+
+/* =====================================================
+   5. GENERADOR DE FONDOS ANIMADOS (CANVAS ENGINE)
+   ===================================================== */
 function WordCounterModule ({ lang }: { lang: string }) {
-  // TRADUCCIONES LOCALES DEL MÓDULO
   const t = {
     es: {
       title: 'Contador & Corrector',
-      desc: 'Pega tu texto para analizar sus métricas y obtener una versión con limpieza ortográfica y gramatical básica.',
+      desc: 'Analiza métricas de tu texto y obtén una versión mejorada con IA.',
       label_textarea: 'Texto a analizar',
-      placeholder: 'Pega tu texto aquí para comenzar a contar...',
+      placeholder: 'Pega tu texto aquí...',
       btn_clean: 'Limpiar',
-      metrics: {
-        words: 'Palabras',
-        chars: 'Caracteres / Letras',
-        spaces: 'Contar con espacios',
-        sentences: 'Frases',
-        paragraphs: 'Párrafos'
-      },
-      beta_title: 'Corrector Ortográfico (BETA)',
+      metrics: { words: 'Palabras', chars: 'Letras', spaces: 'Con espacios' },
+      beta_title: 'Corrector IA Profesional',
+      btn_fix: 'Corregir con IA',
       btn_copy: 'Copiar Corrección',
       btn_copied: 'Copiado ✓',
-      placeholder_fix: 'El texto limpio y corregido aparecerá aquí...',
-      disclaimer:
-        '*Nota: Este corrector repara espacios dobles, puntuación y mayúsculas. Para análisis gramatical profundo mediante IA, se requiere conexión a una API externa.'
+      placeholder_fix: 'El texto mejorado aparecerá aquí...'
     },
     en: {
       title: 'Counter & Fixer',
-      desc: 'Paste your text to analyze its metrics and get a version with basic spelling and grammatical cleaning.',
+      desc: 'Analyze text metrics and get an improved version with AI.',
       label_textarea: 'Text to analyze',
-      placeholder: 'Paste your text here to start counting...',
+      placeholder: 'Paste your text here...',
       btn_clean: 'Clear',
-      metrics: {
-        words: 'Words',
-        chars: 'Characters / Letters',
-        spaces: 'Count with spaces',
-        sentences: 'Sentences',
-        paragraphs: 'Paragraphs'
-      },
-      beta_title: 'Spell Checker (BETA)',
+      metrics: { words: 'Words', chars: 'Letters', spaces: 'With spaces' },
+      beta_title: 'Professional AI Checker',
+      btn_fix: 'Fix with AI',
       btn_copy: 'Copy Correction',
       btn_copied: 'Copied ✓',
-      placeholder_fix: 'The clean and corrected text will appear here...',
-      disclaimer:
-        '*Note: This checker fixes double spaces, punctuation, and capitalization. For deep grammatical analysis via AI, an external API connection is required.'
+      placeholder_fix: 'The improved text will appear here...'
     }
   }[lang as 'es' | 'en']
 
   const [text, setText] = useState('')
+  const [correctedText, setCorrectedText] = useState('')
   const [countSpaces, setCountSpaces] = useState(true)
-  const [language, setLanguage] = useState<'es' | 'en'>(lang as 'es' | 'en')
   const [isCopied, setIsCopied] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const wordsCount = text.trim() ? text.trim().split(/\s+/).length : 0
   const charsCount = countSpaces ? text.length : text.replace(/\s/g, '').length
-  const sentencesCount = text.trim()
-    ? text.split(/[.!?]+/).filter(s => s.trim().length > 0).length
-    : 0
-  const paragraphsCount = text.trim()
-    ? text.split(/\n+/).filter(p => p.trim().length > 0).length
-    : 0
 
-  const correctedText = React.useMemo(() => {
-    if (!text) return ''
-    let fixed = text
-    fixed = fixed.replace(/ {2,}/g, ' ')
-    fixed = fixed.replace(/\s+([.,!?:;])/g, '$1')
-    fixed = fixed.replace(/([.,!?:;])([a-zA-Zñáéíóúü])/gi, '$1 $2')
-    fixed = fixed.replace(
-      /(^\s*|[.!?]\s+)([a-zñáéíóúü])/gi,
-      (match, p1, p2) => p1 + p2.toUpperCase()
-    )
-    return fixed.trim()
-  }, [text])
+  const handleFixText = async () => {
+    if (!text || text.length < 5) return
+    setIsLoading(true)
+    setCorrectedText('Procesando...')
 
-  const handleCopy = async () => {
-    if (!correctedText) return
     try {
-      await navigator.clipboard.writeText(correctedText)
-      setIsCopied(true)
-      setTimeout(() => setIsCopied(false), 2000)
+      const res = await fetch('/api/corrector', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ texto: text, lang })
+      })
+      const data = await res.json()
+      if (data.success) {
+        setCorrectedText(data.textoCorregido)
+      } else {
+        setCorrectedText(`Error: ${data.error}`)
+      }
     } catch (err) {
-      console.error('Fallo al copiar', err)
+      setCorrectedText('Fallo de conexión con el servidor.')
+    } finally {
+      setIsLoading(false)
     }
+  }
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(correctedText)
+    setIsCopied(true)
+    setTimeout(() => setIsCopied(false), 2000)
   }
 
   return (
     <div className='animate-fade-in space-y-6'>
-      <div className='text-center md:text-left'>
-        <h2 className='text-2xl md:text-3xl font-bold mb-2 text-[var(--text-1)]'>
+      <div className='text-left'>
+        <h2 className='text-2xl font-bold mb-2 text-[var(--text-1)] flex items-center gap-3'>
+          <BarChart2 className='w-7 h-7 text-[var(--text-brand)]' />
           {t.title}
         </h2>
-        <p className='text-[var(--text-2)]'>{t.desc}</p>
+        <p className='text-[var(--text-2)] text-sm'>{t.desc}</p>
       </div>
 
-      <div className='grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6'>
-        <div className='lg:col-span-8 flex flex-col rounded-2xl shadow-[var(--shadow-1)] overflow-hidden min-h-[300px] border bg-[var(--bg-1)] border-[var(--border-1)]'>
-          <div className='p-3 border-b flex justify-between items-center bg-[var(--bg-2)] border-[var(--border-1)]'>
-            <span className='text-sm font-semibold text-[var(--text-1)]'>
+      <div className='grid grid-cols-1 lg:grid-cols-12 gap-6'>
+        <div className='lg:col-span-8 flex flex-col rounded-[2rem] border bg-[var(--bg-1)] border-[var(--border-1)] overflow-hidden shadow-sm'>
+          <div className='p-4 border-b flex justify-between items-center bg-[var(--bg-2)] border-[var(--border-1)]'>
+            <span className='text-[10px] font-black uppercase tracking-widest text-[var(--text-3)]'>
               {t.label_textarea}
             </span>
             <button
-              onClick={() => setText('')}
-              className='text-xs transition-colors text-[var(--text-2)] hover:text-red-500'
+              onClick={() => {
+                setText('')
+                setCorrectedText('')
+              }}
+              className='text-[10px] font-black uppercase text-red-500'
             >
               {t.btn_clean}
             </button>
@@ -1691,1563 +2898,695 @@ function WordCounterModule ({ lang }: { lang: string }) {
             value={text}
             onChange={e => setText(e.target.value)}
             placeholder={t.placeholder}
-            className='w-full h-full flex-grow p-6 outline-none resize-none leading-relaxed bg-transparent text-[var(--text-1)]'
-            style={{ minHeight: '250px' }}
+            className='w-full p-6 outline-none resize-none leading-relaxed bg-transparent text-[var(--text-1)] min-h-[300px] text-sm'
           />
         </div>
 
-        <div className='lg:col-span-4 flex flex-col gap-4'>
-          <div className='rounded-2xl p-4 md:p-5 shadow-[var(--shadow-1)] flex items-center justify-between border bg-[var(--bg-1)] border-[var(--border-1)]'>
-            <div>
-              <p className='text-xs font-bold uppercase tracking-wider text-[var(--text-2)]'>
+        <div className='lg:col-span-4 space-y-4'>
+          <div className='grid grid-cols-2 gap-4'>
+            <div className='rounded-2xl p-5 border bg-[var(--bg-1)] border-[var(--border-1)] text-center shadow-sm'>
+              <p className='text-[9px] font-black uppercase text-[var(--text-3)] mb-1'>
                 {t.metrics.words}
               </p>
-              <p className='text-3xl font-black text-[var(--text-1)]'>
+              <p className='text-3xl font-black text-[var(--text-1)] tracking-tighter'>
                 {wordsCount}
               </p>
             </div>
-            <Type className='w-8 h-8 text-[var(--text-brand)] opacity-50' />
-          </div>
-
-          <div className='rounded-2xl p-4 md:p-5 shadow-[var(--shadow-1)] flex flex-col gap-2 border bg-[var(--bg-1)] border-[var(--border-1)]'>
-            <div className='flex items-center justify-between'>
-              <div>
-                <p className='text-xs font-bold uppercase tracking-wider text-[var(--text-2)]'>
-                  {t.metrics.chars}
-                </p>
-                <p className='text-3xl font-black text-[var(--text-1)]'>
-                  {charsCount}
-                </p>
-              </div>
-              <Hash className='w-8 h-8 text-[var(--text-brand)] opacity-50' />
-            </div>
-            <label className='flex items-center gap-2 cursor-pointer mt-2 w-fit group'>
-              <input
-                type='checkbox'
-                checked={countSpaces}
-                onChange={e => setCountSpaces(e.target.checked)}
-                className='sr-only'
-              />
-              <div
-                className={`w-10 h-5 rounded-full relative transition-colors ${
-                  countSpaces ? 'bg-[var(--bg-brand)]' : 'bg-[var(--border-2)]'
-                }`}
-              >
-                <div
-                  className={`absolute left-1 top-1 w-3 h-3 rounded-full transition-transform duration-300 bg-white ${
-                    countSpaces ? 'translate-x-5' : ''
-                  }`}
-                ></div>
-              </div>
-              <span className='text-xs group-hover:opacity-80 text-[var(--text-2)]'>
-                {t.metrics.spaces}
-              </span>
-            </label>
-          </div>
-
-          <div className='grid grid-cols-2 gap-4'>
-            <div className='rounded-2xl p-4 md:p-5 shadow-[var(--shadow-1)] flex flex-col items-center justify-center text-center border bg-[var(--bg-1)] border-[var(--border-1)]'>
-              <p className='text-xs font-bold uppercase tracking-wider text-[var(--text-2)]'>
-                {t.metrics.sentences}
+            <div className='rounded-2xl p-5 border bg-[var(--bg-1)] border-[var(--border-1)] text-center shadow-sm'>
+              <p className='text-[9px] font-black uppercase text-[var(--text-3)] mb-1'>
+                {t.metrics.chars}
               </p>
-              <p className='text-2xl font-black text-[var(--text-1)]'>
-                {sentencesCount}
+              <p className='text-3xl font-black text-[var(--text-1)] tracking-tighter'>
+                {charsCount}
               </p>
             </div>
-            <div className='rounded-2xl p-4 md:p-5 shadow-[var(--shadow-1)] flex flex-col items-center justify-center text-center border bg-[var(--bg-1)] border-[var(--border-1)]'>
-              <p className='text-xs font-bold uppercase tracking-wider text-[var(--text-2)]'>
-                {t.metrics.paragraphs}
-              </p>
-              <p className='text-2xl font-black text-[var(--text-1)]'>
-                {paragraphsCount}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className='lg:col-span-12 flex flex-col rounded-2xl shadow-[var(--shadow-1)] overflow-hidden border bg-[var(--bg-1)] border-[var(--border-brand)]'>
-          <div className='p-3 border-b flex flex-wrap gap-4 justify-between items-center bg-[var(--bg-brand-hover)] border-[var(--border-brand)]'>
-            <div className='flex items-center gap-3 flex-wrap'>
-              <span className='text-sm font-bold flex items-center gap-2 text-[var(--text-brand)]'>
-                <CheckCircle className='w-4 h-4' /> {t.beta_title}
-              </span>
-
-              <div className='flex rounded-lg p-1 border bg-[var(--bg-1)] border-[var(--border-1)]'>
-                <button
-                  onClick={() => setLanguage('es')}
-                  className={`px-3 py-1 text-xs font-bold rounded-md transition-all flex items-center gap-1 ${
-                    language === 'es'
-                      ? 'shadow-sm bg-[var(--bg-brand-hover)] text-[var(--text-brand)]'
-                      : 'hover:opacity-80 text-[var(--text-2)] bg-transparent'
-                  }`}
-                >
-                  <Languages className='w-3 h-3' /> Español
-                </button>
-                <button
-                  onClick={() => setLanguage('en')}
-                  className={`px-3 py-1 text-xs font-bold rounded-md transition-all flex items-center gap-1 ${
-                    language === 'en'
-                      ? 'shadow-sm bg-[var(--bg-brand-hover)] text-[var(--text-brand)]'
-                      : 'hover:opacity-80 text-[var(--text-2)] bg-transparent'
-                  }`}
-                >
-                  <Languages className='w-3 h-3' /> English
-                </button>
-              </div>
-            </div>
-
-            <button
-              onClick={handleCopy}
-              disabled={!correctedText}
-              className={`relative flex items-center justify-center overflow-hidden px-4 py-2 text-xs font-bold rounded-lg transition-all disabled:opacity-50 ${
-                isCopied
-                  ? 'text-white shadow-[0_0_15px_var(--text-success)] bg-[var(--text-success)]'
-                  : 'text-white hover:opacity-90 bg-[var(--bg-brand)]'
-              }`}
-            >
-              <AnimatePresence mode='wait'>
-                {isCopied ? (
-                  <motion.div
-                    key='copied'
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -20, opacity: 0 }}
-                    className='flex items-center gap-2 absolute'
-                  >
-                    {t.btn_copied}
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key='normal'
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -20, opacity: 0 }}
-                    className='flex items-center gap-2 absolute'
-                  >
-                    <Copy className='w-4 h-4' /> {t.btn_copy}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              <div className='invisible flex items-center gap-2'>
-                <Copy className='w-4 h-4' /> {t.btn_copy}
-              </div>
-            </button>
-          </div>
-
-          <textarea
-            readOnly
-            value={correctedText}
-            placeholder={t.placeholder_fix}
-            className='w-full p-6 outline-none resize-none leading-relaxed bg-transparent text-[var(--text-1)]'
-            style={{ minHeight: '150px' }}
-          />
-          <div className='p-3 text-[10px] text-center border-t bg-[var(--bg-2)] border-[var(--border-1)] text-[var(--text-2)]'>
-            {t.disclaimer}
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-/* =====================================================
-   MÓDULO 6: CONVERSORES DE TEXTO (CON PROTOCOLO i18n)
-===================================================== */
-const ResultBox = ({
-  label,
-  value,
-  t_common
-}: {
-  label: string
-  value: string
-  t_common: any
-}) => {
-  const [copied, setCopied] = useState(false)
-  const handleCopy = () => {
-    navigator.clipboard.writeText(value)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
-  return (
-    <div className='space-y-1'>
-      <label className='text-xs font-bold uppercase tracking-wider pl-1 text-[var(--text-2)]'>
-        {label}
-      </label>
-      <div className='flex gap-2'>
-        <input
-          readOnly
-          value={value}
-          className='flex-grow rounded-xl px-4 py-3 text-sm outline-none font-mono bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)]'
-        />
-        <button
-          onClick={handleCopy}
-          title={t_common.copy_title}
-          className={`relative p-3 rounded-xl transition-all flex-shrink-0 flex items-center justify-center overflow-hidden w-12 border ${
-            copied
-              ? 'text-white shadow-md bg-[var(--text-success)] border-[var(--text-success)]'
-              : 'hover:opacity-80 bg-[var(--bg-2)] border-[var(--border-1)] text-[var(--text-2)] hover:text-[var(--text-brand)] hover:border-[var(--border-brand)]'
-          }`}
-        >
-          <AnimatePresence mode='wait'>
-            {copied ? (
-              <motion.div
-                key='copied'
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -20, opacity: 0 }}
-                className='absolute text-[10px] font-bold'
-              >
-                {t_common.btn_copied}
-              </motion.div>
-            ) : (
-              <motion.div
-                key='normal'
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -20, opacity: 0 }}
-                className='absolute'
-              >
-                <Copy className='w-5 h-5' />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </button>
-      </div>
-    </div>
-  )
-}
-
-function TextConvertersModule ({ lang }: { lang: string }) {
-  // TRADUCCIONES LOCALES DEL MÓDULO
-  const t = {
-    es: {
-      title: 'Conversores de Texto',
-      desc: 'Escribe un texto y obtén automáticamente variables y codificaciones.',
-      label_source: 'Texto de Origen',
-      placeholder: 'Pega aquí tu título, variable o código...',
-      common: { copy_title: 'Copiar al portapapeles', btn_copied: 'Copiado ✓' },
-      sections: {
-        variables: 'Formatos de Variables',
-        security: 'Codificación y Seguridad'
-      },
-      labels: {
-        slug: 'WordPress Slug',
-        snake: 'snake_case',
-        camel: 'camelCase',
-        pascal: 'PascalCase',
-        screaming: 'SCREAMING_SNAKE_CASE',
-        url_enc: 'URL Encode',
-        url_dec: 'URL Decode',
-        b64_enc: 'Base64 Encode',
-        b64_dec: 'Base64 Decode'
-      },
-      errors: { b64: 'Error al codificar', format: 'Formato inválido' }
-    },
-    en: {
-      title: 'Text Converters',
-      desc: 'Write text and automatically get variables and encodings.',
-      label_source: 'Source Text',
-      placeholder: 'Paste your title, variable, or code here...',
-      common: { copy_title: 'Copy to clipboard', btn_copied: 'Copied ✓' },
-      sections: {
-        variables: 'Variable Formats',
-        security: 'Encoding & Security'
-      },
-      labels: {
-        slug: 'WordPress Slug',
-        snake: 'snake_case',
-        camel: 'camelCase',
-        pascal: 'PascalCase',
-        screaming: 'SCREAMING_SNAKE_CASE',
-        url_enc: 'URL Encode',
-        url_dec: 'URL Decode',
-        b64_enc: 'Base64 Encode',
-        b64_dec: 'Base64 Decode'
-      },
-      errors: { b64: 'Encoding error', format: 'Invalid format' }
-    }
-  }[lang as 'es' | 'en']
-
-  const [inputText, setInputText] = useState(
-    'Mi título de post súper optimizado para SEO 2026'
-  )
-
-  // LÓGICA DE TRANSFORMACIÓN (BLINDADA)
-  const toSlug = (str: string) =>
-    str
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '')
-  const toSnake = (str: string) => toSlug(str).replace(/-/g, '_')
-  const toScreamingSnake = (str: string) => toSnake(str).toUpperCase()
-  const toCamel = (str: string) => {
-    const words = str
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-zA-Z0-9]+/g, ' ')
-      .trim()
-      .split(' ')
-    if (words.length === 0 || words[0] === '') return ''
-    return (
-      words[0].toLowerCase() +
-      words
-        .slice(1)
-        .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-        .join('')
-    )
-  }
-  const toPascal = (str: string) => {
-    const words = str
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-zA-Z0-9]+/g, ' ')
-      .trim()
-      .split(' ')
-    if (words.length === 0 || words[0] === '') return ''
-    return words
-      .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-      .join('')
-  }
-  const safeBase64Encode = (str: string) => {
-    try {
-      return btoa(str)
-    } catch {
-      return t.errors.b64
-    }
-  }
-  const safeBase64Decode = (str: string) => {
-    try {
-      return atob(str)
-    } catch {
-      return t.errors.format
-    }
-  }
-  const safeUrlEncode = (str: string) => {
-    try {
-      return encodeURIComponent(str)
-    } catch {
-      return 'Error'
-    }
-  }
-  const safeUrlDecode = (str: string) => {
-    try {
-      return decodeURIComponent(str)
-    } catch {
-      return t.errors.format
-    }
-  }
-
-  return (
-    <div className='animate-fade-in space-y-6'>
-      <div className='text-center md:text-left'>
-        <h2 className='text-2xl md:text-3xl font-bold mb-2 text-[var(--text-1)]'>
-          {t.title}
-        </h2>
-        <p className='text-[var(--text-2)]'>{t.desc}</p>
-      </div>
-      <div className='grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-8'>
-        <div className='lg:col-span-5 rounded-2xl p-4 md:p-6 shadow-[var(--shadow-1)] flex flex-col gap-3 border bg-[var(--bg-1)] border-[var(--border-1)]'>
-          <label className='text-sm font-semibold text-[var(--text-1)]'>
-            {t.label_source}
-          </label>
-          <textarea
-            rows={6}
-            value={inputText}
-            onChange={e => setInputText(e.target.value)}
-            placeholder={t.placeholder}
-            className='w-full rounded-xl p-4 outline-none transition-colors resize-none bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)] focus:border-[var(--border-brand)]'
-          />
-        </div>
-        <div className='lg:col-span-7 rounded-2xl p-4 md:p-6 shadow-inner space-y-8 overflow-y-auto max-h-[600px] border bg-[var(--bg-2)] border-[var(--border-1)]'>
-          <div className='space-y-4'>
-            <h3 className='font-bold flex items-center gap-2 pb-2 border-b text-[var(--text-brand)] border-[var(--border-1)]'>
-              <Code className='w-4 h-4' /> {t.sections.variables}
-            </h3>
-            <ResultBox
-              label={t.labels.slug}
-              value={toSlug(inputText)}
-              t_common={t.common}
-            />
-            <ResultBox
-              label={t.labels.snake}
-              value={toSnake(inputText)}
-              t_common={t.common}
-            />
-            <ResultBox
-              label={t.labels.camel}
-              value={toCamel(inputText)}
-              t_common={t.common}
-            />
-            <ResultBox
-              label={t.labels.pascal}
-              value={toPascal(inputText)}
-              t_common={t.common}
-            />
-            <ResultBox
-              label={t.labels.screaming}
-              value={toScreamingSnake(inputText)}
-              t_common={t.common}
-            />
-          </div>
-          <div className='space-y-4'>
-            <h3 className='font-bold flex items-center gap-2 pb-2 border-b text-[var(--text-brand)] border-[var(--border-1)]'>
-              <Zap className='w-4 h-4' /> {t.sections.security}
-            </h3>
-            <ResultBox
-              label={t.labels.url_enc}
-              value={safeUrlEncode(inputText)}
-              t_common={t.common}
-            />
-            <ResultBox
-              label={t.labels.url_dec}
-              value={safeUrlDecode(inputText)}
-              t_common={t.common}
-            />
-            <ResultBox
-              label={t.labels.b64_enc}
-              value={safeBase64Encode(inputText)}
-              t_common={t.common}
-            />
-            <ResultBox
-              label={t.labels.b64_dec}
-              value={safeBase64Decode(inputText)}
-              t_common={t.common}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-/* =====================================================
-   MÓDULO 7: GENERADOR DE LOREM IPSUM (CON PROTOCOLO i18n)
-===================================================== */
-function LoremIpsumModule ({ lang }: { lang: string }) {
-  // TRADUCCIONES LOCALES DEL MÓDULO
-  const t = {
-    es: {
-      title: 'Generador de Lorem Ipsum',
-      desc: 'Crea textos de relleno estructurados al instante.',
-      label_paragraphs: 'Cantidad de Párrafos',
-      label_words: 'Palabras por Párrafo',
-      label_html: 'Estructura HTML (H2)',
-      btn_vary: 'Variar texto actual',
-      label_result: 'Texto Generado',
-      btn_copy: 'Copiar todo',
-      btn_copied: 'Copiado ✓',
-      h2_prefix: 'Subtítulo de la sección'
-    },
-    en: {
-      title: 'Lorem Ipsum Generator',
-      desc: 'Create structured filler text instantly.',
-      label_paragraphs: 'Number of Paragraphs',
-      label_words: 'Words per Paragraph',
-      label_html: 'HTML Structure (H2)',
-      btn_vary: 'Vary current text',
-      label_result: 'Generated Text',
-      btn_copy: 'Copy all',
-      btn_copied: 'Copied ✓',
-      h2_prefix: 'Section Subtitle'
-    }
-  }[lang as 'es' | 'en']
-
-  const [paragraphsCount, setParagraphsCount] = useState<number | ''>(3)
-  const [wordsPerParagraph, setWordsPerParagraph] = useState<number | ''>(50)
-  const [includeH2, setIncludeH2] = useState(true)
-  const [generatedText, setGeneratedText] = useState('')
-  const [isCopied, setIsCopied] = useState(false)
-
-  const baseWords =
-    'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum'.split(
-      ' '
-    )
-
-  const generateLorem = () => {
-    let result = []
-    const pCount = Math.max(1, Math.min(10, Number(paragraphsCount) || 1))
-    const wCount = Math.max(1, Number(wordsPerParagraph) || 1)
-    for (let i = 0; i < pCount; i++) {
-      let paraWords = []
-      for (let j = 0; j < wCount; j++) {
-        paraWords.push(baseWords[Math.floor(Math.random() * baseWords.length)])
-      }
-      paraWords[0] =
-        paraWords[0].charAt(0).toUpperCase() + paraWords[0].slice(1)
-      let paraText = paraWords.join(' ') + '.'
-      if (includeH2)
-        result.push(`<h2>${t.h2_prefix} ${i + 1}</h2>\n<p>${paraText}</p>`)
-      else result.push(paraText)
-    }
-    setGeneratedText(result.join('\n\n'))
-  }
-
-  useEffect(() => {
-    generateLorem()
-  }, [paragraphsCount, wordsPerParagraph, includeH2])
-
-  const handleCopy = async () => {
-    if (!generatedText) return
-    try {
-      await navigator.clipboard.writeText(generatedText)
-      setIsCopied(true)
-      setTimeout(() => setIsCopied(false), 2000)
-    } catch (err) {}
-  }
-
-  return (
-    <div className='animate-fade-in space-y-6'>
-      <div className='text-center md:text-left'>
-        <h2 className='text-2xl md:text-3xl font-bold mb-2 text-[var(--text-1)]'>
-          {t.title}
-        </h2>
-        <p className='text-[var(--text-2)]'>{t.desc}</p>
-      </div>
-
-      <div className='grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-8'>
-        <div className='lg:col-span-4 rounded-2xl p-4 md:p-6 shadow-[var(--shadow-1)] flex flex-col gap-6 h-fit border bg-[var(--bg-1)] border-[var(--border-1)]'>
-          <div className='space-y-2'>
-            <label className='text-sm font-semibold text-[var(--text-1)]'>
-              {t.label_paragraphs}
-            </label>
-            <input
-              type='number'
-              min='1'
-              max='10'
-              value={paragraphsCount}
-              onChange={e =>
-                setParagraphsCount(
-                  e.target.value === '' ? '' : parseInt(e.target.value)
-                )
-              }
-              className='w-full rounded-xl px-4 py-3 outline-none transition-colors bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)] focus:border-[var(--border-brand)]'
-            />
-          </div>
-          <div className='space-y-2'>
-            <label className='text-sm font-semibold text-[var(--text-1)]'>
-              {t.label_words}
-            </label>
-            <input
-              type='number'
-              min='1'
-              value={wordsPerParagraph}
-              onChange={e =>
-                setWordsPerParagraph(
-                  e.target.value === '' ? '' : parseInt(e.target.value)
-                )
-              }
-              className='w-full rounded-xl px-4 py-3 outline-none transition-colors bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)] focus:border-[var(--border-brand)]'
-            />
-          </div>
-          <div className='pt-4 border-t border-[var(--border-1)]'>
-            <label className='flex items-center gap-3 cursor-pointer group'>
-              <div className='relative'>
-                <input
-                  type='checkbox'
-                  checked={includeH2}
-                  onChange={e => setIncludeH2(e.target.checked)}
-                  className='sr-only'
-                />
-                <div
-                  className={`block w-14 h-8 rounded-full transition-colors ${
-                    includeH2 ? 'bg-[var(--bg-brand)]' : 'bg-[var(--border-2)]'
-                  }`}
-                ></div>
-                <div
-                  className={`absolute left-1 top-1 w-6 h-6 rounded-full transition-transform duration-300 bg-white ${
-                    includeH2 ? 'translate-x-6' : ''
-                  }`}
-                ></div>
-              </div>
-              <span className='text-sm font-bold group-hover:opacity-80 transition-colors text-[var(--text-1)]'>
-                {t.label_html}
-              </span>
-            </label>
           </div>
           <button
-            onClick={generateLorem}
-            className='w-full mt-2 flex items-center justify-center gap-2 border font-bold py-3 rounded-xl transition-all bg-[var(--bg-2)] border-[var(--border-1)] text-[var(--text-1)] hover:bg-[var(--bg-1)]'
+            onClick={handleFixText}
+            disabled={isLoading || !text}
+            className='w-full py-4 rounded-2xl font-black text-white bg-[var(--bg-brand)] shadow-lg hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2 uppercase text-[10px] tracking-widest'
           >
-            <RefreshCw className='w-4 h-4' /> {t.btn_vary}
+            {isLoading ? (
+              <RefreshCw className='w-4 h-4 animate-spin' />
+            ) : (
+              <Zap className='w-4 h-4' />
+            )}
+            {t.btn_fix}
           </button>
-        </div>
-
-        <div className='lg:col-span-8 flex flex-col rounded-2xl shadow-[var(--shadow-1)] overflow-hidden min-h-[500px] border bg-[var(--bg-1)] border-[var(--border-1)]'>
-          <div className='p-3 border-b flex justify-between items-center bg-[var(--bg-2)] border-[var(--border-1)]'>
-            <span className='text-sm font-semibold flex items-center gap-2 text-[var(--text-1)]'>
-              {t.label_result}
-            </span>
-            <button
-              onClick={handleCopy}
-              disabled={!generatedText}
-              className={`relative flex items-center justify-center overflow-hidden px-4 py-2 text-xs font-bold rounded-lg transition-all disabled:opacity-50 text-white ${
-                isCopied
-                  ? 'shadow-[0_0_15px_var(--text-success)] bg-[var(--text-success)]'
-                  : 'hover:opacity-90 bg-[var(--bg-brand)]'
-              }`}
-            >
-              <AnimatePresence mode='wait'>
-                {isCopied ? (
-                  <motion.div
-                    key='copied'
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -20, opacity: 0 }}
-                    className='flex items-center gap-2 absolute'
-                  >
-                    {t.btn_copied}
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key='normal'
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -20, opacity: 0 }}
-                    className='flex items-center gap-2 absolute'
-                  >
-                    <Copy className='w-4 h-4' /> {t.btn_copy}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              <div className='invisible flex items-center gap-2'>
-                <Copy className='w-4 h-4' /> {t.btn_copy}
-              </div>
-            </button>
-          </div>
-          <textarea
-            readOnly
-            value={generatedText}
-            className='w-full h-full p-6 font-mono text-sm outline-none resize-none leading-relaxed bg-transparent text-[var(--text-2)]'
-          />
         </div>
       </div>
     </div>
+  )
+}
+
+function AnimatedBgGenerator ({ lang, t, onCopy, isCopied }: any) {
+  const at = t.animated_bg
+  const [type, setType] = useState('snow')
+  const [speed, setSpeed] = useState(2)
+  const [amount, setAmount] = useState(50)
+  const [size, setSize] = useState(3)
+  const [color, setColor] = useState('#ffffff')
+  const [bgColor, setBgColor] = useState('#0f172a')
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [particleOpacity, setParticleOpacity] = useState(0.8)
+  const [drawMode, setDrawMode] = useState<'fill' | 'stroke'>('fill')
+  const [strokeWidth, setStrokeWidth] = useState(2)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    let animationFrameId: number
+    let particles: any[] = []
+
+    const createParticles = () => {
+      particles = []
+      const w = (canvas.width = canvas.offsetWidth)
+      const h = (canvas.height = canvas.offsetHeight)
+      for (let i = 0; i < amount; i++) {
+        particles.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          // Ajuste de velocidad: ahora el valor 1 es muy sutil
+          vx: (Math.random() - 0.5) * (speed * 0.5),
+          vy:
+            type === 'snow'
+              ? Math.random() * (speed * 0.3) + 0.2
+              : (Math.random() - 0.5) * (speed * 0.5),
+          s: Math.random() * size + 1
+        })
+      }
+    }
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+      // Configuración de color con opacidad
+      // Convertimos HEX a RGBA para la transparencia
+      const r = parseInt(color.slice(1, 3), 16)
+      const g = parseInt(color.slice(3, 5), 16)
+      const b = parseInt(color.slice(5, 7), 16)
+      const colorFinal = `rgba(${r}, ${g}, ${b}, ${particleOpacity})`
+
+      ctx.fillStyle = colorFinal
+      ctx.strokeStyle = colorFinal
+      ctx.lineWidth = strokeWidth
+
+      particles.forEach(p => {
+        ctx.beginPath()
+        if (type === 'hearts') {
+          const d = p.s * 1.5
+          ctx.moveTo(p.x, p.y)
+          ctx.bezierCurveTo(
+            p.x - d,
+            p.y - d,
+            p.x - d * 1.5,
+            p.y + d / 1.5,
+            p.x,
+            p.y + d * 1.5
+          )
+          ctx.bezierCurveTo(
+            p.x + d * 1.5,
+            p.y + d / 1.5,
+            p.x + d,
+            p.y - d,
+            p.x,
+            p.y
+          )
+        } else {
+          ctx.arc(p.x, p.y, p.s, 0, Math.PI * 2)
+        }
+
+        // OPCIÓN DE RELLENO O BORDE
+        if (drawMode === 'fill') ctx.fill()
+        else ctx.stroke()
+
+        p.x += p.vx
+        p.y += p.vy
+
+        if (p.y > canvas.height) p.y = -10
+        if (p.y < -10) p.y = canvas.height
+        if (p.x > canvas.width) p.x = 0
+        if (p.x < 0) p.x = canvas.width
+      })
+      animationFrameId = requestAnimationFrame(draw)
+    }
+
+    createParticles()
+    draw()
+    return () => cancelAnimationFrame(animationFrameId)
+  }, [type, speed, amount, size, color, particleOpacity, drawMode, strokeWidth])
+  // Nota: 'bgColor' no va aquí porque el fondo se controla por CSS en el div padre
+
+  const generatedHtml = useMemo(() => {
+    // Convertimos el color de la partícula a RGBA para el código exportado
+    const r = parseInt(color.slice(1, 3), 16)
+    const g = parseInt(color.slice(3, 5), 16)
+    const b = parseInt(color.slice(5, 7), 16)
+    const rgba = `rgba(${r},${g},${b},${particleOpacity})`
+
+    return `
+<div style="position:relative; width:100%; min-height:400px; background:${bgColor}; overflow:hidden; border-radius:2rem;">
+  <canvas id="bgAnimCanvas" style="display:block; width:100%; height:100%;"></canvas>
+  <script>
+    (function(){
+      const c=document.getElementById('bgAnimCanvas'), x=c.getContext('2d');
+      let ps=[];
+      function init(){
+        c.width=c.parentNode.offsetWidth; c.height=c.parentNode.offsetHeight;
+        ps=[];
+        for(let i=0;i<${amount};i++) ps.push({
+          x:Math.random()*c.width, 
+          y:Math.random()*c.height, 
+          vx:(Math.random()-0.5)*${speed * 0.5},
+          vy:${
+            type === 'snow'
+              ? `Math.random()*${speed * 0.3}+0.2`
+              : `(Math.random()-0.5)*${speed * 0.5}`
+          }, 
+          s:Math.random()*${size}+1
+        });
+      }
+      function loop(){
+        x.clearRect(0,0,c.width,c.height); 
+        x.fillStyle='${rgba}'; x.strokeStyle='${rgba}'; x.lineWidth=${strokeWidth};
+        ps.forEach(p=>{
+          x.beginPath();
+          ${
+            type === 'hearts'
+              ? `const d=p.s*1.5; x.moveTo(p.x,p.y); x.bezierCurveTo(p.x-d,p.y-d,p.x-d*1.5,p.y+d/1.5,p.x,p.y+d*1.5); x.bezierCurveTo(p.x+d*1.5,p.y+d/1.5,p.x+d,p.y-d,p.x,p.y);`
+              : `x.arc(p.x,p.y,p.s,0,7);`
+          }
+          ${drawMode === 'fill' ? 'x.fill();' : 'x.stroke();'}
+          p.x+=p.vx; p.y+=p.vy;
+          if(p.y>c.height) p.y=-10; if(p.x>c.width) p.x=0; if(p.x<0) p.x=c.width;
+        });
+        requestAnimationFrame(loop);
+      }
+      window.addEventListener('resize', init); init(); loop();
+    })();
+  </script>
+</div>`.trim()
+  }, [
+    type,
+    speed,
+    amount,
+    size,
+    color,
+    bgColor,
+    particleOpacity,
+    drawMode,
+    strokeWidth
+  ])
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className='grid grid-cols-1 lg:grid-cols-12 gap-8'
+    >
+      {/* PANEL IZQUIERDO */}
+      <div className='lg:col-span-5 p-8 bg-[var(--bg-1)] rounded-[2.5rem] border border-[var(--border-1)] space-y-6 shadow-sm'>
+        <div className='flex items-center gap-3'>
+          <PlayCircle className='w-6 h-6 text-[var(--text-brand)]' />
+          <h3 className='text-lg font-black uppercase tracking-tighter text-[var(--text-1)]'>
+            {at.title}
+          </h3>
+        </div>
+
+        <div className='space-y-4'>
+          <div className='space-y-2'>
+            <label className='text-[10px] font-black uppercase text-[var(--text-3)]'>
+              {at.label_type}
+            </label>
+            <select
+              value={type}
+              onChange={e => setType(e.target.value)}
+              className='w-full p-3 bg-[var(--bg-2)] border rounded-xl text-xs font-bold text-[var(--text-1)]'
+            >
+              <option value='snow'>{at.types.snow}</option>
+              <option value='hearts'>{at.types.hearts}</option>
+              <option value='bubbles'>{at.types.bubbles}</option>
+            </select>
+          </div>
+          <ControlRange
+            label={at.label_speed}
+            val={speed}
+            min={1}
+            max={10}
+            set={setSpeed}
+          />
+          <ControlRange
+            label={at.label_amount}
+            val={amount}
+            min={10}
+            max={200}
+            set={setAmount}
+          />
+          <ControlRange
+            label={at.label_size}
+            val={size}
+            min={1}
+            max={15}
+            set={setSize}
+          />
+          <div className='grid grid-cols-2 gap-4'>
+            <ColorField label={at.label_color} val={color} set={setColor} />
+            <ColorField label='Fondo' val={bgColor} set={setBgColor} />
+          </div>
+          <div className='pt-4 border-t border-[var(--border-1)] space-y-4'>
+            <ControlRange 
+              label="Opacidad Partículas" 
+              val={particleOpacity} 
+              min={0.1} max={1} step={0.1} 
+              set={setParticleOpacity} 
+            />
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase text-[var(--text-3)]">Estilo</label>
+                <select 
+                  value={drawMode} 
+                  onChange={(e) => setDrawMode(e.target.value as any)}
+                  className="w-full p-2.5 bg-[var(--bg-2)] border border-[var(--border-1)] rounded-xl text-[10px] font-bold text-[var(--text-1)] outline-none"
+                >
+                  <option value="fill">Relleno</option>
+                  <option value="stroke">Solo Borde</option>
+                </select>
+              </div>
+              {drawMode === 'stroke' && (
+                <ControlRange 
+                  label="Grosor Borde" 
+                  val={strokeWidth} 
+                  min={1} max={10} 
+                  set={setStrokeWidth} 
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* PREVISUALIZACIÓN DERECHA */}
+      <div className='lg:col-span-7 space-y-6'>
+        <div
+          className='h-[450px] rounded-[3rem] shadow-2xl border-[12px] border-[var(--bg-1)] relative overflow-hidden transition-all duration-500'
+          style={{ backgroundColor: bgColor }}
+        >
+          <canvas ref={canvasRef} className='w-full h-full' />
+        </div>
+
+        <div className='space-y-2'>
+          <p className='text-[10px] font-black uppercase text-[var(--text-3)] ml-4'>
+            {at.export_desc}
+          </p>
+          <CodeBox code={generatedHtml} onCopy={onCopy} isCopied={isCopied} />
+        </div>
+      </div>
+    </motion.div>
   )
 }
 
 /* =====================================================
    MÓDULO 8: TRANSFORMADOR DE TEXTO (CON PROTOCOLO i18n)
 ===================================================== */
-function TextTransformerModule ({ lang }: { lang: string }) {
-  // TRADUCCIONES LOCALES DEL MÓDULO
+function SuiteTextModule ({ lang }: { lang: string }) {
+  // Traducciones integradas (Protocolo i18n listo)
   const t = {
     es: {
-      title: 'Transformador de Texto',
-      desc: 'Pega tu texto, aplica filtros que <strong>se acumulan</strong>, dale formato y visualiza el resultado respetando tus ediciones.',
-      label_original: '1. Texto Original',
-      btn_sync: 'Enviar a edición ↓',
-      btn_clean_all: 'Limpiar todo',
-      placeholder_input: 'Pega aquí el texto base...',
-      btn_copy: 'Copiar Resultado',
-      btn_copied: 'Copiado ✓',
-      search: {
-        title: 'Buscar y Reemplazar',
-        placeholder_find: 'Buscar palabra...',
-        btn_find: 'Buscar',
-        placeholder_replace: 'Reemplazar con...',
-        btn_replace: 'Reemplazar',
-        no_matches: 'No hay coincidencias.',
-        matches: 'coincidencias.'
+      title: 'Inteligencia SuiteText',
+      desc: 'El cerebro universal para tu texto. Busca, reemplaza, convierte y genera con comandos naturales.',
+      placeholder_input: 'Pega tu texto aquí...',
+      placeholder_ai:
+        'Ej: Reemplaza "perro" por "gato", quita los puntos y ponlo en snake_case...',
+      placeholder_fix: 'El resultado aparecerá aquí...',
+      result_label: 'Resultado SuiteText',
+      btn_ai: 'Ejecutar Comando',
+      metrics: {
+        words: 'Palabras',
+        chars: 'Letras',
+        special: 'Letras sin E'
       },
-      filters: {
-        title: 'Filtro de Mayúsculas',
+      quick_actions: {
         upper: 'MAYÚSCULAS',
         lower: 'minúsculas',
-        title_case: 'Tipo Título',
-        sentence: '1ra Mayúscula',
-        invert: 'iNVERTIR mAY/mIN',
-        after_dot: 'Mayúscula después del punto.',
-        alternate: 'aLtErNaDaS (iNtErCaMbIaDaS)'
+        slug: 'tipo-slug-seo'
       },
-      cleanup: {
-        title: 'Limpieza de Símbolos',
-        desc: 'Haz clic para borrar el símbolo del texto:',
-        no_spaces: 'Eliminar TODOS los espacios',
-        double_spaces: 'Quitar espacios dobles/extra',
-        strip_html: 'Eliminar etiquetas HTML',
-        reverse: 'Invertir texto (otxet)'
-      }
+      helper_text:
+        'Recuerda: texto-tipo-slug / snake_case / camelCase / PascalCase',
+      btn_copy: 'Copiar',
+      btn_copied: 'Copiado ✓',
+      btn_clean: 'Limpiar Todo',
+      error_ai: 'Error al conectar con SuiteText AI',
+      action_completed: 'completado.'
     },
     en: {
-      title: 'Text Transformer',
-      desc: 'Paste your text, apply <strong>cumulative</strong> filters, format it, and preview results respecting your edits.',
-      label_original: '1. Original Text',
-      btn_sync: 'Send to editor ↓',
-      btn_clean_all: 'Clear all',
-      placeholder_input: 'Paste base text here...',
-      btn_copy: 'Copy Result',
-      btn_copied: 'Copied ✓',
-      search: {
-        title: 'Find & Replace',
-        placeholder_find: 'Find word...',
-        btn_find: 'Find',
-        placeholder_replace: 'Replace with...',
-        btn_replace: 'Replace',
-        no_matches: 'No matches.',
-        matches: 'matches.'
+      title: 'SuiteText Intelligence',
+      desc: 'The universal brain for your text. Find, replace, convert, and generate with natural commands.',
+      placeholder_input: 'Paste your text here...',
+      placeholder_ai:
+        'Ex: Replace "dog" with "cat", remove periods, and use snake_case...',
+      placeholder_fix: 'Result will appear here...',
+      result_label: 'SuiteText Result',
+      btn_ai: 'Execute Command',
+      metrics: {
+        words: 'Words',
+        chars: 'Letters',
+        special: 'Letters without E'
       },
-      filters: {
-        title: 'Case Filters',
+      quick_actions: {
         upper: 'UPPERCASE',
         lower: 'lowercase',
-        title_case: 'Title Case',
-        sentence: 'Sentence case',
-        invert: 'iNVERT cASE',
-        after_dot: 'Capitalize after period.',
-        alternate: 'aLtErNaTiNg cAsE'
+        slug: 'seo-slug-type'
       },
-      cleanup: {
-        title: 'Symbol Cleanup',
-        desc: 'Click to remove the symbol from the text:',
-        no_spaces: 'Remove ALL spaces',
-        double_spaces: 'Remove double/extra spaces',
-        strip_html: 'Remove HTML tags',
-        reverse: 'Reverse text (txet)'
-      }
+      helper_text:
+        'Remember: text-type-slug / snake_case / camelCase / PascalCase',
+      btn_copy: 'Copy',
+      btn_copied: 'Copied ✓',
+      btn_clean: 'Clear All',
+      error_ai: 'Error connecting to SuiteText AI',
+      action_completed: 'completed.'
     }
   }[lang as 'es' | 'en']
 
-  const [inputText, setInputText] = useState('')
-  const [outputText, setOutputText] = useState('')
-  const [findText, setFindText] = useState('')
-  const [replaceText, setReplaceText] = useState('')
+  const [input, setInput] = useState('')
+  const [comando, setComando] = useState('')
+  const [output, setOutput] = useState('')
+  const [infoIA, setInfoIA] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const [isCopied, setIsCopied] = useState(false)
 
-  const inputRef = useRef<HTMLDivElement>(null)
-  const outputRef = useRef<HTMLDivElement>(null)
-
-  const symbolsToClean = [
-    '-',
-    '_',
-    '/',
-    '\\',
-    "'",
-    '"',
-    '?',
-    '¿',
-    '¡',
-    '!',
-    ':',
-    ';',
-    '='
-  ]
-
-  const escapeRegExp = (string: string) =>
-    string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-
-  const plainTextForCount = useMemo(() => {
-    if (typeof window === 'undefined') return ''
-    return (
-      new DOMParser().parseFromString(outputText, 'text/html').body
-        .textContent || ''
-    )
-  }, [outputText])
-
-  const matchCount = findText
-    ? (plainTextForCount.match(new RegExp(escapeRegExp(findText), 'gi')) || [])
-        .length
-    : 0
-
-  const processHtml = (html: string, mode: string, payload?: any) => {
-    if (!html) return ''
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(html, 'text/html')
-    const walk = document.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT, null)
-    let node
-    while ((node = walk.nextNode())) {
-      let val = node.nodeValue || ''
-      switch (mode) {
-        case 'upper':
-          val = val.toUpperCase()
-          break
-        case 'lower':
-          val = val.toLowerCase()
-          break
-        case 'title':
-          val = val.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
-          break
-        case 'sentence':
-          val = val.charAt(0).toUpperCase() + val.slice(1).toLowerCase()
-          break
-        case 'afterDot':
-          val = val.replace(/(^\w|\.\s+\w)/gm, c => c.toUpperCase())
-          break
-        case 'alternate':
-          val = val
-            .split('')
-            .map((c, i) => (i % 2 === 0 ? c.toLowerCase() : c.toUpperCase()))
-            .join('')
-          break
-        case 'invert':
-          val = val
-            .split('')
-            .map(c =>
-              c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()
-            )
-            .join('')
-          break
-        case 'reverse':
-          val = val.split('').reverse().join('')
-          break
-        case 'spaces':
-          val = val.replace(/\s+/g, ' ').trim()
-          break
-        case 'no_spaces':
-          val = val.replace(/\s+/g, '')
-          break
-        case 'replace':
-          if (payload?.find)
-            val = val.replace(
-              new RegExp(escapeRegExp(payload.find), 'gi'),
-              payload.replace
-            )
-          break
-        case 'remove_symbol':
-          if (payload?.symbol)
-            val = val.replace(new RegExp(escapeRegExp(payload.symbol), 'g'), '')
-          break
-      }
-      node.nodeValue = val
+  // MÉTRICAS EN TIEMPO REAL
+  const metrics = useMemo(() => {
+    const textToAnalyze = output || input
+    return {
+      words: textToAnalyze.trim()
+        ? textToAnalyze.trim().split(/\s+/).length
+        : 0,
+      chars: textToAnalyze.length,
+      noE: textToAnalyze.replace(/e/gi, '').length
     }
-    return mode === 'stripHtml'
-      ? doc.body.textContent || ''
-      : doc.body.innerHTML
-  }
+  }, [input, output])
 
-  const handleQuickAction = (action: string, payload?: any) => {
-    const currentHtml = outputRef.current?.innerHTML || outputText || inputText
-    const newHtml = processHtml(currentHtml, action, payload)
-    setOutputText(newHtml)
-    if (outputRef.current) outputRef.current.innerHTML = newHtml
-  }
-
-  const handleInputOriginal = (e: React.FormEvent<HTMLDivElement>) => {
-    let val = e.currentTarget.innerHTML
-    val = val.replace(/<mark[^>]*>([\s\S]*?)<\/mark>/gi, '$1')
-    setInputText(val)
-    if (!outputText && outputRef.current) {
-      setOutputText(val)
-      outputRef.current.innerHTML = val
-    }
-  }
-
-  const forceSync = () => {
-    setOutputText(inputText)
-    if (outputRef.current) outputRef.current.innerHTML = inputText
-  }
-
-  const handleInputModified = (e: React.FormEvent<HTMLDivElement>) => {
-    setOutputText(e.currentTarget.innerHTML)
-  }
-
-  const handleSearchHighlight = () => {
-    if (!findText || !outputRef.current) return
-    let html = outputText
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(html, 'text/html')
-    const walk = document.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT, null)
-    const nodes = []
-    const regex = new RegExp(`(${escapeRegExp(findText)})`, 'gi')
-    let node
-    while ((node = walk.nextNode())) {
-      if (regex.test(node.nodeValue || '')) nodes.push(node)
-    }
-    nodes.forEach(n => {
-      const span = document.createElement('span')
-      span.innerHTML = (n.nodeValue || '').replace(
-        regex,
-        '<mark style="background-color: #d946ef; color: white; font-weight: bold; border-radius: 0.125rem; padding: 0 0.125rem;">$1</mark>'
-      )
-      n.parentNode?.replaceChild(span, n)
-    })
-    outputRef.current.innerHTML = doc.body.innerHTML
-  }
-
-  const applyFormat = (command: string) => {
-    if (outputRef.current) {
-      outputRef.current.focus()
-      document.execCommand(command, false, undefined)
-      setOutputText(outputRef.current.innerHTML)
-    }
-  }
-
-  const handleClearFormat = () => {
-    if (outputRef.current) {
-      const plain = outputRef.current.textContent || ''
-      setOutputText(plain)
-      outputRef.current.innerHTML = plain
-    }
-  }
-
-  const handleCopy = async () => {
-    if (!outputText) return
+  const handleAIAction = async () => {
+    if (!comando) return
+    setIsLoading(true)
     try {
-      await navigator.clipboard.writeText(outputText)
-      setIsCopied(true)
-      setTimeout(() => setIsCopied(false), 2000)
-    } catch (err) {}
+      const res = await fetch('/api/corrector', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ texto: input, comando, lang })
+      })
+      const data = await res.json()
+      if (data.success) {
+        setOutput(data.resultado)
+        setInfoIA(data.info)
+      }
+    } catch (err) {
+      setInfoIA('Error al conectar con SuiteText AI')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(output || input)
+    setIsCopied(true)
+    setTimeout(() => setIsCopied(false), 2000)
   }
 
   return (
-    <div className='animate-fade-in space-y-6'>
-      <div className='text-center md:text-left'>
-        <h2 className='text-2xl md:text-3xl font-bold mb-2 text-[var(--text-1)]'>
+    <div className='space-y-6 animate-fade-in'>
+      {/* HEADER UNIFICADO */}
+      <div className='text-left'>
+        <h2 className='text-2xl md:text-3xl font-bold mb-2 text-[var(--text-1)] flex items-center gap-3 justify-start'>
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 4, ease: 'linear' }}
+          >
+            <RefreshCw className='w-8 h-8 text-[var(--text-brand)]' />
+          </motion.div>
           {t.title}
         </h2>
-        <p
-          className='text-[var(--text-2)]'
-          dangerouslySetInnerHTML={{ __html: t.desc }}
-        ></p>
+        <p className='text-[var(--text-2)]'>{t.desc}</p>
       </div>
 
-      <div className='grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6'>
-        <div className='lg:col-span-8 flex flex-col gap-6'>
-          <div className='flex flex-col rounded-2xl shadow-[var(--shadow-1)] overflow-hidden min-h-[220px] border bg-[var(--bg-1)] border-[var(--border-1)]'>
-            <div className='p-3 border-b flex justify-between items-center bg-[var(--bg-2)] border-[var(--border-1)]'>
-              <span className='text-sm font-semibold text-[var(--text-1)]'>
-                {t.label_original}
+      <div className='grid grid-cols-1 lg:grid-cols-12 gap-6'>
+        {/* COLUMNA IZQUIERDA: FLUJO DE TEXTO (8 de 12 columnas) */}
+        <div className='lg:col-span-8 space-y-6'>
+          {/* 1. INPUT ORIGINAL */}
+          <div className='rounded-[2rem] border bg-[var(--bg-1)] border-[var(--border-1)] overflow-hidden shadow-[var(--shadow-1)]'>
+            <div className='p-4 bg-[var(--bg-2)] border-b border-[var(--border-1)] flex justify-between items-center'>
+              <span className='text-[10px] font-black uppercase tracking-widest text-[var(--text-3)] flex items-center gap-2'>
+                <TextCursorInput className='w-4 h-4' /> Input
               </span>
-              <div className='flex gap-3'>
-                <button
-                  onClick={forceSync}
-                  className='text-xs font-bold transition-colors flex items-center gap-1 text-[var(--text-brand)] hover:underline'
-                >
-                  <ArrowRightLeft className='w-3 h-3' /> {t.btn_sync}
-                </button>
-                <button
-                  onClick={() => {
-                    setInputText('')
-                    setOutputText('')
-                    setFindText('')
-                    if (inputRef.current) inputRef.current.innerHTML = ''
-                    if (outputRef.current) outputRef.current.innerHTML = ''
-                  }}
-                  className='text-xs transition-colors text-[var(--text-2)] hover:text-red-500'
-                >
-                  {t.btn_clean_all}
-                </button>
-              </div>
+              <button
+                onClick={() => {
+                  setInput('')
+                  setOutput('')
+                  setInfoIA('')
+                  setComando('')
+                }}
+                className='text-[10px] font-black uppercase text-red-500 hover:opacity-70 transition-all'
+              >
+                {t.btn_clean}
+              </button>
             </div>
-            <div
-              ref={inputRef}
-              contentEditable
-              onInput={handleInputOriginal}
-              className='w-full h-full flex-grow p-6 outline-none leading-relaxed overflow-y-auto max-h-[250px] bg-transparent text-[var(--text-1)]'
-              style={{ minHeight: '150px' }}
+            <textarea
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              placeholder={t.placeholder_input}
+              className='w-full p-6 min-h-[220px] bg-transparent outline-none text-[var(--text-1)] font-medium resize-none leading-relaxed'
             />
           </div>
 
-          <div className='flex flex-col rounded-2xl shadow-[var(--shadow-1)] overflow-hidden min-h-[300px] border bg-[var(--bg-brand-hover)] border-[var(--border-brand)]'>
-            <div className='p-2 border-b flex justify-between items-center flex-wrap gap-2 bg-[var(--bg-1)] border-[var(--border-1)]'>
-              <div className='flex items-center gap-1 p-1 rounded-lg border bg-[var(--bg-2)] border-[var(--border-1)]'>
-                <button
-                  onClick={() => applyFormat('bold')}
-                  className='p-2 rounded hover:bg-[var(--bg-brand-hover)] hover:text-[var(--text-brand)]'
-                >
-                  <Bold className='w-4 h-4 text-[var(--text-2)]' />
-                </button>
-                <button
-                  onClick={() => applyFormat('italic')}
-                  className='p-2 rounded hover:bg-[var(--bg-brand-hover)] hover:text-[var(--text-brand)]'
-                >
-                  <Italic className='w-4 h-4 text-[var(--text-2)]' />
-                </button>
-                <button
-                  onClick={() => applyFormat('underline')}
-                  className='p-2 rounded hover:bg-[var(--bg-brand-hover)] hover:text-[var(--text-brand)]'
-                >
-                  <UnderlineIcon className='w-4 h-4 text-[var(--text-2)]' />
-                </button>
-                <button
-                  onClick={() => applyFormat('strikeThrough')}
-                  className='p-2 rounded hover:bg-[var(--bg-brand-hover)] hover:text-[var(--text-brand)]'
-                >
-                  <Strikethrough className='w-4 h-4 text-[var(--text-2)]' />
-                </button>
-                <div className='w-px h-6 mx-1 bg-[var(--border-1)]'></div>
-                <button
-                  onClick={handleClearFormat}
-                  className='p-2 rounded text-red-500 hover:bg-red-500/10'
-                >
-                  <Eraser className='w-4 h-4' />
-                </button>
-              </div>
+          {/* 2. RESULTADO (I18N + TOKENS + SCROLL) */}
+          <div className='rounded-[2rem] border bg-[var(--bg-inverse)] border-[var(--border-inverse)] overflow-hidden shadow-2xl relative flex flex-col'>
+            <div className='p-4 flex justify-between items-center border-b border-[var(--border-inverse)] bg-[var(--bg-2)]/20 shrink-0'>
+              <span className='text-[10px] uppercase tracking-widest text-[var(--text-inverse)] opacity-50 font-black'>
+                {t.result_label}
+              </span>
               <button
                 onClick={handleCopy}
-                className={`relative flex items-center justify-center overflow-hidden px-4 py-2 text-xs font-bold rounded-lg transition-all text-white ${
-                  isCopied ? 'bg-[var(--text-success)]' : 'bg-[var(--bg-brand)]'
-                }`}
+                className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase transition-all 
+                  ${
+                    isCopied
+                      ? 'bg-[var(--bg-success)] text-[var(--text-inverse)]'
+                      : 'bg-[var(--bg-1)] text-[var(--text-1)] hover:scale-105'
+                  }`}
               >
-                <AnimatePresence mode='wait'>
-                  {isCopied ? (
-                    <motion.div
-                      key='copied'
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: -20, opacity: 0 }}
-                      className='flex items-center gap-2 absolute'
-                    >
-                      {t.btn_copied}
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key='normal'
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: -20, opacity: 0 }}
-                      className='flex items-center gap-2 absolute'
-                    >
-                      <Copy className='w-4 h-4' /> {t.btn_copy}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-                <div className='invisible flex items-center gap-2'>
-                  <Copy className='w-4 h-4' /> {t.btn_copy}
-                </div>
+                {isCopied ? t.btn_copied : t.btn_copy}
               </button>
             </div>
-            <div
-              ref={outputRef}
-              contentEditable
-              onInput={handleInputModified}
-              className='w-full h-full flex-grow p-6 outline-none leading-relaxed overflow-y-auto max-h-[350px] bg-transparent text-[var(--text-1)]'
-              style={{ minHeight: '250px' }}
-            />
-          </div>
-        </div>
 
-        <div className='lg:col-span-4 flex flex-col gap-4 md:gap-6'>
-          <div className='rounded-2xl p-4 md:p-5 shadow-[var(--shadow-1)] space-y-3 border bg-[var(--bg-1)] border-[var(--border-1)]'>
-            <h3 className='font-bold text-sm uppercase tracking-wider text-[var(--text-1)]'>
-              {t.search.title}
-            </h3>
-            <div className='flex flex-col gap-3'>
-              <div className='flex gap-2'>
-                <input
-                  type='text'
-                  placeholder={t.search.placeholder_find}
-                  value={findText}
-                  onChange={e => setFindText(e.target.value)}
-                  className='flex-grow rounded-lg px-3 py-2 text-sm bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)]'
-                />
-                <button
-                  onClick={handleSearchHighlight}
-                  disabled={!findText}
-                  className='px-4 py-2 font-bold rounded-lg text-sm bg-[var(--bg-2)] border border-[var(--border-1)] text-[#d946ef] hover:bg-[#d946ef]/10'
-                >
-                  {t.search.btn_find}
-                </button>
-              </div>
-              {findText && (
-                <span className='text-[10px] font-semibold text-[#d946ef]'>
-                  {matchCount === 0
-                    ? t.search.no_matches
-                    : `${matchCount} ${t.search.matches}`}
+            {/* Contenedor con altura fija, scroll y tipografía mono */}
+            <div className='p-8 h-[450px] overflow-y-auto custom-scrollbar text-[var(--text-inverse)] font-mono text-sm leading-relaxed whitespace-pre-wrap select-all'>
+              {output || (
+                <span className='opacity-20 italic font-normal text-[var(--text-inverse)]'>
+                  {t.placeholder_fix}
                 </span>
               )}
-              <input
-                type='text'
-                placeholder={t.search.placeholder_replace}
-                value={replaceText}
-                onChange={e => setReplaceText(e.target.value)}
-                className='w-full rounded-lg px-3 py-2 text-sm bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)]'
-              />
-              <button
-                onClick={() =>
-                  handleQuickAction('replace', {
-                    find: findText,
-                    replace: replaceText
-                  })
+            </div>
+
+            <AnimatePresence>
+              {infoIA && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className='absolute bottom-4 left-4 right-4 p-3 rounded-xl bg-[var(--bg-brand)] text-[var(--text-inverse)] text-[10px] font-black uppercase flex items-center gap-2 shadow-lg z-10'
+                >
+                  <Info className='w-3 h-3 text-[var(--text-inverse)]' />{' '}
+                  {infoIA}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* COLUMNA DERECHA: CENTRO DE CONTROL (4 de 12 columnas) */}
+        <div className='lg:col-span-4 space-y-6'>
+          {/* 3. MÉTRICAS (ARRIBA) */}
+          <div className='grid grid-cols-1 gap-3'>
+            {[
+              { label: t.metrics.words, val: metrics.words, icon: FileText },
+              { label: t.metrics.chars, val: metrics.chars, icon: Type },
+              { label: t.metrics.special, val: metrics.noE, icon: Hash }
+            ].map((m, i) => (
+              <div
+                key={i}
+                className='p-5 rounded-3xl border bg-[var(--bg-1)] border-[var(--border-1)] flex items-center justify-between shadow-sm hover:border-[var(--border-brand)] transition-colors'
+              >
+                <div className='flex items-center gap-3'>
+                  <m.icon className='w-5 h-5 text-[var(--text-brand)] opacity-70' />
+                  <p className='text-[10px] font-black text-[var(--text-3)] uppercase tracking-tight'>
+                    {m.label}
+                  </p>
+                </div>
+                <p className='text-xl font-black text-[var(--text-1)]'>
+                  {m.val}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* 4. BOTONES ACCIÓN RÁPIDA (ENCIMA DEL INPUT IA) */}
+          <div className='space-y-3'>
+            <div className='flex flex-col gap-2'>
+              {[
+                {
+                  id: 'upper',
+                  label: 'MAYÚSCULAS',
+                  prompt: 'pasa todo el texto a MAYÚSCULAS'
+                },
+                {
+                  id: 'lower',
+                  label: 'minúsculas',
+                  prompt: 'pasa todo el texto a minúsculas'
+                },
+                {
+                  id: 'slug',
+                  label: 'tipo-slug-seo',
+                  prompt:
+                    'convierte el texto en un slug optimizado para SEO (letras minúsculas, sin acentos y separados por guiones)'
                 }
-                disabled={!findText || !outputText || matchCount === 0}
-                className='w-full py-2 text-white font-bold rounded-lg bg-[var(--bg-brand)]'
-              >
-                {t.search.btn_replace} {matchCount > 0 ? `(${matchCount})` : ''}
-              </button>
+              ].map(btn => (
+                <button
+                  key={btn.id}
+                  disabled={isLoading || !input}
+                  onClick={() => executeQuickAction(btn.prompt, btn.label)} // Función auxiliar para no repetir código
+                  className='w-full px-4 py-3 rounded-xl border border-[var(--border-1)] bg-[var(--bg-1)] text-[var(--text-1)] text-[10px] font-black uppercase tracking-widest hover:border-[var(--text-brand)] hover:text-[var(--text-brand)] transition-all disabled:opacity-30 flex justify-between items-center'
+                >
+                  {btn.label}
+                  <Zap className='w-3 h-3 opacity-30' />
+                </button>
+              ))}
             </div>
-          </div>
 
-          <div className='rounded-2xl p-4 md:p-5 shadow-[var(--shadow-1)] space-y-3 border bg-[var(--bg-1)] border-[var(--border-1)]'>
-            <h3 className='font-bold text-sm uppercase tracking-wider text-[var(--text-1)]'>
-              {t.filters.title}
-            </h3>
-            <div className='grid grid-cols-2 gap-2'>
-              <button
-                onClick={() => handleQuickAction('upper')}
-                className='py-2 px-3 rounded-lg text-sm bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)] hover:border-[var(--border-brand)]'
-              >
-                {t.filters.upper}
-              </button>
-              <button
-                onClick={() => handleQuickAction('lower')}
-                className='py-2 px-3 rounded-lg text-sm bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)] hover:border-[var(--border-brand)]'
-              >
-                {t.filters.lower}
-              </button>
-              <button
-                onClick={() => handleQuickAction('title')}
-                className='py-2 px-3 rounded-lg text-sm bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)] hover:border-[var(--border-brand)]'
-              >
-                {t.filters.title_case}
-              </button>
-              <button
-                onClick={() => handleQuickAction('sentence')}
-                className='py-2 px-3 rounded-lg text-sm bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)] hover:border-[var(--border-brand)]'
-              >
-                {t.filters.sentence}
-              </button>
-              <button
-                onClick={() => handleQuickAction('invert')}
-                className='py-2 px-3 rounded-lg text-sm bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)] hover:border-[var(--border-brand)]'
-              >
-                {t.filters.invert}
-              </button>
-              <button
-                onClick={() => handleQuickAction('afterDot')}
-                className='col-span-2 py-2 px-3 rounded-lg text-sm bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)] hover:border-[var(--border-brand)]'
-              >
-                {t.filters.after_dot}
-              </button>
-              <button
-                onClick={() => handleQuickAction('alternate')}
-                className='col-span-2 py-2 px-3 rounded-lg text-sm bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)] hover:border-[var(--border-brand)]'
-              >
-                {t.filters.alternate}
-              </button>
-            </div>
-          </div>
-
-          <div className='rounded-2xl p-4 md:p-5 shadow-[var(--shadow-1)] space-y-4 border bg-[var(--bg-1)] border-[var(--border-1)]'>
-            <h3 className='font-bold text-sm uppercase tracking-wider text-[var(--text-1)]'>
-              {t.cleanup.title}
-            </h3>
-            <div className='space-y-2'>
-              <p className='text-xs text-[var(--text-2)]'>{t.cleanup.desc}</p>
-              <div className='flex flex-wrap gap-2'>
-                {symbolsToClean.map(sym => (
-                  <button
-                    key={sym}
-                    onClick={() =>
-                      handleQuickAction('remove_symbol', { symbol: sym })
-                    }
-                    className='w-10 h-10 flex items-center justify-center rounded-lg font-mono font-bold border bg-[var(--bg-2)] border-[var(--border-1)] text-[var(--text-1)] hover:bg-red-500 hover:text-white'
-                  >
-                    {sym}
-                  </button>
-                ))}
+            {/* 5. INPUT IA (DEBAJO DE LOS BOTONES) */}
+            <div className='rounded-3xl p-1.5 border-2 border-[var(--border-brand)] bg-[var(--bg-1)] shadow-[var(--shadow-brand-glow)] overflow-hidden'>
+              <div className='flex flex-col gap-1'>
+                <input
+                  value={comando}
+                  onChange={e => setComando(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleAIAction()}
+                  placeholder={t.placeholder_ai}
+                  className='w-full py-3 px-4 bg-transparent outline-none text-[var(--text-1)] font-bold text-xs'
+                />
+                <button
+                  onClick={handleAIAction}
+                  disabled={isLoading || !comando}
+                  className='w-full bg-[var(--bg-brand)] text-white py-3 rounded-2xl font-black text-[10px] uppercase tracking-tight hover:opacity-90 disabled:opacity-30 transition-all flex items-center justify-center gap-2'
+                >
+                  {isLoading ? (
+                    <RefreshCw className='w-4 h-4 animate-spin' />
+                  ) : (
+                    <Wand2 className='w-4 h-4' />
+                  )}
+                  {t.btn_ai}
+                </button>
               </div>
             </div>
-            <div className='grid grid-cols-1 gap-2 pt-4 border-t border-[var(--border-1)]'>
-              <button
-                onClick={() => handleQuickAction('no_spaces')}
-                className='py-2 px-3 flex items-center gap-2 font-bold rounded-lg text-sm border bg-[var(--bg-2)] border-[var(--border-1)] text-red-500 hover:bg-red-500/10'
-              >
-                {t.cleanup.no_spaces}
-              </button>
-              <button
-                onClick={() => handleQuickAction('spaces')}
-                className='py-2 px-3 rounded-lg text-sm border bg-[var(--bg-2)] border-[var(--border-1)] text-[var(--text-1)] hover:border-[var(--border-brand)]'
-              >
-                {t.cleanup.double_spaces}
-              </button>
-              <button
-                onClick={() => handleQuickAction('stripHtml')}
-                className='py-2 px-3 rounded-lg text-sm border bg-[var(--bg-2)] border-[var(--border-1)] text-[var(--text-1)] hover:border-[var(--border-brand)]'
-              >
-                {t.cleanup.strip_html}
-              </button>
-              <button
-                onClick={() => handleQuickAction('reverse')}
-                className='py-2 px-3 rounded-lg text-sm border bg-[var(--bg-2)] border-[var(--border-1)] text-[var(--text-1)] hover:border-[var(--border-brand)]'
-              >
-                {t.cleanup.reverse}
-              </button>
-            </div>
+
+            <p className='text-[9px] font-black text-[var(--text-brand)] uppercase tracking-widest px-2 italic text-center opacity-70'>
+              {t.helper_text}
+            </p>
           </div>
         </div>
       </div>
     </div>
   )
-}
 
-/* =====================================================
-   MÓDULO 9: GENERADOR DE HASHTAGS (CON PROTOCOLO i18n)
-===================================================== */
-function HashtagModule ({ lang }: { lang: string }) {
-  // TRADUCCIONES LOCALES DEL MÓDULO
-  const t = {
-    es: {
-      title: 'Generador de Hashtags',
-      desc: 'Escribe palabras separadas por comas o espacios y conviértelas en hashtags listos.',
-      label_input: 'Tus Palabras o Frase',
-      placeholder: 'Ej: seo, wordpress, rendimiento web...',
-      btn_clean: 'Limpiar área',
-      result_title: 'Hashtags Generados',
-      result_empty: '#tus #hashtags #apareceran #aqui',
-      btn_copy: 'Copiar Hashtags',
-      btn_copied: 'Copiado ✓'
-    },
-    en: {
-      title: 'Hashtag Generator',
-      desc: 'Type words separated by commas or spaces and convert them into ready-to-use hashtags.',
-      label_input: 'Your Words or Phrase',
-      placeholder: 'Ex: seo, wordpress, web performance...',
-      btn_clean: 'Clear area',
-      result_title: 'Generated Hashtags',
-      result_empty: '#your #hashtags #will #appear #here',
-      btn_copy: 'Copy Hashtags',
-      btn_copied: 'Copied ✓'
-    }
-  }[lang as 'es' | 'en']
-
-  const [text, setText] = useState('')
-  const [isCopied, setIsCopied] = useState(false)
-
-  const generateHashtags = () => {
-    if (!text.trim()) return ''
-    return text
-      .split(/[\s,]+/)
-      .filter(w => w.trim().length > 0)
-      .map(w => '#' + w.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]/g, ''))
-      .join(' ')
-  }
-  const result = generateHashtags()
-
-  const handleCopy = async () => {
-    if (!result) return
+  // Función auxiliar para las acciones rápidas
+  async function executeQuickAction (prompt: string, label: string) {
+    setIsLoading(true)
     try {
-      await navigator.clipboard.writeText(result)
-      setIsCopied(true)
-      setTimeout(() => setIsCopied(false), 2000)
-    } catch (err) {
-      console.error('Fallo al copiar', err)
-    }
-  }
-
-  return (
-    <div className='animate-fade-in space-y-6'>
-      <div className='text-center md:text-left'>
-        <h2 className='text-2xl md:text-3xl font-bold mb-2 text-[var(--text-1)]'>
-          {t.title}
-        </h2>
-        <p className='text-[var(--text-2)]'>{t.desc}</p>
-      </div>
-
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8'>
-        <div className='rounded-2xl p-4 md:p-6 shadow-[var(--shadow-1)] flex flex-col gap-3 border bg-[var(--bg-1)] border-[var(--border-1)]'>
-          <label className='text-sm font-semibold text-[var(--text-1)]'>
-            {t.label_input}
-          </label>
-          <textarea
-            rows={5}
-            value={text}
-            onChange={e => setText(e.target.value)}
-            placeholder={t.placeholder}
-            className='w-full rounded-xl p-4 outline-none transition-colors resize-none bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)] focus:border-[var(--border-brand)]'
-          />
-          <button
-            onClick={() => setText('')}
-            className='text-xs transition-colors self-start text-[var(--text-2)] hover:text-[var(--text-brand)]'
-          >
-            {t.btn_clean}
-          </button>
-        </div>
-
-        <div className='rounded-2xl p-4 md:p-6 shadow-inner flex flex-col min-h-[200px] border bg-[var(--bg-2)] border-[var(--border-1)]'>
-          <h3 className='font-bold mb-4 text-[var(--text-brand)]'>
-            {t.result_title}
-          </h3>
-          <div className='flex-grow p-4 rounded-xl text-sm break-all border bg-[var(--bg-2)] border-[var(--border-1)] text-[var(--text-1)] font-mono'>
-            {result || (
-              <span className='opacity-50 text-[var(--text-2)]'>
-                {t.result_empty}
-              </span>
-            )}
-          </div>
-          <button
-            onClick={handleCopy}
-            disabled={!result}
-            className={`relative mt-4 w-full flex items-center justify-center overflow-hidden gap-2 font-bold py-3 rounded-xl transition-all disabled:opacity-50 text-white ${
-              isCopied
-                ? 'shadow-[0_0_15px_var(--text-success)] bg-[var(--text-success)]'
-                : 'hover:opacity-90 bg-[var(--bg-brand)]'
-            }`}
-          >
-            <AnimatePresence mode='wait'>
-              {isCopied ? (
-                <motion.div
-                  key='copied'
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -20, opacity: 0 }}
-                  className='flex items-center gap-2 absolute'
-                >
-                  {t.btn_copied}
-                </motion.div>
-              ) : (
-                <motion.div
-                  key='normal'
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -20, opacity: 0 }}
-                  className='flex items-center gap-2 absolute'
-                >
-                  <Copy className='w-5 h-5' /> {t.btn_copy}
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <div className='invisible flex items-center gap-2'>
-              <Copy className='w-5 h-5' /> {t.btn_copy}
-            </div>
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-/* =====================================================
-   MÓDULO 10: GENERADOR DE CONTRASEÑAS (CON PROTOCOLO i18n)
-===================================================== */
-function PasswordModule ({ lang }: { lang: string }) {
-  // TRADUCCIONES LOCALES DEL MÓDULO
-  const t = {
-    es: {
-      title: 'Generador de Contraseñas',
-      desc: 'Crea contraseñas seguras y aleatorias para tus sitios o bases de datos.',
-      placeholder: 'Haz_clic_para_generar_***',
-      btn_copied: 'Copiado ✓',
-      security_level: 'Nivel de Seguridad',
-      levels: {
-        normal: { title: 'Normal', desc: '8 Caracteres' },
-        medium: { title: 'Medio', desc: '12 Caracteres' },
-        high: { title: 'Alto (Seguro)', desc: '20 Caracteres' }
+      const res = await fetch('/api/corrector', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ texto: input, comando: prompt, lang })
+      })
+      const data = await res.json()
+      if (data.success) {
+        setOutput(data.resultado)
+        setInfoIA(`${label} completado.`)
       }
-    },
-    en: {
-      title: 'Password Generator',
-      desc: 'Create secure and random passwords for your sites or databases.',
-      placeholder: 'Click_to_generate_***',
-      btn_copied: 'Copied ✓',
-      security_level: 'Security Level',
-      levels: {
-        normal: { title: 'Normal', desc: '8 Characters' },
-        medium: { title: 'Medium', desc: '12 Characters' },
-        high: { title: 'High (Secure)', desc: '20 Characters' }
-      }
-    }
-  }[lang as 'es' | 'en']
-
-  const [password, setPassword] = useState(t.placeholder)
-  const [isCopied, setIsCopied] = useState(false)
-
-  const generatePassword = (level: 'normal' | 'medio' | 'alto') => {
-    const chars =
-      level === 'normal'
-        ? 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-        : 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~|}{[]:;?><,./-='
-    const len = level === 'normal' ? 8 : level === 'medio' ? 12 : 20
-    let result = ''
-    for (let i = 0; i < len; i++)
-      result += chars[Math.floor(Math.random() * chars.length)]
-    setPassword(result)
-  }
-
-  const handleCopy = async () => {
-    if (password === t.placeholder) return
-    try {
-      await navigator.clipboard.writeText(password)
-      setIsCopied(true)
-      setTimeout(() => setIsCopied(false), 2000)
     } catch (err) {
-      console.error('Fallo al copiar', err)
+      setInfoIA('Error en acción rápida')
+    } finally {
+      setIsLoading(false)
     }
   }
-
-  return (
-    <div className='animate-fade-in space-y-6'>
-      <div className='text-center md:text-left'>
-        <h2 className='text-2xl md:text-3xl font-bold mb-2 text-[var(--text-1)]'>
-          {t.title}
-        </h2>
-        <p className='text-[var(--text-2)]'>{t.desc}</p>
-      </div>
-
-      <div className='rounded-2xl p-6 md:p-8 shadow-[var(--shadow-1)] flex flex-col items-center justify-center max-w-2xl mx-auto mt-6 md:mt-10 border bg-[var(--bg-1)] border-[var(--border-1)]'>
-        <div className='w-full rounded-2xl p-4 md:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 border bg-[var(--bg-2)] border-[var(--border-1)]'>
-          <span className='text-xl md:text-3xl font-mono break-all text-center sm:text-left tracking-wider text-[var(--text-1)]'>
-            {password}
-          </span>
-          <button
-            onClick={handleCopy}
-            className={`relative p-4 rounded-xl transition-all flex-shrink-0 flex items-center justify-center overflow-hidden w-16 h-16 ${
-              isCopied
-                ? 'shadow-[0_0_15px_var(--text-success)] text-white bg-[var(--text-success)]'
-                : 'hover:opacity-90 bg-[var(--bg-brand-hover)] text-[var(--text-brand)] hover:bg-[var(--bg-brand)] hover:text-white'
-            }`}
-          >
-            <AnimatePresence mode='wait'>
-              {isCopied ? (
-                <motion.div
-                  key='copied'
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -20, opacity: 0 }}
-                  className='absolute text-[10px] font-bold'
-                >
-                  {t.btn_copied}
-                </motion.div>
-              ) : (
-                <motion.div
-                  key='normal'
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -20, opacity: 0 }}
-                  className='absolute'
-                >
-                  <Copy className='w-6 h-6' />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </button>
-        </div>
-
-        <h3 className='text-sm font-bold uppercase tracking-wider mb-4 text-[var(--text-2)]'>
-          {t.security_level}
-        </h3>
-        <div className='grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 w-full'>
-          <button
-            onClick={() => generatePassword('normal')}
-            className='py-4 px-4 rounded-xl flex flex-col items-center gap-1 transition-all border bg-[var(--bg-2)] border-[var(--border-1)] hover:border-green-500'
-          >
-            <span className='font-bold text-[var(--text-1)]'>
-              {t.levels.normal.title}
-            </span>
-            <span className='text-xs text-[var(--text-2)]'>
-              {t.levels.normal.desc}
-            </span>
-          </button>
-          <button
-            onClick={() => generatePassword('medio')}
-            className='py-4 px-4 rounded-xl flex flex-col items-center gap-1 transition-all border bg-[var(--bg-2)] border-[var(--border-1)] hover:border-yellow-500'
-          >
-            <span className='font-bold text-[var(--text-1)]'>
-              {t.levels.medium.title}
-            </span>
-            <span className='text-xs text-[var(--text-2)]'>
-              {t.levels.medium.desc}
-            </span>
-          </button>
-          <button
-            onClick={() => generatePassword('alto')}
-            className='py-4 px-4 rounded-xl flex flex-col items-center gap-1 transition-all border bg-[var(--bg-2)] border-[var(--border-1)] hover:border-red-500'
-          >
-            <span className='font-bold text-[var(--text-1)]'>
-              {t.levels.high.title}
-            </span>
-            <span className='text-xs text-[var(--text-2)]'>
-              {t.levels.high.desc}
-            </span>
-          </button>
-        </div>
-      </div>
-    </div>
-  )
 }
-
 /* =====================================================
-   CASCARÓN DEL ERP (CON PROTOCOLO i18n)
+   CASCARÓN DEL ERP (REFACTORIZADO & PREMIUM)
 ===================================================== */
 export default function SuiteTextPage ({
   params: { lang }
 }: {
   params: { lang: string }
 }) {
-  // TRADUCCIONES PARA EL LAYOUT GLOBAL
   const t = {
     es: {
       sidebar: {
         title: 'Suite Text',
         subtitle: 'SEO & Performance',
-        donate_title: '¿Te es útil la Suite?',
+        donate_title: 'Soportar el proyecto',
         donate_methods: { paypal: 'PayPal', payo: 'Payo', payu: 'PayU' }
       },
       modal: {
         title: 'Donar con Payoneer',
-        desc: 'Para apoyarme a través de Payoneer, por favor envía tu donación utilizando mi correo electrónico asociado. ¡Mil gracias! ☕',
+        desc: 'Utiliza el siguiente correo asociado para realizar tu transferencia.',
         label_email: 'Correo Payoneer',
-        copied: 'Copiado ✓'
-      },
-      footer: {
-        rights: '© 2026 Suite Text - Todos los derechos reservados.',
-        heart: 'Desarrollado con ❤️ para la comunidad'
+        copied: 'Copiado'
       },
       menu: [
-        { id: 'paint', label: 'Pintura y Sombras' },
-        { id: 'counter', label: 'Contador & Corrector' },
-        { id: 'transform', label: 'Transformador' },
-        { id: 'converters', label: 'Conversores URL' },
-        { id: 'hashtags', label: 'Hashtags' },
-        { id: 'passwords', label: 'Contraseñas' },
-        { id: 'lorem', label: 'Generador Lorem' },
+        { id: 'transform', label: 'SuiteText Intelligence' },
+        { id: 'counter', label: 'Corrector Pro' },
         { id: 'whatsapp', label: 'Link WhatsApp' },
         { id: 'qr', label: 'Código QR' },
-        { id: 'images', label: 'Optimizador WebP' }
+        { id: 'images', label: 'Optimizador WebP' },
+        { id: 'paint', label: 'Pintura y Sombras' }
       ]
     },
     en: {
       sidebar: {
         title: 'Suite Text',
         subtitle: 'SEO & Performance',
-        donate_title: 'Is this Suite useful?',
+        donate_title: 'Support Project',
         donate_methods: { paypal: 'PayPal', payo: 'Payo', payu: 'PayU' }
       },
       modal: {
         title: 'Donate with Payoneer',
-        desc: 'To support me via Payoneer, please send your donation using my associated email. Thank you so much! ☕',
+        desc: 'Use the following associated email to make your transfer.',
         label_email: 'Payoneer Email',
-        copied: 'Copied ✓'
-      },
-      footer: {
-        rights: '© 2026 Suite Text - All rights reserved.',
-        heart: 'Developed with ❤️ for the community'
+        copied: 'Copied'
       },
       menu: [
-        { id: 'paint', label: 'Painting and Shadows' },
-        { id: 'counter', label: 'Word Counter & Fixer' },
-        { id: 'transform', label: 'Transformer' },
-        { id: 'converters', label: 'URL Converters' },
-        { id: 'hashtags', label: 'Hashtags' },
-        { id: 'passwords', label: 'Passwords' },
-        { id: 'lorem', label: 'Lorem Generator' },
+        { id: 'transform', label: 'SuiteText Intelligence' },
+        { id: 'counter', label: 'Pro Proofreader' },
         { id: 'whatsapp', label: 'WhatsApp Link' },
         { id: 'qr', label: 'QR Code' },
-        { id: 'images', label: 'WebP Optimizer' }
+        { id: 'images', label: 'WebP Optimizer' },
+        { id: 'paint', label: 'Paint & Shadows' }
       ]
     }
   }[lang as 'es' | 'en']
 
-  const [activeTab, setActiveTab] = useState('paint')
+  // ESTADO INICIAL: SuiteText Intelligence (Módulo 8)
+  const [activeTab, setActiveTab] = useState('transform')
   const [donationModal, setDonationModal] = useState<null | 'payoneer'>(null)
   const [copiedData, setCopiedData] = useState<string>('')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  // Mapeo de iconos (Blindaje Visual - No se traduce)
   const menuIcons: Record<string, React.ReactNode> = {
-    paint: <Palette className='w-5 h-5' />,
-    analyzer: <Search className='w-5 h-5' />,
+    transform: <Wand2 className='w-5 h-5' />,
     counter: <BarChart2 className='w-5 h-5' />,
-    transform: <Type className='w-5 h-5' />,
-    converters: <ArrowRightLeft className='w-5 h-5' />,
-    hashtags: <Hash className='w-5 h-5' />,
-    passwords: <Key className='w-5 h-5' />,
-    lorem: <AlignLeft className='w-5 h-5' />,
     whatsapp: <MessageCircle className='w-5 h-5' />,
     qr: <QrCode className='w-5 h-5' />,
-    images: <ImageIcon className='w-5 h-5' />
+    images: <ImageIcon className='w-5 h-5' />,
+    paint: <Palette className='w-5 h-5' />
   }
 
   const handleCopyData = (text: string, id: string) => {
@@ -3257,187 +3596,175 @@ export default function SuiteTextPage ({
   }
 
   return (
-    <div className='min-h-screen pt-40 md:pt-50 pb-8 md:pb-12 flex flex-col relative bg-[var(--bg-body)]'>
-      {/* MODAL DE DONACIONES */}
-      {donationModal && (
-        <div className='fixed inset-0 z-[9999] flex items-center justify-center p-4 animate-fade-in bg-black/80 backdrop-blur-sm'>
-          <div className='rounded-2xl w-full max-w-md shadow-2xl relative overflow-hidden border bg-[var(--bg-1)] border-[var(--border-1)]'>
-            <div className='p-4 border-b flex justify-between items-center bg-[var(--bg-2)] border-[var(--border-1)]'>
-              <h3 className='font-bold flex items-center gap-2 text-[var(--text-1)]'>
-                <Heart className='w-5 h-5 text-red-500 fill-red-500' />{' '}
-                {t.modal.title}
-              </h3>
-              <button
-                onClick={() => setDonationModal(null)}
-                className='transition-colors text-[var(--text-2)] hover:text-red-500'
-              >
-                <XCircle className='w-6 h-6' />
-              </button>
-            </div>
-            <div className='p-6 space-y-6'>
-              <p className='text-sm leading-relaxed text-[var(--text-2)]'>
-                {t.modal.desc}
-              </p>
-              <div className='space-y-2'>
-                <label className='text-xs font-bold uppercase text-[var(--text-2)]'>
-                  {t.modal.label_email}
-                </label>
-                <div className='flex gap-2'>
-                  <input
-                    readOnly
-                    value='loaizacarmonaa@gmail.com'
-                    className='w-full rounded-lg px-4 py-3 text-sm outline-none font-mono bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)]'
-                  />
-                  <button
-                    onClick={() =>
-                      handleCopyData(
-                        'loaizacarmonaa@gmail.com',
-                        'payoneer_email'
-                      )
-                    }
-                    className={`relative p-3 rounded-lg transition-all flex-shrink-0 flex items-center justify-center w-12 text-white ${
-                      copiedData === 'payoneer_email'
-                        ? 'bg-[var(--text-success)]'
-                        : 'bg-[var(--bg-brand)]'
-                    }`}
-                  >
-                    <AnimatePresence mode='wait'>
-                      {copiedData === 'payoneer_email' ? (
-                        <motion.div
-                          key='copied'
-                          initial={{ y: 20, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                          exit={{ y: -20, opacity: 0 }}
-                          className='absolute text-[9px] font-bold'
-                        >
-                          {t.modal.copied}
-                        </motion.div>
-                      ) : (
-                        <motion.div
-                          key='normal'
-                          initial={{ y: 20, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                          exit={{ y: -20, opacity: 0 }}
-                          className='absolute'
-                        >
-                          <Copy className='w-5 h-5' />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </button>
+    <div className='min-h-screen bg-[var(--bg-body)] flex flex-col relative'>
+      {/* MODAL DE DONACIONES (Z-INDEX SUPERIOR) */}
+      <AnimatePresence>
+        {donationModal && (
+          <div className='fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm'>
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className='rounded-3xl w-full max-w-md shadow-2xl overflow-hidden border bg-[var(--bg-1)] border-[var(--border-1)]'
+            >
+              <div className='p-5 border-b flex justify-between items-center bg-[var(--bg-2)] border-[var(--border-1)]'>
+                <h3 className='font-black text-sm uppercase tracking-widest text-[var(--text-1)] flex items-center gap-2'>
+                  <Heart className='w-4 h-4 text-[var(--text-brand)]' />{' '}
+                  {t.modal.title}
+                </h3>
+                <button
+                  onClick={() => setDonationModal(null)}
+                  className='text-[var(--text-3)] hover:text-red-500 transition-colors'
+                >
+                  <XCircle className='w-6 h-6' />
+                </button>
+              </div>
+              <div className='p-8 space-y-6'>
+                <p className='text-sm font-medium text-[var(--text-2)]'>
+                  {t.modal.desc}
+                </p>
+                <div className='space-y-2'>
+                  <label className='text-[10px] font-black uppercase text-[var(--text-3)]'>
+                    {t.modal.label_email}
+                  </label>
+                  <div className='flex gap-2'>
+                    <input
+                      readOnly
+                      value='loaizacarmonaa@gmail.com'
+                      className='w-full rounded-xl px-4 py-3 text-xs outline-none font-mono font-bold bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)]'
+                    />
+                    <button
+                      onClick={() =>
+                        handleCopyData(
+                          'loaizacarmonaa@gmail.com',
+                          'payoneer_email'
+                        )
+                      }
+                      className={`relative px-4 rounded-xl transition-all flex items-center justify-center text-white ${
+                        copiedData === 'payoneer_email'
+                          ? 'bg-[var(--bg-success)]'
+                          : 'bg-[var(--bg-brand)] hover:opacity-90'
+                      }`}
+                    >
+                      <AnimatePresence mode='wait'>
+                        {copiedData === 'payoneer_email' ? (
+                          <motion.span
+                            key='c'
+                            initial={{ y: 5, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            className='text-[9px] font-black uppercase'
+                          >
+                            {t.modal.copied}
+                          </motion.span>
+                        ) : (
+                          <motion.div
+                            key='i'
+                            initial={{ y: 5, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                          >
+                            <Copy className='w-4 h-4' />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* HEADER MÓVIL */}
-      <div className='top-36 left-0 right-0 z-50 md:hidden p-4 border-b bg-[var(--bg-1)] border-[var(--border-1)] backdrop-blur-md'>
-        <div className='flex items-center justify-between'>
-          <h1 className='text-xl font-bold flex items-center gap-2 text-[var(--text-1)]'>
-            <Zap className='w-6 h-6 text-[var(--text-brand)]' />{' '}
-            {t.sidebar.title}
-          </h1>
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className='p-2 rounded-lg bg-[var(--bg-2)] text-[var(--text-1)]'
-          >
-            {mobileMenuOpen ? (
-              <X className='w-6 h-6' />
-            ) : (
-              <Menu className='w-6 h-6' />
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* MENÚ MÓVIL OVERLAY */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className='fixed inset-0 z-40 md:hidden bg-black/50 backdrop-blur-sm'
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            <motion.div
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              className='absolute left-0 top-[250px] bottom-0 w-72 overflow-y-auto p-4 border-r bg-[var(--bg-1)] border-[var(--border-1)] shadow-2xl'
-              onClick={e => e.stopPropagation()}
-            >
-              <nav className='flex flex-col gap-1'>
-                {t.menu.map(item => (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      setActiveTab(item.id)
-                      setMobileMenuOpen(false)
-                    }}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                      activeTab === item.id
-                        ? 'bg-[var(--bg-brand-hover)] border-[var(--border-brand)] text-[var(--text-brand)]'
-                        : 'text-[var(--text-2)] hover:bg-[var(--bg-2)]'
-                    }`}
-                  >
-                    {menuIcons[item.id]} {item.label}
-                  </button>
-                ))}
-              </nav>
             </motion.div>
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
-      <div className='w-full max-w-[1400px] mx-auto px-4 md:px-5 flex-grow flex flex-col md:flex-row gap-4 md:gap-6'>
-        {/* SIDEBAR ESCRITORIO */}
-        <aside className='hidden md:flex w-72 flex-shrink-0 rounded-2xl flex-col shadow-[var(--shadow-1)] h-[calc(100vh-8rem)] sticky top-24 border bg-[var(--bg-1)] border-[var(--border-1)] overflow-hidden'>
-          <div className='p-6 pb-4 border-b border-[var(--border-1)]'>
-            <h1 className='text-xl font-bold flex items-center gap-2 text-[var(--text-1)]'>
+      {/* NAVEGACIÓN MÓVIL (TOP BAR) */}
+      <div className='relative md:hidden px-4 pt-40 pb-4 bg-[var(--bg-1)] border-b border-[var(--border-1)] flex items-center justify-between shadow-sm'>
+        <div className='flex items-center gap-2'>
+          <Zap className='w-5 h-5 text-[var(--text-brand)]' />
+          <span className='font-black text-sm uppercase tracking-tighter text-[var(--text-1)]'>
+            {t.sidebar.title}
+          </span>
+        </div>
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className='p-2 rounded-lg bg-[var(--bg-2)] border border-[var(--border-1)] text-[var(--text-1)] active:scale-95 transition-transform'
+        >
+          {mobileMenuOpen ? (
+            <X className='w-5 h-5' />
+          ) : (
+            <Menu className='w-5 h-5' />
+          )}
+        </button>
+      </div>
+
+      <div className='w-full max-w-[1400px] mx-auto px-4 md:px-6 flex-grow flex flex-col md:flex-row gap-6 pt-6 md:pt-40 pb-12'>
+        {/* SIDEBAR (Escritorio y Drawer Móvil) */}
+        <aside
+          className={`
+          ${
+            mobileMenuOpen
+              ? 'flex fixed inset-x-4 top-50 z-[150] h-auto shadow-2xl'
+              : 'hidden'
+          } 
+          md:flex md:sticky md:top-32 md:h-[calc(100vh-12rem)] md:w-72 flex-shrink-0 
+          flex-col border bg-[var(--bg-1)] border-[var(--border-1)] overflow-hidden shadow-[var(--shadow-1)]
+        `}
+        >
+          <div className='p-6 border-b border-[var(--border-1)] bg-[var(--bg-2)]/50'>
+            <h1 className='text-xl font-black flex items-center gap-2 text-[var(--text-1)] tracking-tighter'>
               <Zap className='w-6 h-6 text-[var(--text-brand)]' />{' '}
               {t.sidebar.title}
             </h1>
-            <p className='text-xs mt-1 tracking-wider uppercase text-[var(--text-2)]'>
+            <p className='text-[9px] font-black uppercase tracking-[0.2em] text-[var(--text-3)] mt-1 opacity-70'>
               {t.sidebar.subtitle}
             </p>
           </div>
-          <nav className='flex-grow overflow-y-auto p-4 flex flex-col gap-1'>
+
+          <nav className='flex-grow overflow-y-auto p-3 flex flex-col gap-1 custom-scrollbar'>
             {t.menu.map(item => (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                  activeTab === item.id
-                    ? 'bg-[var(--bg-brand-hover)] border-[var(--border-brand)] text-[var(--text-brand)] border'
-                    : 'text-[var(--text-2)] hover:bg-[var(--bg-2)]'
-                }`}
+                onClick={() => {
+                  setActiveTab(item.id)
+                  setMobileMenuOpen(false)
+                }}
+                className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl text-xs font-black uppercase tracking-tight transition-all
+                  ${
+                    activeTab === item.id
+                      ? 'bg-[var(--bg-brand-hover)] border border-[var(--border-brand)] text-[var(--text-brand)] shadow-sm'
+                      : 'text-[var(--text-2)] hover:bg-[var(--bg-2)] border border-transparent'
+                  }`}
               >
-                {menuIcons[item.id]} {item.label}
+                <span
+                  className={
+                    activeTab === item.id
+                      ? 'scale-110 transition-transform'
+                      : ''
+                  }
+                >
+                  {menuIcons[item.id]}
+                </span>
+                {item.label}
               </button>
             ))}
           </nav>
 
-          <div className='p-4 border-t border-[var(--border-1)] bg-[var(--bg-2)]'>
-            <div className='rounded-xl p-4 text-center space-y-3 border bg-[var(--bg-1)] border-[var(--border-brand)]'>
-              <Heart className='w-6 h-6 mx-auto animate-pulse text-red-500 fill-red-500' />
-              <h4 className='text-sm font-bold text-[var(--text-1)]'>
+          {/* DONACIONES */}
+          <div className='p-4 mt-auto border-t border-[var(--border-1)] bg-[var(--bg-2)]/30'>
+            <div className='rounded-2xl p-4 space-y-3 border bg-[var(--bg-1)] border-[var(--border-1)] shadow-sm'>
+              <h4 className='text-[10px] font-black uppercase tracking-widest text-center text-[var(--text-2)]'>
                 {t.sidebar.donate_title}
               </h4>
-              <div className='grid grid-cols-3 gap-2 pt-1'>
+              <div className='grid grid-cols-3 gap-1.5'>
                 <a
                   href='https://www.paypal.com/donate/?hosted_button_id=CB37A97E6SSPN'
                   target='_blank'
                   rel='noopener'
-                  className='py-2 rounded-lg bg-[var(--bg-2)] text-[10px] font-bold border border-[var(--border-1)] hover:border-[#00457C]'
+                  className='py-2 rounded-lg bg-[var(--bg-2)] text-[9px] font-black uppercase border border-[var(--border-1)] hover:border-[var(--text-brand)] text-center transition-all text-[var(--text-1)]'
                 >
                   {t.sidebar.donate_methods.paypal}
                 </a>
                 <button
                   onClick={() => setDonationModal('payoneer')}
-                  className='py-2 rounded-lg bg-[var(--bg-2)] text-[10px] font-bold border border-[var(--border-1)] hover:border-[#FF4800]'
+                  className='py-2 rounded-lg bg-[var(--bg-2)] text-[9px] font-black uppercase border border-[var(--border-1)] hover:border-[var(--text-brand)] transition-all text-[var(--text-1)]'
                 >
                   {t.sidebar.donate_methods.payo}
                 </button>
@@ -3445,7 +3772,7 @@ export default function SuiteTextPage ({
                   href='https://biz.payulatam.com/L0f83572D8D5B13'
                   target='_blank'
                   rel='noopener'
-                  className='py-2 rounded-lg bg-[var(--bg-2)] text-[10px] font-bold border border-[var(--border-1)] hover:border-[#A5C313]'
+                  className='py-2 rounded-lg bg-[var(--bg-2)] text-[9px] font-black uppercase border border-[var(--border-1)] hover:border-[var(--text-brand)] text-center transition-all text-[var(--text-1)]'
                 >
                   {t.sidebar.donate_methods.payu}
                 </a>
@@ -3454,31 +3781,35 @@ export default function SuiteTextPage ({
           </div>
         </aside>
 
-        {/* ÁREA DE CONTENIDO DINÁMICO */}
-        <main className='flex-grow rounded-2xl p-4 md:p-6 lg:p-10 shadow-[var(--shadow-1)] border bg-[var(--bg-1)] border-[var(--border-1)] overflow-hidden mt-16 md:mt-0'>
-          <div className='animate-fade-in h-full'>
-            {activeTab === 'paint' && <PaintAndShadowsModule lang={lang} />}
-            {activeTab === 'counter' && <WordCounterModule lang={lang} />}
-            {activeTab === 'transform' && <TextTransformerModule lang={lang} />}
-            {activeTab === 'converters' && <TextConvertersModule lang={lang} />}
-            {activeTab === 'hashtags' && <HashtagModule lang={lang} />}
-            {activeTab === 'passwords' && <PasswordModule lang={lang} />}
-            {activeTab === 'lorem' && <LoremIpsumModule lang={lang} />}
-            {activeTab === 'whatsapp' && <WhatsAppModule lang={lang} />}
-            {activeTab === 'qr' && <QrGeneratorModule lang={lang} />}
-            {activeTab === 'images' && <ImageOptimizerModule lang={lang} />}
+        {/* CONTENIDO PRINCIPAL */}
+        <main className='flex-grow min-w-0'>
+          <div className='bg-[var(--bg-1)] border border-[var(--border-1)] rounded-[2.5rem] p-5 md:p-10 shadow-[var(--shadow-2)] min-h-[600px]'>
+            <AnimatePresence mode='wait'>
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                {activeTab === 'transform' && <SuiteTextModule lang={lang} />}
+                {activeTab === 'counter' && <WordCounterModule lang={lang} />}
+                {activeTab === 'whatsapp' && <WhatsAppModule lang={lang} />}
+                {activeTab === 'qr' && <QrGeneratorModule lang={lang} />}
+                {activeTab === 'images' && <ImageOptimizerModule lang={lang} />}
+                {activeTab === 'paint' && <PaintAndShadowsModule lang={lang} />}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* CRÉDITOS DISCRETOS (FUERA DE FOOTER) */}
+          <div className='mt-6 px-4 flex justify-between items-center opacity-40 hover:opacity-100 transition-opacity'>
+            <span className='text-[10px] font-bold text-[var(--text-3)] uppercase tracking-widest'>
+              © 2026 Suite Text
+            </span>
           </div>
         </main>
       </div>
-
-      <footer className='mt-8 md:mt-12 py-8 md:py-12 bg-[var(--gradient-footer)]'>
-        <div className='w-full max-w-[1400px] mx-auto px-4 md:px-5 text-center'>
-          <p className='text-sm text-[var(--text-1)]'>{t.footer.rights}</p>
-          <p className='text-xs mt-2 opacity-75 text-[var(--text-1)]'>
-            {t.footer.heart}
-          </p>
-        </div>
-      </footer>
     </div>
   )
 }

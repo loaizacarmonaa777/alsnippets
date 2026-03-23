@@ -1,0 +1,23 @@
+{
+  "audit": {
+    "header": {
+      "title": "PRO Audit Suite",
+      "subtitle": "Systems Intelligence Analysis"
+    },
+    "modes": {
+      "basic": "Basic Mode (Public)",
+      "advanced": "Advanced Mode (Full Access)"
+    },
+    "sections": {
+      "seo": "SEO Structure",
+      "performance": "Performance",
+      "security": "Security & Malware",
+      "business": "Business Impact"
+    },
+    "scores": {
+      "global": "Global Score",
+      "estimated_time": "Estimated Time",
+      "budget": "Suggested Budget"
+    }
+  }
+}

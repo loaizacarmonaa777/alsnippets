@@ -1,0 +1,23 @@
+{
+  "audit": {
+    "header": {
+      "title": "Suite de Auditoría PRO",
+      "subtitle": "Análisis de Inteligencia de Sistemas"
+    },
+    "modes": {
+      "basic": "Modo Básico (Público)",
+      "advanced": "Modo Avanzado (Acceso Total)"
+    },
+    "sections": {
+      "seo": "Estructura SEO",
+      "performance": "Rendimiento",
+      "security": "Seguridad y Malware",
+      "business": "Impacto de Negocio"
+    },
+    "scores": {
+      "global": "Puntuación Global",
+      "estimated_time": "Tiempo Estimado",
+      "budget": "Presupuesto Sugerido"
+    }
+  }
+}

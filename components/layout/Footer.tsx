@@ -100,10 +100,10 @@ export default function Footer ({ lang, dict }: FooterProps) {
                 <div className='p-2.5 rounded-lg bg-[var(--bg-inverse)] text-[var(--text-inverse)] flex items-center justify-center'>
                   <MapPin size={20} />
                 </div>
-                <span className='leading-tight text-[var(--text-2)] dark:text-[var(--text-white-3)]'>
+                <span className='leading-tight text-[var(--text-1)]'>
                   {f?.locationStreet}
                   <br />
-                  <span className='text-[var(--text-3)] dark:text-[var(--text-white-4)] text-xs font-bold uppercase tracking-wider'>
+                  <span className='text-[var(--text-3)] text-xs font-bold uppercase tracking-wider'>
                     {f?.locationRegion}
                   </span>
                 </span>
@@ -112,7 +112,7 @@ export default function Footer ({ lang, dict }: FooterProps) {
 
             {/* Switcher de Tema con Lucide */}
             <div className='pt-6 flex flex-col items-start gap-6 w-full'>
-              <div className='flex p-1.5 rounded-full gap-1 bg-[var(--bg-2)] dark:bg-[var(--bg-3)] border border-[var(--border-1)] dark:border-[var(--border-2)]'>
+              <div className='flex p-1.5 rounded-full gap-1 bg-[var(--bg-2)] border border-[var(--border-1)]'>
                 {mounted && (
                   <>
                     <button
@@ -141,16 +141,24 @@ export default function Footer ({ lang, dict }: FooterProps) {
                 )}
               </div>
 
-              {/* SOCIAL LINKS - Mantenemos tu lógica de SOCIAL_LINKS pero asegurando colores */}
+              {/* SOCIAL LINKS */}
               <div className='flex gap-4 justify-start md:justify-start w-full pt-4'>
                 {SOCIAL_LINKS.map(({ label, href, Icon }) => (
-                  <motion.div key={label} whileHover={{ y: -2 }}>
+                  <motion.div key={label} whileHover={{ y: -3 }}>
                     <SocialIcon href={href} label={label}>
-                      {/*  Estilos Iconos */}
-                      <div className='w-11 h-11 flex items-center justify-center rounded-xl bg-[var(--bg-2)] dark:bg-[var(--bg-3)] border border-[var(--border-brand)] text-[var(--text-1)] dark:text-[var(--text-white-2)] hover:text-[var(--text-brand)] hover:border-[var(--text-brand)] hover:shadow-[var(--shadow-brand-glow-hover)] transition-all duration-300 overflow-hidden'>
-                        {/* Escala de los iconos */}
-                        <div className='scale-80 flex items-center justify-center'>
-                          <Icon />
+                      <div
+                        className='w-11 h-11 flex items-center justify-center rounded-xl border transition-all duration-300 overflow-hidden 
+                        bg-[var(--bg-2)] 
+                        border-[var(--border-brand)] 
+                        text-[var(--text-1)] 
+                        hover:text-[var(--text-brand)] 
+                        hover:border-[var(--text-brand)] 
+                        hover:shadow-[var(--shadow-brand-glow-hover)]'
+                      >
+                        <div className='scale-75 flex items-center justify-center'>
+                          <span className='text-current flex items-center justify-center'>
+                            <Icon />
+                          </span>
                         </div>
                       </div>
                     </SocialIcon>
@@ -309,9 +317,7 @@ export default function Footer ({ lang, dict }: FooterProps) {
             </h4>
             <FormNewsletter lang={currentLang} />
             <div className='text-base space-y-4 pt-8 text-center md:text-left flex-grow font-medium'>
-              <p className='text-[var(--text-1)] font-bold'>
-                {f?.trust}
-              </p>
+              <p className='text-[var(--text-1)] font-bold'>{f?.trust}</p>
               <ul className='space-y-2 text-sm text-[var(--text-1)]'>
                 <li>{f?.experience}</li>
                 <li>{f?.realOptimization}</li>
