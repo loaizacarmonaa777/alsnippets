@@ -10,7 +10,7 @@ import Step3CrearWeb from './Step3CrearWeb'
 import Step3SEO from './Step3SEO'
 import Step3Horas from './Step3Horas'
 import Step4Resumen from './Step4Resumen'
-import { PRICES, Currency } from './utils/pricingLogic'
+import { PRICES, Currency, getFullBreakdown } from './utils/pricingLogic'
 
 /* =====================================================
     TIPOS Y ESTADO INICIAL
@@ -97,74 +97,55 @@ export default function CotizadorApp ({ lang, dict }: CotizadorAppProps) {
 
   const handleFinalize = async () => {
     if (!turnstileToken) {
-      setApiError(s.waitSecurity)
-      return
+      setApiError(s.waitSecurity);
+      return;
     }
 
-    setIsSubmitting(true)
-    setApiError('')
+    setIsSubmitting(true);
+    setApiError('');
 
-    // --- CÁLCULO DE PRECIOS ---
-    const p = PRICES[formData.moneda as Currency] || PRICES['USD']
-    let total = 0
-
-    switch (formData.servicioPrincipal) {
-      case 'Crear Web':
-        total += p.webBase
-        if (formData.necesitaWooCommerce === 'Sí') total += p.ecommerce
-        if (formData.tieneBranding === 'No') total += p.brandingBase
-        break
-      case 'Soporte':
-        if (formData.necesidadesSoporte.includes('Soporte Global')) {
-          total += p.soporteGlobal
-        } else if (formData.plataformaSoporte === 'Otro') {
-          total += p.mantenimiento * 1.5
-        } else {
-          total += formData.necesidadesSoporte.length * p.mantenimiento
-        }
-        break
-      case 'Por Horas':
-        const rate = formData.tipoHoras === 'Code' ? p.horaCode : p.horaNoCode
-        total += rate * formData.cantidadHoras
-        break
-      case 'SEO':
-        total += p.seoAuditoria
-        break
-    }
+    // LLAMADA A LA NUEVA LÓGICA ÚNICA
+    const calculation = getFullBreakdown(formData);
 
     const formattedTotal = new Intl.NumberFormat(
       formData.moneda === 'COP' ? 'es-CO' : 'en-US',
       {
         style: 'currency',
         currency: formData.moneda,
-        minimumFractionDigits: formData.moneda === 'COP' ? 0 : 2
+        minimumFractionDigits: 0
       }
-    ).format(total)
+    ).format(calculation.total);
+
+    // Creamos el resumen para el email (Desglose legible)
+    const desgloseTexto = calculation.breakdown
+      .map((item: any) => `- ${item.label}: ${new Intl.NumberFormat().format(item.price)}`)
+      .join('\n');
 
     try {
       const response = await fetch('/api/cotizador', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          formData,
+          formData: { ...formData, precioTotal: calculation.total },
           turnstileToken,
           totalFormateado: formattedTotal,
+          desglose: desgloseTexto, // 👈 ENVIAMOS EL DESGLOSE AL EMAIL
           lang
         })
-      })
+      });
 
-      const data = await response.json()
-
+      const data = await response.json();
       if (response.ok && data.success) {
-        setStep(4)
+        setFormData(prev => ({ ...prev, precioTotal: calculation.total }));
+        setStep(4);
       } else {
-        setApiError(data.error || s.errorGen)
-        if (typeof window.turnstile !== 'undefined') window.turnstile.reset()
+        setApiError(data.error || s.errorGen);
+        if (typeof window.turnstile !== 'undefined') window.turnstile.reset();
       }
     } catch (error) {
-      setApiError(s.errorNet)
+      setApiError(s.errorNet);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
   }
 

@@ -1184,8 +1184,8 @@ function PaintAndShadowsModule ({ lang }: { lang: string }) {
           'Texto Normal (16px) - Accesibilidad garantizada con la Suite.',
         sample_large: 'Diseño Inclusivo y Potente.',
         ratio_label: 'Ratio Contraste',
-        ai_title: 'SuiteText AI Recomienda',
-        ai_desc: 'Para este fondo, usa este color de texto:',
+        ai_title: 'Recomencaciión',
+        ai_desc: 'Usa este color en el texto:',
         status_aaa: 'Excelente contraste (Web Pro)',
         status_aa: 'Contraste óptimo',
         status_large: 'Solo para textos grandes',
@@ -1211,7 +1211,7 @@ function PaintAndShadowsModule ({ lang }: { lang: string }) {
         preview: 'Previsualización'
       },
       palettes: {
-        title: 'Generador de Paletas IA',
+        title: 'Generador de Paletas',
         input_hex: 'Color primario',
         input_prompt: '¿De qué trata tu sitio web?',
         placeholder_prompt:
@@ -1286,8 +1286,8 @@ function PaintAndShadowsModule ({ lang }: { lang: string }) {
           'Normal Text (16px) - Accessibility guaranteed with the Suite.',
         sample_large: 'Inclusive and Powerful Design.',
         ratio_label: 'Contrast Ratio',
-        ai_title: 'SuiteText AI Recomienda',
-        ai_desc: 'For this background, use this text color:',
+        ai_title: 'Recommendation',
+        ai_desc: 'Use this color in the text:',
         status_aaa: 'Excellent contrast (Web Pro)',
         status_aa: 'Optimal contrast',
         status_large: 'Large text only',
@@ -1313,7 +1313,7 @@ function PaintAndShadowsModule ({ lang }: { lang: string }) {
         preview: 'Preview'
       },
       palettes: {
-        title: 'AI Palette Generator',
+        title: 'Palette Generator',
         input_hex: 'Primary Color',
         input_prompt: 'What is your website about?',
         placeholder_prompt: 'e.g. Dental clinic, pet store, travel blog...',
@@ -2799,146 +2799,6 @@ function MeshGradientGenerator ({ lang, t, onCopy, isCopied }: any) {
 /* =====================================================
    5. GENERADOR DE FONDOS ANIMADOS (CANVAS ENGINE)
    ===================================================== */
-function WordCounterModule ({ lang }: { lang: string }) {
-  const t = {
-    es: {
-      title: 'Contador & Corrector',
-      desc: 'Analiza métricas de tu texto y obtén una versión mejorada con IA.',
-      label_textarea: 'Texto a analizar',
-      placeholder: 'Pega tu texto aquí...',
-      btn_clean: 'Limpiar',
-      metrics: { words: 'Palabras', chars: 'Letras', spaces: 'Con espacios' },
-      beta_title: 'Corrector IA Profesional',
-      btn_fix: 'Corregir con IA',
-      btn_copy: 'Copiar Corrección',
-      btn_copied: 'Copiado ✓',
-      placeholder_fix: 'El texto mejorado aparecerá aquí...'
-    },
-    en: {
-      title: 'Counter & Fixer',
-      desc: 'Analyze text metrics and get an improved version with AI.',
-      label_textarea: 'Text to analyze',
-      placeholder: 'Paste your text here...',
-      btn_clean: 'Clear',
-      metrics: { words: 'Words', chars: 'Letters', spaces: 'With spaces' },
-      beta_title: 'Professional AI Checker',
-      btn_fix: 'Fix with AI',
-      btn_copy: 'Copy Correction',
-      btn_copied: 'Copied ✓',
-      placeholder_fix: 'The improved text will appear here...'
-    }
-  }[lang as 'es' | 'en']
-
-  const [text, setText] = useState('')
-  const [correctedText, setCorrectedText] = useState('')
-  const [countSpaces, setCountSpaces] = useState(true)
-  const [isCopied, setIsCopied] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-
-  const wordsCount = text.trim() ? text.trim().split(/\s+/).length : 0
-  const charsCount = countSpaces ? text.length : text.replace(/\s/g, '').length
-
-  const handleFixText = async () => {
-    if (!text || text.length < 5) return
-    setIsLoading(true)
-    setCorrectedText('Procesando...')
-
-    try {
-      const res = await fetch('/api/corrector', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ texto: text, lang })
-      })
-      const data = await res.json()
-      if (data.success) {
-        setCorrectedText(data.textoCorregido)
-      } else {
-        setCorrectedText(`Error: ${data.error}`)
-      }
-    } catch (err) {
-      setCorrectedText('Fallo de conexión con el servidor.')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(correctedText)
-    setIsCopied(true)
-    setTimeout(() => setIsCopied(false), 2000)
-  }
-
-  return (
-    <div className='animate-fade-in space-y-6'>
-      <div className='text-left'>
-        <h2 className='text-2xl font-bold mb-2 text-[var(--text-1)] flex items-center gap-3'>
-          <BarChart2 className='w-7 h-7 text-[var(--text-brand)]' />
-          {t.title}
-        </h2>
-        <p className='text-[var(--text-2)] text-sm'>{t.desc}</p>
-      </div>
-
-      <div className='grid grid-cols-1 lg:grid-cols-12 gap-6'>
-        <div className='lg:col-span-8 flex flex-col rounded-[2rem] border bg-[var(--bg-1)] border-[var(--border-1)] overflow-hidden shadow-sm'>
-          <div className='p-4 border-b flex justify-between items-center bg-[var(--bg-2)] border-[var(--border-1)]'>
-            <span className='text-[10px] font-black uppercase tracking-widest text-[var(--text-3)]'>
-              {t.label_textarea}
-            </span>
-            <button
-              onClick={() => {
-                setText('')
-                setCorrectedText('')
-              }}
-              className='text-[10px] font-black uppercase text-red-500'
-            >
-              {t.btn_clean}
-            </button>
-          </div>
-          <textarea
-            value={text}
-            onChange={e => setText(e.target.value)}
-            placeholder={t.placeholder}
-            className='w-full p-6 outline-none resize-none leading-relaxed bg-transparent text-[var(--text-1)] min-h-[300px] text-sm'
-          />
-        </div>
-
-        <div className='lg:col-span-4 space-y-4'>
-          <div className='grid grid-cols-2 gap-4'>
-            <div className='rounded-2xl p-5 border bg-[var(--bg-1)] border-[var(--border-1)] text-center shadow-sm'>
-              <p className='text-[9px] font-black uppercase text-[var(--text-3)] mb-1'>
-                {t.metrics.words}
-              </p>
-              <p className='text-3xl font-black text-[var(--text-1)] tracking-tighter'>
-                {wordsCount}
-              </p>
-            </div>
-            <div className='rounded-2xl p-5 border bg-[var(--bg-1)] border-[var(--border-1)] text-center shadow-sm'>
-              <p className='text-[9px] font-black uppercase text-[var(--text-3)] mb-1'>
-                {t.metrics.chars}
-              </p>
-              <p className='text-3xl font-black text-[var(--text-1)] tracking-tighter'>
-                {charsCount}
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={handleFixText}
-            disabled={isLoading || !text}
-            className='w-full py-4 rounded-2xl font-black text-white bg-[var(--bg-brand)] shadow-lg hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-2 uppercase text-[10px] tracking-widest'
-          >
-            {isLoading ? (
-              <RefreshCw className='w-4 h-4 animate-spin' />
-            ) : (
-              <Zap className='w-4 h-4' />
-            )}
-            {t.btn_fix}
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 function AnimatedBgGenerator ({ lang, t, onCopy, isCopied }: any) {
   const at = t.animated_bg
   const [type, setType] = useState('snow')
@@ -3157,31 +3017,36 @@ function AnimatedBgGenerator ({ lang, t, onCopy, isCopied }: any) {
             <ColorField label='Fondo' val={bgColor} set={setBgColor} />
           </div>
           <div className='pt-4 border-t border-[var(--border-1)] space-y-4'>
-            <ControlRange 
-              label="Opacidad Partículas" 
-              val={particleOpacity} 
-              min={0.1} max={1} step={0.1} 
-              set={setParticleOpacity} 
+            <ControlRange
+              label='Opacidad Partículas'
+              val={particleOpacity}
+              min={0.1}
+              max={1}
+              step={0.1}
+              set={setParticleOpacity}
             />
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase text-[var(--text-3)]">Estilo</label>
-                <select 
-                  value={drawMode} 
-                  onChange={(e) => setDrawMode(e.target.value as any)}
-                  className="w-full p-2.5 bg-[var(--bg-2)] border border-[var(--border-1)] rounded-xl text-[10px] font-bold text-[var(--text-1)] outline-none"
+            <div className='grid grid-cols-2 gap-4'>
+              <div className='space-y-2'>
+                <label className='text-[10px] font-black uppercase text-[var(--text-3)]'>
+                  Estilo
+                </label>
+                <select
+                  value={drawMode}
+                  onChange={e => setDrawMode(e.target.value as any)}
+                  className='w-full p-2.5 bg-[var(--bg-2)] border border-[var(--border-1)] rounded-xl text-[10px] font-bold text-[var(--text-1)] outline-none'
                 >
-                  <option value="fill">Relleno</option>
-                  <option value="stroke">Solo Borde</option>
+                  <option value='fill'>Relleno</option>
+                  <option value='stroke'>Solo Borde</option>
                 </select>
               </div>
               {drawMode === 'stroke' && (
-                <ControlRange 
-                  label="Grosor Borde" 
-                  val={strokeWidth} 
-                  min={1} max={10} 
-                  set={setStrokeWidth} 
+                <ControlRange
+                  label='Grosor Borde'
+                  val={strokeWidth}
+                  min={1}
+                  max={10}
+                  set={setStrokeWidth}
                 />
               )}
             </div>
@@ -3293,19 +3158,31 @@ function SuiteTextModule ({ lang }: { lang: string }) {
   const handleAIAction = async () => {
     if (!comando) return
     setIsLoading(true)
+    setInfoIA('SuiteText AI está pensando...') // Feedback inmediato
+
     try {
       const res = await fetch('/api/corrector', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ texto: input, comando, lang })
+        body: JSON.stringify({
+          texto: input || ' ', // Evita enviar texto vacío
+          comando,
+          lang
+        })
       })
+
+      if (!res.ok) throw new Error('Error en el servidor')
+
       const data = await res.json()
       if (data.success) {
         setOutput(data.resultado)
         setInfoIA(data.info)
+      } else {
+        setInfoIA(data.error || 'La IA tuvo un inconveniente')
       }
     } catch (err) {
-      setInfoIA('Error al conectar con SuiteText AI')
+      setInfoIA('Error de conexión con SuiteText AI')
+      console.error(err)
     } finally {
       setIsLoading(false)
     }
@@ -3522,17 +3399,20 @@ function SuiteTextModule ({ lang }: { lang: string }) {
 /* =====================================================
    CASCARÓN DEL ERP (REFACTORIZADO & PREMIUM)
 ===================================================== */
-export default function SuiteTextPage ({
-  params: { lang }
+export default function SuiteTextPage({
+  params
 }: {
   params: { lang: string }
 }) {
+  // 1. Extraemos lang de params (solo una vez)
+  const lang = params.lang;
+
   const t = {
     es: {
       sidebar: {
         title: 'Suite Text',
         subtitle: 'SEO & Performance',
-        donate_title: 'Soportar el proyecto',
+        donate_title: 'Invítame a un café',
         donate_methods: { paypal: 'PayPal', payo: 'Payo', payu: 'PayU' }
       },
       modal: {
@@ -3542,8 +3422,7 @@ export default function SuiteTextPage ({
         copied: 'Copiado'
       },
       menu: [
-        { id: 'transform', label: 'SuiteText Intelligence' },
-        { id: 'counter', label: 'Corrector Pro' },
+        { id: 'transform', label: 'Inteligencia SuiteText' },
         { id: 'whatsapp', label: 'Link WhatsApp' },
         { id: 'qr', label: 'Código QR' },
         { id: 'images', label: 'Optimizador WebP' },
@@ -3554,7 +3433,7 @@ export default function SuiteTextPage ({
       sidebar: {
         title: 'Suite Text',
         subtitle: 'SEO & Performance',
-        donate_title: 'Support Project',
+        donate_title: 'Buy me a coffee',
         donate_methods: { paypal: 'PayPal', payo: 'Payo', payu: 'PayU' }
       },
       modal: {
@@ -3565,7 +3444,6 @@ export default function SuiteTextPage ({
       },
       menu: [
         { id: 'transform', label: 'SuiteText Intelligence' },
-        { id: 'counter', label: 'Pro Proofreader' },
         { id: 'whatsapp', label: 'WhatsApp Link' },
         { id: 'qr', label: 'QR Code' },
         { id: 'images', label: 'WebP Optimizer' },
@@ -3747,35 +3625,78 @@ export default function SuiteTextPage ({
             ))}
           </nav>
 
-          {/* DONACIONES */}
-          <div className='p-4 mt-auto border-t border-[var(--border-1)] bg-[var(--bg-2)]/30'>
-            <div className='rounded-2xl p-4 space-y-3 border bg-[var(--bg-1)] border-[var(--border-1)] shadow-sm'>
-              <h4 className='text-[10px] font-black uppercase tracking-widest text-center text-[var(--text-2)]'>
-                {t.sidebar.donate_title}
-              </h4>
-              <div className='grid grid-cols-3 gap-1.5'>
-                <a
-                  href='https://www.paypal.com/donate/?hosted_button_id=CB37A97E6SSPN'
-                  target='_blank'
-                  rel='noopener'
-                  className='py-2 rounded-lg bg-[var(--bg-2)] text-[9px] font-black uppercase border border-[var(--border-1)] hover:border-[var(--text-brand)] text-center transition-all text-[var(--text-1)]'
-                >
-                  {t.sidebar.donate_methods.paypal}
-                </a>
-                <button
-                  onClick={() => setDonationModal('payoneer')}
-                  className='py-2 rounded-lg bg-[var(--bg-2)] text-[9px] font-black uppercase border border-[var(--border-1)] hover:border-[var(--text-brand)] transition-all text-[var(--text-1)]'
-                >
-                  {t.sidebar.donate_methods.payo}
-                </button>
-                <a
-                  href='https://biz.payulatam.com/L0f83572D8D5B13'
-                  target='_blank'
-                  rel='noopener'
-                  className='py-2 rounded-lg bg-[var(--bg-2)] text-[9px] font-black uppercase border border-[var(--border-1)] hover:border-[var(--text-brand)] text-center transition-all text-[var(--text-1)]'
-                >
-                  {t.sidebar.donate_methods.payu}
-                </a>
+          {/* SECCIÓN DONACIONES REDISEÑADA */}
+          <div className='p-5 mt-auto border-t border-[var(--border-1)] bg-[var(--bg-2)]/30'>
+            <div className='relative group rounded-[2rem] p-5 border bg-[var(--bg-1)] border-[var(--border-1)] shadow-sm overflow-hidden transition-all duration-500 hover:shadow-[var(--shadow-brand-glow)] hover:border-[var(--text-brand)]/30'>
+              
+              {/* Decoración de fondo sutil */}
+              <div className='absolute -top-10 -right-10 w-24 h-24 bg-[var(--text-brand)] opacity-[0.03] blur-2xl rounded-full group-hover:opacity-[0.08] transition-opacity' />
+
+              <div className='relative z-10 space-y-4'>
+                <div className='flex flex-col items-center text-center space-y-1'>
+                  <motion.div
+                    animate={{ 
+                      rotate: [0, -10, 10, -10, 0],
+                      y: [0, -2, 0]
+                    }}
+                    transition={{ 
+                      repeat: Infinity, 
+                      duration: 3, 
+                      ease: "easeInOut" 
+                    }}
+                    className='mb-1'
+                  >
+                    <Heart className='w-5 h-5 text-[var(--text-heart)] fill-[var(--text-heart)]' />
+                  </motion.div>
+                  <h4 className='text-[11px] font-black uppercase tracking-[0.15em] text-[var(--text-1)]'>
+                    {t.sidebar.donate_title}
+                  </h4>
+                </div>
+
+                <div className='grid grid-cols-1 gap-2'>
+                  {/* PAYPAL - Botón Principal */}
+                  <motion.a
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    href='https://www.paypal.com/donate/?hosted_button_id=CB37A97E6SSPN'
+                    target='_blank'
+                    rel='noopener'
+                    className='flex items-center justify-between px-4 py-3 rounded-xl bg-[var(--bg-2)] border border-[var(--border-1)] hover:border-[var(--text-brand)] group/btn transition-all'
+                  >
+                    <span className='text-[10px] font-black uppercase tracking-wider text-[var(--text-2)] group-hover/btn:text-[var(--text-brand)]'>
+                      {t.sidebar.donate_methods.paypal}
+                    </span>
+                    <Zap className='w-3.5 h-3.5 text-[var(--text-brand)] opacity-40 group-hover/btn:opacity-100 group-hover/btn:scale-110 transition-all' />
+                  </motion.a>
+
+                  <div className='grid grid-cols-2 gap-2'>
+                    {/* PAYONEER */}
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setDonationModal('payoneer')}
+                      className='flex items-center justify-center gap-2 py-3 rounded-xl bg-[var(--bg-2)] border border-[var(--border-1)] hover:border-[var(--text-brand)] group/btn transition-all'
+                    >
+                      <span className='text-[9px] font-black uppercase tracking-wider text-[var(--text-2)] group-hover/btn:text-[var(--text-brand)]'>
+                        {t.sidebar.donate_methods.payo}
+                      </span>
+                    </motion.button>
+
+                    {/* PAYU */}
+                    <motion.a
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      href='https://biz.payulatam.com/L0f83572D8D5B13'
+                      target='_blank'
+                      rel='noopener'
+                      className='flex items-center justify-center gap-2 py-3 rounded-xl bg-[var(--bg-2)] border border-[var(--border-1)] hover:border-[var(--text-brand)] group/btn transition-all'
+                    >
+                      <span className='text-[9px] font-black uppercase tracking-wider text-[var(--text-2)] group-hover/btn:text-[var(--text-brand)]'>
+                        {t.sidebar.donate_methods.payu}
+                      </span>
+                    </motion.a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -3793,7 +3714,6 @@ export default function SuiteTextPage ({
                 transition={{ duration: 0.2 }}
               >
                 {activeTab === 'transform' && <SuiteTextModule lang={lang} />}
-                {activeTab === 'counter' && <WordCounterModule lang={lang} />}
                 {activeTab === 'whatsapp' && <WhatsAppModule lang={lang} />}
                 {activeTab === 'qr' && <QrGeneratorModule lang={lang} />}
                 {activeTab === 'images' && <ImageOptimizerModule lang={lang} />}

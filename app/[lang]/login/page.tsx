@@ -51,7 +51,7 @@ export default function LoginPage({ params: { lang } }: { params: { lang: string
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-[var(--bg-body)]">
+    <div className="min-h-screen flex items-center justify-center p-4 mt-30 bg-[var(--bg-body)]">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

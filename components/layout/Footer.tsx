@@ -27,7 +27,7 @@ export default function Footer ({ lang, dict }: FooterProps) {
   return (
     <footer
       className='relative w-full mt-0 pt-16 pb-8 text-[var(--text-1)] dark:text-[var(--text-white-1)]'
-      style={{ background: 'var(--gradient-hero)' }}
+      style={{ background: 'var(--bg-body)' }}
     >
       <div className='container mx-auto px-6 max-w-[1200px]'>
         <div className='grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16'>
@@ -229,7 +229,7 @@ export default function Footer ({ lang, dict }: FooterProps) {
               <ul className='space-y-4 font-medium text-[var(--text-5)]'>
                 <li>
                   <Link
-                    href={`/${currentLang}/suite-text`}
+                    href={`/${currentLang}/proyectos/suite-text`}
                     className='hover:text-[var(--text-1)] transition-all hover:translate-x-2 inline-block'
                   >
                     {f?.suiteText}
@@ -237,7 +237,7 @@ export default function Footer ({ lang, dict }: FooterProps) {
                 </li>
                 <li>
                   <Link
-                    href={`/${currentLang}/barber-short`}
+                    href={`/${currentLang}/proyectos/barber-short`}
                     className='hover:text-[var(--text-1)] transition-all hover:translate-x-2 inline-block'
                   >
                     {f?.barberShort}

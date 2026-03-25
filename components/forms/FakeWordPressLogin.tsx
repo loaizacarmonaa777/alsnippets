@@ -91,7 +91,7 @@ export default function FakeWordPressLogin ({ lang }: FakeWPProps) {
           <img
             src='/logos/stack/01-wordpress.svg'
             alt='WordPress'
-            className='h-20 mx-auto opacity-90 dark:brightness-200'
+            className='h-20 mx-auto'
           />
         </div>
 
@@ -107,7 +107,7 @@ export default function FakeWordPressLogin ({ lang }: FakeWPProps) {
         </div>
 
         {/* Caja login (Blindaje Visual Absoluto) */}
-        <div className='bg-[var(--bg-1)] dark:bg-white p-6 shadow-[var(--shadow-2)] border border-[var(--border-1)] space-y-4 dark:text-black'>
+        <div className='bg-[var(--bg-3)] p-8 pt-14 rounded-sm shadow-[var(--shadow-2)] border border-[var(--border-1)] space-y-6 dark:text-black'>
           <div>
             <label className='block text-sm font-medium mb-1 text-[var(--text-1)]'>
               {t.user}
@@ -165,8 +165,8 @@ export default function FakeWordPressLogin ({ lang }: FakeWPProps) {
         <div className='mt-4 text-sm text-center space-y-2'>
           <div>
             <a
-              href='#'
-              className='text-[var(--text-brand)] hover:underline opacity-90'
+              href={`/${lang}/contacto`}
+              className='text-[var(--text-brand)] hover:text-[var(--text-5)] cursor-pointer transition-colors duration-300'
             >
               {t.lost}
             </a>
@@ -175,7 +175,7 @@ export default function FakeWordPressLogin ({ lang }: FakeWPProps) {
           <div>
             <a
               href={`/${lang}/contacto`}
-              className='text-[var(--text-brand)] hover:underline opacity-90'
+              className='text-[var(--text-brand)] hover:text-[var(--text-5)] cursor-pointer transition-colors duration-300'
             >
               {t.back}
             </a>

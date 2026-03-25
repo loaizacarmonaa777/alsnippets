@@ -76,7 +76,7 @@ export default async function AuditoriaPage ({
                 <p className='text-sm font-medium text-[var(--text-brand)]'>
                   {t.options.audit.note}
                 </p>
-                <p className='text-xs pt-5 text-[var(--text-brand)] hover:text-[var(--text-2)]'>
+                <p className='text-xs pt-5 text-[var(--text-brand)] hover:text-[var(--text-5)] cursor-pointer transition-colors duration-300'>
                   <a href={`/${lang}/devoluciones`} target='_blank'>
                     <i>{t.options.common.refund_link}</i>
                   </a>
@@ -110,7 +110,7 @@ export default async function AuditoriaPage ({
                 <p className='text-sm font-medium text-[var(--text-2)] opacity-80'>
                   {t.options.consulting.note}
                 </p>
-                <p className='text-xs pt-5 text-[var(--text-brand)] hover:text-[var(--text-2)]'>
+                <p className='text-xs pt-5 text-[var(--text-brand)] hover:text-[var(--text-5)] cursor-pointer transition-colors duration-300'>
                   <a href={`/${lang}/devoluciones`} target='_blank'>
                     <i>{t.options.common.refund_link}</i>
                   </a>

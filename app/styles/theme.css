@@ -77,6 +77,7 @@
     --text-brand: #c9a34e;
     --text-inverse: #ffffff; /* Texto blanco puro sobre fondos oscuros */
     --text-success: #15803d; /* Verde para textos de éxito */
+    --text-heart: #b40000;
 
     /* ===== Texto fondo oscuro ===== */
     --text-white-1: #ffffff;
@@ -228,6 +229,7 @@
     --text-brand: #f5d27a;
     --text-inverse: #000000; /* Texto oscuro puro sobre fondos claros */
     --text-success: #4ade80;
+    --text-heart: #fa4747;
 
     /* ===== Texto fondo oscuro ===== */
     --text-white-1: #ffffff;
