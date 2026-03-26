@@ -1,32 +1,36 @@
+// app/[lang]/auditoria/layout.tsx
 import { Metadata } from 'next'
 import { getDictionary } from '@/i18n/get-dictionary'
 
 /* =====================================================
-   METADATA SEO DINÁMICA
+    METADATA SEO DINÁMICA
 ===================================================== */
 export async function generateMetadata({
   params
 }: {
   params: Promise<{ lang: string }>
 }): Promise<Metadata> {
-  const { lang } = await params
-  const dict = await getDictionary(lang as 'es' | 'en')
+  const { lang: rawLang } = await params
+  const lang = rawLang.replace(/^\//, '') as 'es' | 'en'
+  const dict = await getDictionary(lang)
   const t = dict.auditoria.meta
+  const baseUrl = 'https://www.alsnippets.com'
 
   return {
-    title: t.title,
+    // ✅ Regla: El template del RootLayout añadirá el "| Alsnippets"
+    title: "Auditoría", 
     description: t.description,
     keywords: t.keywords,
     openGraph: {
       title: t.og_title,
       description: t.og_description,
-      url: 'https://alsnippets.com/auditoria',
-      siteName: 'Alsnippets',
-      locale: lang === 'en' ? 'en_US' : 'es_ES',
+      url: `${baseUrl}/${lang}/auditoria`,
+      siteName: dict.common.meta.brand,
+      locale: lang === 'en' ? 'en_US' : 'es_CO',
       type: 'website',
       images: [
         {
-          url: '/images/og/og-global-alsnippets.webp',
+          url: '/images/og/openGraph-auditoria.png',
           width: 1200,
           height: 630,
           alt: t.og_alt,
@@ -37,25 +41,17 @@ export async function generateMetadata({
       card: 'summary_large_image',
       title: t.twitter_title,
       description: t.twitter_description,
-      creator: '@alsnippets',
-    },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
-      },
+      images: ['/images/og/openGraph-auditoria.png'],
     },
     alternates: {
-      canonical: 'https://alsnippets.com/auditoria',
+      canonical: `${baseUrl}/${lang}/auditoria`,
     },
   }
 }
 
+/* =====================================================
+    COMPONENTE LAYOUT
+===================================================== */
 export default async function AuditoriaLayout({
   children,
   params
@@ -63,12 +59,13 @@ export default async function AuditoriaLayout({
   children: React.ReactNode
   params: Promise<{ lang: string }>
 }) {
-  const { lang } = await params
-  const dict = await getDictionary(lang as 'es' | 'en')
+  const { lang: rawLang } = await params
+  const lang = rawLang.replace(/^\//, '') as 'es' | 'en'
+  const dict = await getDictionary(lang)
   const s = dict.auditoria.schema
 
   /* =====================================================
-     SCHEMA JSON-LD DINÁMICO
+      SCHEMA JSON-LD DINÁMICO
   ===================================================== */
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -78,10 +75,14 @@ export default async function AuditoriaLayout({
     description: s.description,
     provider: {
       '@type': 'ProfessionalService',
-      name: 'Alsnippets - Adrián Loaiza',
-      image: 'https://alsnippets.com/images/og/og-global-alsnippets.webp',
+      name: 'Alsnippets',
+      image: 'https://www.alsnippets.com/images/og/openGraph-auditoria.png',
       telephone: '+573246454061',
-      url: 'https://alsnippets.com',
+      url: 'https://www.alsnippets.com',
+      address: {
+        '@type': 'PostalAddress',
+        addressCountry: 'CO'
+      }
     },
     areaServed: s.areaServed,
     hasOfferCatalog: {
@@ -99,11 +100,16 @@ export default async function AuditoriaLayout({
 
   return (
     <>
+      {/* Inyección de datos estructurados para Google */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      {children}
+      
+      {/* ✅ IMPORTANTE: Aquí se renderiza la página (page.tsx) */}
+      <section className="relative w-full">
+        {children}
+      </section>
     </>
   )
 }

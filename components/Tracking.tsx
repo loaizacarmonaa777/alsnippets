@@ -1,21 +1,63 @@
 'use client'
 
+import { useEffect } from 'react'
+import { usePathname, useSearchParams } from 'next/navigation'
 import Script from 'next/script'
 
 interface TrackingProps {
-  lang: string // Recibimos el idioma para informar a las plataformas
+  lang: string
   nonce?: string
 }
 
-export default function Tracking ({ lang, nonce }: TrackingProps) {
-  // CONFIGURACIÓN DE IDs (Cámbialos por tus IDs reales)
+export default function Tracking({ lang, nonce }: TrackingProps) {
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
   const GTM_ID = 'GTM-NMM22HG'
   const META_PIXEL_ID = '1828608694503506'
+
+  // ✅ EFECTO PARA RASTREAR NAVEGACIÓN VIRTUAL Y QR
+  useEffect(() => {
+    if (!pathname) return
+
+    // 1. Lógica de atribución para tus tarjetas físicas (QR)
+    let trafficSource = 'web_direct'
+    if (pathname.includes('/tarjetas/')) {
+      trafficSource = 'qr_business_card_profile'
+    }
+
+    // 2. Informar a GTM / GA4
+    if (typeof window !== 'undefined' && (window as any).dataLayer) {
+      (window as any).dataLayer.push({
+        event: 'pageview',
+        page: pathname,
+        language: lang,
+        source_type: trafficSource
+      })
+
+      // Evento específico si escanean tu tarjeta personal
+      if (trafficSource === 'qr_business_card_profile') {
+        (window as any).dataLayer.push({
+          event: 'qr_scan_success',
+          owner: 'Adrian Loaiza',
+          location: 'printed_card_v1'
+        })
+      }
+    }
+
+    // 3. Informar a Meta Pixel
+    if (typeof window !== 'undefined' && typeof (window as any).fbq === 'function') {
+      (window as any).fbq('track', 'PageView', { 
+        language: lang, 
+        page_path: pathname,
+        traffic_origin: trafficSource
+      })
+    }
+  }, [pathname, searchParams, lang])
 
   return (
     <>
       {/* ---------------- GOOGLE TAG MANAGER ---------------- */}
-      {/* PROTOCOLO ALSNIPPETS: Inyectamos el idioma en el dataLayer antes del script principal */}
       <Script id='gtm-datalayer' nonce={nonce} strategy='beforeInteractive'>
         {`
           window.dataLayer = window.dataLayer || [];
@@ -32,12 +74,12 @@ export default function Tracking ({ lang, nonce }: TrackingProps) {
         strategy='afterInteractive'
         dangerouslySetInnerHTML={{
           __html: `
-      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-      })(window,document,'script','dataLayer', '${GTM_ID}');
-    `
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer', '${GTM_ID}');
+          `
         }}
       />
 
@@ -57,7 +99,6 @@ export default function Tracking ({ lang, nonce }: TrackingProps) {
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
             fbq('init', '${META_PIXEL_ID}');
-            // PROTOCOLO ALSNIPPETS: Enviamos el idioma en el PageView para segmentación en Meta Ads
             fbq('track', 'PageView', { language: '${lang}' });
           `
         }}

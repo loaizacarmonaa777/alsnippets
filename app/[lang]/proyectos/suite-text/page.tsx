@@ -3399,13 +3399,13 @@ function SuiteTextModule ({ lang }: { lang: string }) {
 /* =====================================================
    CASCARÓN DEL ERP (REFACTORIZADO & PREMIUM)
 ===================================================== */
-export default function SuiteTextPage({
+export default function SuiteTextPage ({
   params
 }: {
   params: { lang: string }
 }) {
   // 1. Extraemos lang de params (solo una vez)
-  const lang = params.lang;
+  const lang = params.lang
 
   const t = {
     es: {
@@ -3471,6 +3471,17 @@ export default function SuiteTextPage({
     navigator.clipboard.writeText(text)
     setCopiedData(id)
     setTimeout(() => setCopiedData(''), 2000)
+  }
+
+  // ✅ PROTOCOLO ALSNIPPETS: Tracking de intenciones de donación
+  const trackDonationClick = (method: string) => {
+    if (typeof window !== 'undefined' && (window as any).dataLayer) {
+      ;(window as any).dataLayer.push({
+        event: 'donation_intent',
+        donation_method: method, // 'paypal', 'payu', 'payoneer'
+        page_location: 'suite_text_sidebar'
+      })
+    }
   }
 
   return (
@@ -3628,21 +3639,20 @@ export default function SuiteTextPage({
           {/* SECCIÓN DONACIONES REDISEÑADA */}
           <div className='p-5 mt-auto border-t border-[var(--border-1)] bg-[var(--bg-2)]/30'>
             <div className='relative group rounded-[2rem] p-5 border bg-[var(--bg-1)] border-[var(--border-1)] shadow-sm overflow-hidden transition-all duration-500 hover:shadow-[var(--shadow-brand-glow)] hover:border-[var(--text-brand)]/30'>
-              
               {/* Decoración de fondo sutil */}
               <div className='absolute -top-10 -right-10 w-24 h-24 bg-[var(--text-brand)] opacity-[0.03] blur-2xl rounded-full group-hover:opacity-[0.08] transition-opacity' />
 
               <div className='relative z-10 space-y-4'>
                 <div className='flex flex-col items-center text-center space-y-1'>
                   <motion.div
-                    animate={{ 
+                    animate={{
                       rotate: [0, -10, 10, -10, 0],
                       y: [0, -2, 0]
                     }}
-                    transition={{ 
-                      repeat: Infinity, 
-                      duration: 3, 
-                      ease: "easeInOut" 
+                    transition={{
+                      repeat: Infinity,
+                      duration: 3,
+                      ease: 'easeInOut'
                     }}
                     className='mb-1'
                   >
@@ -3661,7 +3671,8 @@ export default function SuiteTextPage({
                     href='https://www.paypal.com/donate/?hosted_button_id=CB37A97E6SSPN'
                     target='_blank'
                     rel='noopener'
-                    className='flex items-center justify-between px-4 py-3 rounded-xl bg-[var(--bg-2)] border border-[var(--border-1)] hover:border-[var(--text-brand)] group/btn transition-all'
+                    onClick={() => trackDonationClick('paypal')} // onClick para el tracking
+                    className='flex items-center justify-between px-4 py-3 ...'
                   >
                     <span className='text-[10px] font-black uppercase tracking-wider text-[var(--text-2)] group-hover/btn:text-[var(--text-brand)]'>
                       {t.sidebar.donate_methods.paypal}
@@ -3674,8 +3685,11 @@ export default function SuiteTextPage({
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      onClick={() => setDonationModal('payoneer')}
-                      className='flex items-center justify-center gap-2 py-3 rounded-xl bg-[var(--bg-2)] border border-[var(--border-1)] hover:border-[var(--text-brand)] group/btn transition-all'
+                      onClick={() => {
+                        setDonationModal('payoneer')
+                        trackDonationClick('payoneer') // onClick para el tracking
+                      }}
+                      className='flex items-center justify-center gap-2 ...'
                     >
                       <span className='text-[9px] font-black uppercase tracking-wider text-[var(--text-2)] group-hover/btn:text-[var(--text-brand)]'>
                         {t.sidebar.donate_methods.payo}
@@ -3689,7 +3703,8 @@ export default function SuiteTextPage({
                       href='https://biz.payulatam.com/L0f83572D8D5B13'
                       target='_blank'
                       rel='noopener'
-                      className='flex items-center justify-center gap-2 py-3 rounded-xl bg-[var(--bg-2)] border border-[var(--border-1)] hover:border-[var(--text-brand)] group/btn transition-all'
+                      onClick={() => trackDonationClick('payu')} // onClick para el tracking
+                      className='flex items-center justify-center gap-2 ...'
                     >
                       <span className='text-[9px] font-black uppercase tracking-wider text-[var(--text-2)] group-hover/btn:text-[var(--text-brand)]'>
                         {t.sidebar.donate_methods.payu}

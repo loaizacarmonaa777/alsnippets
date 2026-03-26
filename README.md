@@ -9,15 +9,21 @@ alsnippets
 │  │  │  └─ route.ts
 │  │  ├─ contact
 │  │  │  └─ route.ts
+│  │  ├─ corrector
+│  │  │  └─ route.ts
 │  │  ├─ cotizador
 │  │  │  └─ route.ts
-│  │  └─ newsletter
+│  │  ├─ newsletter
+│  │  │  └─ route.ts
+│  │  └─ pagespeed
 │  │     └─ route.ts
 │  ├─ favicon-old.ico
 │  ├─ globals.css
 │  ├─ icon.png
 │  ├─ layout.tsx
 │  ├─ not-found.tsx
+│  ├─ robots.ts
+│  ├─ sitemap.ts
 │  ├─ styles
 │  │  ├─ animations.css
 │  │  ├─ base.css
@@ -33,6 +39,7 @@ alsnippets
 │     │     │  │  ├─ AnalyticsDetailView.tsx
 │     │     │  │  ├─ ConflictViewer.tsx
 │     │     │  │  ├─ GeoDetailView.tsx
+│     │     │  │  ├─ InfrastructureDetailView.tsx
 │     │     │  │  ├─ IssueAccordion.tsx
 │     │     │  │  ├─ PerformanceDetailView.tsx
 │     │     │  │  ├─ SecurityDetailView.tsx
@@ -127,8 +134,8 @@ alsnippets
 │  │  └─ PostHero.tsx
 │  ├─ BugCounter.tsx
 │  ├─ contacto
-│  │  ├─ ContactForm.tsx
-│  │  └─ LocationPopup.tsx
+│  │  ├─ AccordionItem.tsx
+│  │  └─ ContactForm.tsx
 │  ├─ cotizador
 │  │  ├─ CotizadorApp.tsx
 │  │  ├─ Step1Datos.tsx
@@ -496,7 +503,8 @@ alsnippets
 │  │  │  ├─ adrian-loaiza-contacto-adrian-sentado.webp
 │  │  │  ├─ adrian-loaiza-contacto.webp
 │  │  │  ├─ alsnippets-hero-contact-desktop.webp
-│  │  │  └─ alsnippets-hero-contact-mobile.webp
+│  │  │  ├─ alsnippets-hero-contact-mobile.webp
+│  │  │  └─ patternWhatsApp.webp
 │  │  ├─ footer
 │  │  │  └─ formas-de-pago-para-alsnippets.webp
 │  │  ├─ hero
@@ -537,6 +545,23 @@ alsnippets
 │  │  │  ├─ alsnippets.webp
 │  │  │  ├─ barber-short.webp
 │  │  │  └─ suite-text.webp
+│  │  ├─ og
+│  │  │  ├─ openGraph-auditoria.png
+│  │  │  ├─ openGraph-barber-short.png
+│  │  │  ├─ openGraph-blog.png
+│  │  │  ├─ openGraph-casos-exito.png
+│  │  │  ├─ openGraph-contacto.png
+│  │  │  ├─ openGraph-creaciones.png
+│  │  │  ├─ openGraph-home.png
+│  │  │  ├─ openGraph-optimizacion-rendimiento.png
+│  │  │  ├─ openGraph-precios.png
+│  │  │  ├─ openGraph-seguridad-limpieza.png
+│  │  │  ├─ openGraph-seo-geo.png
+│  │  │  ├─ openGraph-sobre-mi.png
+│  │  │  ├─ openGraph-soporte-mantenimiento.png
+│  │  │  ├─ openGraph-suite-text.png
+│  │  │  └─ openGraph-tarjetas.png
+│  │  ├─ open-graph
 │  │  ├─ optimizacion
 │  │  │  ├─ arquitectura-de-rendimiento.webp
 │  │  │  ├─ auditoria-tecnica-dependencias.webp

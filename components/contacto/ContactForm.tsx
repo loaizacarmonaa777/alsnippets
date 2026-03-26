@@ -195,8 +195,17 @@ export default function ContactForm ({
 
       if (!response.ok) throw new Error(data.error || t.messages.error_submit)
 
+        // ✅ PROTOCOLO ALSNIPPETS: Notificar a GTM del éxito en contacto
+      if (typeof window !== 'undefined' && (window as any).dataLayer) {
+        (window as any).dataLayer.push({
+          event: 'form_success',
+          form_id: 'contact_main',
+          language: lang,
+          country_code: codigoPais // Dato útil para saber de dónde te escriben más
+        });
+      }
+
       // 🎊 SECCIÓN: VITAMINA USUARIO (Confetti)
-      // Usamos ráfagas laterales para asegurar que se vea en cualquier resolución
       const end = Date.now() + 2 * 1000
       const frame = () => {
         confetti({

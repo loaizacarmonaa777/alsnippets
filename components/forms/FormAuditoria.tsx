@@ -430,7 +430,19 @@ export default function FormAuditoria ({
           lang
         })
       })
+
       if (response.ok) {
+        // ✅ PROTOCOLO ALSNIPPETS: Notificar a GTM antes del éxito visual
+        if (typeof window !== 'undefined' && (window as any).dataLayer) {
+          ;(window as any).dataLayer.push({
+            event: 'form_success',
+            form_id: 'audit_request',
+            service_type: tipoServicio,
+            contact_method: medioContacto,
+            language: lang
+          })
+        }
+
         const end = Date.now() + 3000
         const frame = () => {
           confetti({

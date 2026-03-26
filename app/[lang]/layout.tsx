@@ -19,7 +19,25 @@ export async function generateMetadata ({
       template: `%s | ${dict.common.meta.brand}`,
       default: dict.common.meta.title
     },
-    description: dict.common.meta.description
+    description: dict.common.meta.description,
+    openGraph: {
+      images: [
+        {
+          url: '/images/og/openGraph-home.png', // Imagen destacada
+          width: 1200,
+          height: 630,
+          alt: dict.common.meta.brand,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      images: ['/images/og/openGraph-home.png'],
+    },
+    // Codigo de verificacion google Search Console
+    verification: {
+      google: 'zhENHm7vTL3yHcfRs1bxdhVb5FrgPB0ucb87zqdeyGU', 
+    },
   }
 }
 

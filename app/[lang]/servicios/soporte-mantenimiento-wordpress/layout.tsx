@@ -2,39 +2,43 @@ import { Metadata } from "next";
 import { getDictionary } from "@/i18n/get-dictionary";
 
 /* =========================================================================
-   SEGURIDAD DE URL BASE
+    DEFINICIÓN DE LA URL BASE
    ========================================================================= */
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://alsnippets.com";
+const baseUrl = "https://www.alsnippets.com";
 
 export async function generateMetadata({ 
   params 
 }: { 
   params: Promise<{ lang: string }> 
 }): Promise<Metadata> {
-  const { lang } = await params;
-  const dict = await getDictionary(lang as 'es' | 'en');
+  const { lang: rawLang } = await params;
+  const lang = rawLang.replace(/^\//, '') as 'es' | 'en';
+  const dict = await getDictionary(lang);
   const t = dict.servicios_soporte.meta;
 
   return {
-    title: t.title,
+    // ✅ Regla de Títulos (SEO): Solo el nombre de la página
+    title: "Soporte y Mantenimiento", 
     description: t.description,
     keywords: t.keywords,
-    metadataBase: new URL(baseUrl),
     
     alternates: {
-      canonical: `/${lang}/servicios/soporte-mantenimiento-wordpress`,
+      // ✅ Regla de Enlaces (I18n): Inyección automática de /${lang}/ y www
+      canonical: `${baseUrl}/${lang}/servicios/soporte-mantenimiento-wordpress`,
     },
 
     openGraph: {
       title: t.og_title,
       description: t.og_description,
-      url: `/${lang}/servicios/soporte-mantenimiento-wordpress`,
-      siteName: "Alsnippets - Adrián Loaiza",
-      locale: lang === 'es' ? 'es_ES' : 'en_US',
+      // ✅ Regla de Enlaces (I18n): Inyección de /${lang}/
+      url: `${baseUrl}/${lang}/servicios/soporte-mantenimiento-wordpress`,
+      siteName: "Alsnippets",
+      locale: lang === 'es' ? 'es_CO' : 'en_US',
       type: "website",
       images: [
         {
-          url: "/images/og/og-mantenimiento.jpg", 
+          // ✅ Imagen actualizada: openGraph-soporte-mantenimiento.png
+          url: "/images/og/openGraph-soporte-mantenimiento.png", 
           width: 1200,
           height: 630,
           alt: t.og_alt,
@@ -46,8 +50,8 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: t.twitter_title,
       description: t.twitter_description,
-      images: ["/images/og/og-mantenimiento.jpg"],
       creator: "@alsnippets",
+      images: ["/images/og/openGraph-soporte-mantenimiento.png"],
     },
 
     robots: {
@@ -63,6 +67,9 @@ export async function generateMetadata({
   };
 }
 
+/* =========================================================================
+    COMPONENTE LAYOUT
+   ========================================================================= */
 export default async function SoporteMantenimientoWordPressLayout({
   children,
   params,
@@ -70,12 +77,13 @@ export default async function SoporteMantenimientoWordPressLayout({
   children: React.ReactNode;
   params: Promise<{ lang: string }>;
 }) {
-  const { lang } = await params;
-  const dict = await getDictionary(lang as 'es' | 'en');
+  const { lang: rawLang } = await params;
+  const lang = rawLang.replace(/^\//, '') as 'es' | 'en';
+  const dict = await getDictionary(lang);
   const s = dict.servicios_soporte.schema;
 
   /* =====================================================
-      SCHEMA JSON-LD DINÁMICO
+      SCHEMA JSON-LD DINÁMICO (SEO TÉCNICO)
      ===================================================== */
   const jsonLd = {
     "@context": "https://schema.org",
@@ -84,21 +92,28 @@ export default async function SoporteMantenimientoWordPressLayout({
     "description": s.description,
     "provider": {
       "@type": "ProfessionalService",
-      "name": "Alsnippets - Adrián Loaiza",
+      "name": "Alsnippets", // ✅ Singularidad de Marca
+      "image": `${baseUrl}/images/og/openGraph-soporte-mantenimiento.png`,
       "url": `${baseUrl}/${lang}`
     },
-    "serviceType": "Technical Support",
+    "serviceType": "Technical Support and Maintenance",
     "areaServed": "Worldwide",
+    // ✅ Regla de Enlaces (I18n): Inyección de /${lang}/
     "url": `${baseUrl}/${lang}/servicios/soporte-mantenimiento-wordpress`
   };
 
   return (
     <>
+      {/* Inyección de Schema JSON-LD */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      {children}
+      
+      {/* Renderizado de hijos preservando la estructura visual */}
+      <section className="relative w-full">
+        {children}
+      </section>
     </>
   );
 }

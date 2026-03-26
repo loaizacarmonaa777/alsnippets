@@ -60,6 +60,14 @@ export default function FormDemoBarberShort ({
 
   // Función de mensaje WhtatsApp
   const handleWhatsAppHelp = () => {
+    // ✅ Tracking de intención de ayuda
+    if (typeof window !== 'undefined' && (window as any).dataLayer) {
+      (window as any).dataLayer.push({
+        event: 'click_help_whatsapp',
+        location: 'barbershort_form'
+      });
+    }
+
     const msg = encodeURIComponent(t.whatsapp.help_msg)
     window.open(`https://wa.me/573246454061?text=${msg}`, '_blank')
   }
@@ -81,8 +89,20 @@ export default function FormDemoBarberShort ({
           lang
         })
       })
-      if (response.ok) onLoginSuccess(name, phone)
-      else {
+
+      if (response.ok) {
+        // ✅ PROTOCOLO ALSNIPPETS: Éxito en Demo Barbershort
+        if (typeof window !== 'undefined' && (window as any).dataLayer) {
+          ;(window as any).dataLayer.push({
+            event: 'form_success',
+            form_id: 'barbershort_demo',
+            phone_prefix: codigoPais, // Para analítica de países
+            language: lang
+          })
+        }
+
+        onLoginSuccess(name, phone)
+      } else {
         setError(t.validation.err_conn)
         if (typeof window.turnstile !== 'undefined') window.turnstile.reset()
       }
