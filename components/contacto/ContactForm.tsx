@@ -6,6 +6,7 @@ import { Turnstile } from '@marsidev/react-turnstile'
 import confetti from 'canvas-confetti'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getCountries, getCountryCallingCode } from 'libphonenumber-js'
+import { submitLead } from '@/app/actions/leads'
 
 /* =====================================================
    DATA: LISTADO DE PAÍSES
@@ -18,21 +19,77 @@ const LISTA_PAISES = getCountries()
   }))
   .sort((a, b) => parseInt(a.code) - parseInt(b.code))
 
-// Reemplaza todo el bloque antiguo de COUNTRY_OPTIONS y CountrySearchSelect por este selector simple:
-const CleanCountrySelect = ({ value, onChange, t }: any) => (
-  <select
-    value={value}
-    onChange={e => onChange(e.target.value)}
-    className='w-1/3 border border-[var(--border-1)] bg-[var(--bg-1)] rounded-lg px-3 py-3 outline-none focus:border-[var(--border-brand)] text-sm font-bold'
-  >
-    <option value=''>{t.placeholders.country_code || 'Ext'}</option>
-    {LISTA_PAISES.map((c, i) => (
-      <option key={i} value={c.code}>
-        {c.code} ({c.iso})
-      </option>
-    ))}
-  </select>
-)
+/* =====================================================
+    SELECTOR DE PAÍS CON BUSCADOR (PROTOCOLO ALSNIPPETS)
+===================================================== */
+const CountrySearchSelect = ({ value, onChange, disabled, t }: any) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const [search, setSearch] = useState('')
+
+  const filteredCountries = useMemo(() => {
+    return LISTA_PAISES.filter(
+      c =>
+        c.code.includes(search) ||
+        c.iso.toLowerCase().includes(search.toLowerCase())
+    )
+  }, [search])
+
+  const selected = LISTA_PAISES.find(c => c.code === value)
+
+  return (
+    <div className='relative w-1/3'>
+      <button
+        type='button'
+        onClick={() => setIsOpen(!isOpen)}
+        disabled={disabled}
+        className='w-full border border-[var(--border-1)] bg-[var(--bg-1)] rounded-lg px-3 py-3 text-left outline-none focus:border-[var(--border-brand)] flex justify-between items-center text-sm font-bold disabled:opacity-50'
+      >
+        <span className='truncate'>
+          {selected
+            ? `${selected.code} (${selected.iso})`
+            : t.placeholders.country_code || 'Ext'}
+        </span>
+        <span className='text-[10px] opacity-50'>▼</span>
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className='absolute z-[100] mt-1 w-64 bg-[var(--bg-1)] border border-[var(--border-1)] rounded-lg shadow-2xl overflow-hidden'
+          >
+            <input
+              type='text'
+              autoFocus
+              placeholder={t.placeholders.search_country || 'Buscar...'}
+              className='w-full p-3 bg-[var(--bg-2)] border-b border-[var(--border-1)] outline-none text-sm'
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
+            <div className='max-h-60 overflow-y-auto'>
+              {filteredCountries.map((c, i) => (
+                <button
+                  key={i}
+                  type='button'
+                  className='w-full text-left px-4 py-2 text-sm hover:bg-[var(--bg-brand)] hover:text-black transition-colors'
+                  onClick={() => {
+                    onChange(c.code)
+                    setIsOpen(false)
+                    setSearch('')
+                  }}
+                >
+                  {c.code} {c.iso}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
 
 const PHONE_RULES: Record<string, { min: number; max: number; msg: string }> = {
   '+57': { min: 10, max: 10, msg: 'Colombia: 10 dígitos' },
@@ -103,27 +160,6 @@ export default function ContactForm ({
     return { isValid: true, error: null }
   }
 
-  const validatePhoneNumber = (
-    code: string,
-    number: string
-  ): { isValid: boolean; error: string | null; isInfo: boolean } => {
-    if (!code || !number) return { isValid: false, error: null, isInfo: false }
-    const rule = PHONE_RULES[code] || PHONE_RULES.default
-    if (number.length < rule.min)
-      return {
-        isValid: false,
-        error: t.validation.phone_too_short,
-        isInfo: false
-      }
-    if (number.length > rule.max)
-      return {
-        isValid: false,
-        error: t.validation.phone_too_long,
-        isInfo: false
-      }
-    return { isValid: true, error: rule.msg, isInfo: true }
-  }
-
   const getCharCount = (
     text: string
   ): { count: number; remaining: number; isOverLimit: boolean } => {
@@ -136,7 +172,23 @@ export default function ContactForm ({
   // --- Estados de validación derivados ---
   const nameValidation = validateName(nombreCompleto)
   const emailValidation = validateEmail(email)
-  const phoneValidation = validatePhoneNumber(codigoPais, telefono)
+  const phoneValidation = useMemo(() => {
+    if (!codigoPais || !telefono)
+      return { isValid: false, error: null, msgInfo: '' }
+    const rule = PHONE_RULES[codigoPais] || PHONE_RULES.default
+
+    const isValid = telefono.length >= rule.min && telefono.length <= rule.max
+
+    return {
+      isValid,
+      error: !isValid
+        ? telefono.length < rule.min
+          ? t.validation.phone_too_short
+          : t.validation.phone_too_long
+        : null,
+      msgInfo: rule.msg
+    }
+  }, [codigoPais, telefono, t])
   const charCount = useMemo(() => getCharCount(mensaje), [mensaje])
 
   // --- Efecto para validación general del formulario ---
@@ -178,6 +230,22 @@ export default function ContactForm ({
     setSuccessMessage('')
 
     try {
+      // 1. ✅ PERSISTENCIA EN SUPABASE: Aseguramos el mensaje antes que nada
+      const result = await submitLead({
+        email: email,
+        nombre: nombreCompleto,
+        telefono: `${codigoPais} ${telefono}`,
+        source: 'contacto',
+        lang: lang,
+        metadata: {
+          mensaje_original: mensaje,
+          turnstile: turnstileToken,
+          pais_iso: codigoPais,
+          enviado_desde: window.location.pathname
+        }
+      })
+
+      // 2. Envío a tu API actual para recibir el email
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -193,51 +261,55 @@ export default function ContactForm ({
 
       const data = await response.json()
 
-      if (!response.ok) throw new Error(data.error || t.messages.error_submit)
+      // 3. Verificamos éxito (Si falla la API pero Supabase guardó, igual lo tratamos como éxito para el usuario)
+      if (response.ok || result.success) {
+        // ✅ PROTOCOLO ALSNIPPETS: Notificar a GTM (Mantenemos tu lógica)
+        if (typeof window !== 'undefined' && (window as any).dataLayer) {
+          ;(window as any).dataLayer.push({
+            event: 'form_success',
+            form_id: 'contact_main',
+            language: lang,
+            country_code: codigoPais
+          })
+        }
 
-        // ✅ PROTOCOLO ALSNIPPETS: Notificar a GTM del éxito en contacto
-      if (typeof window !== 'undefined' && (window as any).dataLayer) {
-        (window as any).dataLayer.push({
-          event: 'form_success',
-          form_id: 'contact_main',
-          language: lang,
-          country_code: codigoPais // Dato útil para saber de dónde te escriben más
-        });
+        // 🎊 SECCIÓN: VITAMINA USUARIO (Confetti)
+        const end = Date.now() + 2 * 1000
+        const frame = () => {
+          confetti({
+            particleCount: 2,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+            colors: ['#ff4d00', '#ffffff']
+          })
+          confetti({
+            particleCount: 2,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+            colors: ['#ff4d00', '#ffffff']
+          })
+          if (Date.now() < end) requestAnimationFrame(frame)
+        }
+        frame()
+
+        setSuccessMessage(t.messages.success)
+
+        // Resets de formulario
+        setNombreCompleto('')
+        setEmail('')
+        setCodigoPais('')
+        setTelefono('')
+        setMensaje('')
+        setAceptaLegales(false)
+        setTurnstileToken('')
+        setNombreTocado(false)
+        setEmailTocado(false)
+        setTelefonoTocado(false)
+      } else {
+        throw new Error(data.error || result.error || t.messages.error_submit)
       }
-
-      // 🎊 SECCIÓN: VITAMINA USUARIO (Confetti)
-      const end = Date.now() + 2 * 1000
-      const frame = () => {
-        confetti({
-          particleCount: 2,
-          angle: 60,
-          spread: 55,
-          origin: { x: 0 },
-          colors: ['#ff4d00', '#ffffff']
-        })
-        confetti({
-          particleCount: 2,
-          angle: 120,
-          spread: 55,
-          origin: { x: 1 },
-          colors: ['#ff4d00', '#ffffff']
-        })
-        if (Date.now() < end) requestAnimationFrame(frame)
-      }
-      frame()
-
-      setSuccessMessage(t.messages.success)
-
-      setNombreCompleto('')
-      setEmail('')
-      setCodigoPais('')
-      setTelefono('')
-      setMensaje('')
-      setAceptaLegales(false)
-      setTurnstileToken('')
-      setNombreTocado(false)
-      setEmailTocado(false)
-      setTelefonoTocado(false)
     } catch (error) {
       setErrorMessage(
         error instanceof Error ? error.message : t.messages.error_submit
@@ -280,17 +352,15 @@ export default function ContactForm ({
   const emailError =
     emailTocado && !emailValidation.isValid ? emailValidation.error : null
 
-  // CORRECCIÓN: Unificamos los errores del validador automático y el manual de escritura
+  // CORRECCIÓN: Unificamos los errores para asegurar el borde rojo/verde
   const phoneError =
     telefonoError ||
     (telefonoTocado && !phoneValidation.isValid ? phoneValidation.error : null)
 
+  // Ajustado para usar msgInfo (evita el error isInfo)
   const phoneInfo =
-    !phoneError &&
-    telefonoTocado &&
-    phoneValidation.isValid &&
-    phoneValidation.isInfo
-      ? phoneValidation.error
+    !phoneError && telefonoTocado && phoneValidation.isValid
+      ? phoneValidation.msgInfo
       : null
 
   // Estado de validez final
@@ -348,12 +418,14 @@ export default function ContactForm ({
               <p className='text-xs text-red-500 mt-1'>{emailError}</p>
             )}
           </div>
+
           {/* TELÉFONO */}
           <div>
             <div className='flex gap-3'>
-              <CleanCountrySelect
+              <CountrySearchSelect
                 value={codigoPais}
                 onChange={setCodigoPais}
+                disabled={isSubmitting}
                 t={t}
               />
               <input
@@ -362,20 +434,36 @@ export default function ContactForm ({
                 placeholder={t.placeholders.phone}
                 onChange={handlePhoneChange}
                 onBlur={() => setTelefonoTocado(true)}
-                className={`w-2/3 border rounded-lg px-4 py-3 bg-[var(--bg-1)] border-[var(--border-1)] outline-none focus:border-[var(--border-brand)] placeholder-[var(--text-3)] ${
-                  telefonoTocado && phoneValidation.isValid
-                    ? 'border-green-500'
-                    : ''
+                className={`w-2/3 border rounded-xl px-4 py-3 bg-[var(--bg-1)] outline-none transition-all duration-300 ${
+                  telefonoTocado && phoneError
+                    ? 'border-red-500 bg-red-500/5'
+                    : telefono.length > 0 && phoneValidation.isValid
+                    ? 'border-green-500 bg-green-500/5'
+                    : 'border-[var(--border-1)] focus:border-[var(--border-brand)]'
                 }`}
               />
             </div>
-            {phoneError && (
-              <p className='text-xs text-red-500 mt-1'>{phoneError}</p>
-            )}
-            {phoneInfo && !phoneError && (
-              <p className='text-xs text-[var(--text-2)] mt-1'>{phoneInfo}</p>
-            )}
+
+            <AnimatePresence>
+              {telefonoTocado && phoneError && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className='text-xs text-red-500 mt-1 font-bold'
+                >
+                  {phoneError}
+                </motion.p>
+              )}
+              {!phoneError &&
+                telefono.length > 0 &&
+                phoneValidation.isValid && (
+                  <p className='text-green-500 text-[10px] font-bold mt-1'>
+                    ✓ {phoneValidation.msgInfo}
+                  </p>
+                )}
+            </AnimatePresence>
           </div>
+
           {/* MENSAJE */}
           <div>
             <textarea
@@ -393,14 +481,18 @@ export default function ContactForm ({
               }}
               placeholder={t.placeholders.message}
               disabled={isSubmitting}
-              className='w-full border border-[var(--border-1)] rounded-lg px-4 py-3 min-h-[100px] bg-[var(--bg-1)] outline-none focus:border-[var(--border-brand)] resize-none disabled:opacity-50 placeholder-[var(--text-3)]'
+              className={`w-full border border-[var(--border-1)] rounded-lg px-4 py-3 min-h-[100px] bg-[var(--bg-1)] outline-none focus:border-[var(--border-brand)] resize-none disabled:opacity-50 placeholder-[var(--text-3)] transition-all ${
+                mensaje.trim().length > 0 && !charCount.isOverLimit
+                  ? 'border-green-500 bg-green-500/5'
+                  : ''
+              }`}
             />
             {/* Contador de caracteres */}
             <div className='flex justify-end mt-1'>
               <span
                 className={`text-xs ${
                   charCount.isOverLimit
-                    ? 'text-red-500'
+                    ? 'text-red-500 font-bold'
                     : 'text-[var(--text-2)]'
                 }`}
               >

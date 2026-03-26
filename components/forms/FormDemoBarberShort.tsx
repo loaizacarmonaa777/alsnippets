@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { Turnstile } from '@marsidev/react-turnstile'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ShieldCheck, Eye, EyeOff, Lock, User, Phone } from 'lucide-react'
+import { submitLead } from '@/app/actions/leads'
 
 const PHONE_RULES: Record<string, { min: number; max: number; msg: string }> = {
   '+57': { min: 10, max: 10, msg: '10 dígitos' },
@@ -79,31 +80,36 @@ export default function FormDemoBarberShort ({
     setIsSubmitting(true)
 
     try {
-      const response = await fetch('/api/barber-demo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          phone: `${codigoPais}${phone}`,
-          turnstileToken,
-          lang
-        })
+      // ✅ SUSTITUCIÓN ALSNIPPETS: Enviamos datos a Supabase
+      const result = await submitLead({
+        email: 'demo_user@barbershort.com', // Como es una demo sin input de mail, usamos un placeholder o podrías pedirlo
+        nombre: name,
+        telefono: `${codigoPais}${phone}`,
+        source: 'barber_short',
+        lang: lang,
+        metadata: {
+          turnstile: turnstileToken,
+          password_usada: password, // Para saber si probaron la demo con éxito
+          prefijo: codigoPais,
+          url_demo: window.location.href
+        }
       })
 
-      if (response.ok) {
-        // ✅ PROTOCOLO ALSNIPPETS: Éxito en Demo Barbershort
+      if (result.success) {
+        // ✅ PROTOCOLO ALSNIPPETS: Éxito en Demo Barbershort (Mantenemos tu GTM)
         if (typeof window !== 'undefined' && (window as any).dataLayer) {
           ;(window as any).dataLayer.push({
             event: 'form_success',
             form_id: 'barbershort_demo',
-            phone_prefix: codigoPais, // Para analítica de países
+            phone_prefix: codigoPais,
             language: lang
           })
         }
 
+        // Llamamos a tu función original de éxito
         onLoginSuccess(name, phone)
       } else {
-        setError(t.validation.err_conn)
+        setError(result.error || t.validation.err_conn)
         if (typeof window.turnstile !== 'undefined') window.turnstile.reset()
       }
     } catch (err) {

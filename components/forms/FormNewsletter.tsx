@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import confetti from 'canvas-confetti'
 import { Turnstile } from '@marsidev/react-turnstile'
+import { submitLead } from '@/app/actions/leads'
 
 export default function FormNewsletter ({ lang }: { lang: string }) {
   const [email, setEmail] = useState('')
@@ -89,15 +90,20 @@ export default function FormNewsletter ({ lang }: { lang: string }) {
     setIsSubmitting(true)
 
     try {
-      const response = await fetch('/api/newsletter', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, turnstileToken, lang })
+      // ✅ SUSTITUCIÓN: Llamada directa al motor de Supabase
+      const result = await submitLead({
+        email,
+        source: 'newsletter',
+        lang: lang,
+        metadata: { 
+          turnstileToken, 
+          url_actual: window.location.href 
+        }
       })
-      const data = await response.json()
 
-      if (response.ok && data.success) {
-        // ✅ PROTOCOLO ALSNIPPETS: Notificar a GTM del éxito
+      // Cambiamos la validación: ahora usamos result.success
+      if (result.success) {
+        // ✅ PROTOCOLO ALSNIPPETS: Notificar a GTM del éxito (INTACTO)
         if (typeof window !== 'undefined' && (window as any).dataLayer) {
           ;(window as any).dataLayer.push({
             event: 'form_success',
@@ -112,7 +118,8 @@ export default function FormNewsletter ({ lang }: { lang: string }) {
         if (typeof window.turnstile !== 'undefined') window.turnstile.reset()
         setTimeout(() => setSuccessMessage(''), 5000)
       } else {
-        setErrorMessage(data.error || t.errSub)
+        // ✅ Manejo del error desde la respuesta de Supabase
+        setErrorMessage(result.error || t.errSub)
       }
     } catch (error) {
       setErrorMessage(t.errConn)

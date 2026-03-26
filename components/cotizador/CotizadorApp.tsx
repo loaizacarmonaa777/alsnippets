@@ -11,6 +11,7 @@ import Step3SEO from './Step3SEO'
 import Step3Horas from './Step3Horas'
 import Step4Resumen from './Step4Resumen'
 import { PRICES, Currency, getFullBreakdown } from './utils/pricingLogic'
+import { submitLead } from '@/app/actions/leads'
 
 /* =====================================================
     TIPOS Y ESTADO INICIAL
@@ -122,6 +123,23 @@ export default function CotizadorApp ({ lang, dict }: CotizadorAppProps) {
       .join('\n');
 
     try {
+      // 1. ✅ PERSISTENCIA EN SUPABASE: Antes que nada, aseguramos el Lead
+      const result = await submitLead({
+        email: formData.email,
+        nombre: formData.nombre,
+        telefono: formData.whatsapp,
+        source: 'cotizacion',
+        lang: lang,
+        metadata: {
+          ...formData, // Guardamos TODO el estado del cotizador
+          precioTotal: calculation.total,
+          totalFormateado: formattedTotal,
+          desglose_detallado: calculation.breakdown,
+          turnstile: turnstileToken
+        }
+      })
+
+      // 2. Tu envío de email actual (mantenemos la compatibilidad)
       const response = await fetch('/api/cotizador', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -129,17 +147,20 @@ export default function CotizadorApp ({ lang, dict }: CotizadorAppProps) {
           formData: { ...formData, precioTotal: calculation.total },
           turnstileToken,
           totalFormateado: formattedTotal,
-          desglose: desgloseTexto, // 👈 ENVIAMOS EL DESGLOSE AL EMAIL
+          desglose: desgloseTexto,
           lang
         })
       });
 
       const data = await response.json();
-      if (response.ok && data.success) {
+
+      // 3. Verificamos que ambos procesos (Base de datos y Email) terminaran bien
+      if (result.success && response.ok && data.success) {
         setFormData(prev => ({ ...prev, precioTotal: calculation.total }));
         setStep(4);
       } else {
-        setApiError(data.error || s.errorGen);
+        // Mostramos el error de la API o el de Supabase si la API no dio uno
+        setApiError(data.error || result.error || s.errorGen);
         if (typeof window.turnstile !== 'undefined') window.turnstile.reset();
       }
     } catch (error) {
