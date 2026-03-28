@@ -236,3 +236,59 @@
   .nav-link-premium:hover { color: var(--text-brand); }
   .nav-link-premium:hover::after { @apply w-full; }
 }
+
+/* =====================================================
+     Boton de ir arriba
+  ===================================================== */
+
+/* app/styles/components.css */
+
+/* 1. Definimos el Radar */
+@keyframes radar-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(201, 163, 78, 0.7); }
+  70% { box-shadow: 0 0 0 15px rgba(201, 163, 78, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(201, 163, 78, 0); }
+}
+
+/* 2. Estilos del botón */
+.scroll-top-btn {
+  @apply fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[90] flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300;
+  background: var(--bg-brand);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-brand-glow);
+  text-decoration: none;
+  
+  /* Animación Radar siempre activa */
+  animation: radar-pulse 2s infinite;
+  
+  /* Fallback: Si el navegador no soporta scroll-timeline, el botón siempre se verá */
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* 3. Magia para Ocultar/Mostrar (Solo navegadores modernos) */
+@supports (animation-timeline: scroll()) {
+  .scroll-top-btn {
+    animation: radar-pulse 2s infinite, show-btn linear both;
+    animation-timeline: auto, scroll();
+    animation-range: auto, 0px 300px;
+  }
+}
+
+@keyframes show-btn {
+  from { opacity: 0; transform: scale(0); pointer-events: none; }
+  to { opacity: 1; transform: scale(1); pointer-events: auto; }
+}
+
+.scroll-top-btn:hover {
+  transform: scale(1.1);
+  background: var(--text-white-5);
+  box-shadow: var(--shadow-brand-glow-hover);
+}
+
+/* Ajuste para que el icono se vea bien en el centro */
+.scroll-top-btn svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+}

@@ -114,17 +114,36 @@ export default function ContactForm ({
 }) {
   const t = dict
 
-  // --- Estados ---
-  const [nombreCompleto, setNombreCompleto] = useState('')
-  const [email, setEmail] = useState('')
-  const [codigoPais, setCodigoPais] = useState('')
-  const [telefono, setTelefono] = useState('')
-  const [mensaje, setMensaje] = useState('')
+  // 1. Inicialización con recuperación de datos (Drafts)
+  const [nombreCompleto, setNombreCompleto] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('contact_name') || '' : ''))
+  const [email, setEmail] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('contact_email') || '' : ''))
+  const [codigoPais, setCodigoPais] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('contact_prefix') || '' : ''))
+  const [telefono, setTelefono] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('contact_phone') || '' : ''))
+  const [mensaje, setMensaje] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('contact_msg') || '' : ''))
+  
   const [aceptaLegales, setAceptaLegales] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [turnstileToken, setTurnstileToken] = useState<string>('')
+
+  // 2. Efecto de guardado automático para persistencia entre idiomas y limpieza al desmontar
+  useEffect(() => {
+    sessionStorage.setItem('contact_name', nombreCompleto)
+    sessionStorage.setItem('contact_email', email)
+    sessionStorage.setItem('contact_prefix', codigoPais)
+    sessionStorage.setItem('contact_phone', telefono)
+    sessionStorage.setItem('contact_msg', mensaje)
+
+    return () => {
+      sessionStorage.removeItem('contact_name')
+      sessionStorage.removeItem('contact_email')
+      sessionStorage.removeItem('contact_prefix')
+      sessionStorage.removeItem('contact_phone')
+      sessionStorage.removeItem('contact_msg')
+    }
+  }, [nombreCompleto, email, codigoPais, telefono, mensaje])
+
   const [nombreTocado, setNombreTocado] = useState(false)
   const [emailTocado, setEmailTocado] = useState(false)
   const [telefonoTocado, setTelefonoTocado] = useState(false)

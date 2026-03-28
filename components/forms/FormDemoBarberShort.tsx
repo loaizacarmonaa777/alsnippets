@@ -19,18 +19,35 @@ export default function FormDemoBarberShort ({
   dict
 }: any) {
   const t = dict
-  const [name, setName] = useState('')
-  const [phone, setPhone] = useState('')
-  const [codigoPais, setCodigoPais] = useState('+57')
-  const [password, setPassword] = useState('')
+  
+  // 1. Inicialización con persistencia para evitar borrado al cambiar idioma
+  const [name, setName] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('demo_name') || '' : ''))
+  const [phone, setPhone] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('demo_phone') || '' : ''))
+  const [codigoPais, setCodigoPais] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('demo_prefix') || '+57' : '+57'))
+  const [password, setPassword] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('demo_pass') || '' : ''))
+  
   const [acceptTerms, setAcceptTerms] = useState(false)
-
   const [nameTocado, setNameTocado] = useState(false)
   const [phoneError, setPhoneError] = useState('')
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [turnstileToken, setTurnstileToken] = useState<string>('')
   const [showPassword, setShowPassword] = useState(false)
+
+  // 2. Efecto para guardar borradores automáticamente y limpiar al desmontar
+  useEffect(() => {
+    sessionStorage.setItem('demo_name', name)
+    sessionStorage.setItem('demo_phone', phone)
+    sessionStorage.setItem('demo_prefix', codigoPais)
+    sessionStorage.setItem('demo_pass', password)
+
+    return () => {
+      sessionStorage.removeItem('demo_name')
+      sessionStorage.removeItem('demo_phone')
+      sessionStorage.removeItem('demo_prefix')
+      sessionStorage.removeItem('demo_pass')
+    }
+  }, [name, phone, codigoPais, password])
 
   const isNameValid =
     name

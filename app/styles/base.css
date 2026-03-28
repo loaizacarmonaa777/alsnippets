@@ -1,6 +1,10 @@
 /* app/styles/base.css */
 
 @layer base {
+  html {
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch;
+  }
   body {
     min-height: 100vh;
     font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
@@ -9,6 +13,8 @@
     background: var(--bg-body); /* Color dinámico */
     line-height: var(--leading-normal);
     overflow-x: hidden;
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch;
   }
 
   main {

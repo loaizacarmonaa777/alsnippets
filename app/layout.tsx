@@ -1,12 +1,11 @@
 // app/layout.tsx (Infraestructura Global)
 import type { Metadata } from 'next'
 import { Inter, Outfit } from 'next/font/google'
-import './globals.css'
+import './globals.css' // ✅ Ruta correcta: mismo nivel
 import CookieConsent from '@/components/ui/CookieConsent'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { AuthProvider } from '@/components/providers/AuthProvider'
 import Tracking from '@/components/Tracking'
-import { headers } from 'next/headers'
 
 const inter = Inter({
   variable: '--font-inter',
@@ -20,39 +19,23 @@ const outfit = Outfit({
   display: 'swap'
 })
 
-export const viewport = {
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' }
-  ],
-  colorScheme: 'light dark'
-}
-
-export default async function RootLayout ({
-  children
+export default async function RootLayout({
+  children,
+  params
 }: {
   children: React.ReactNode
+  params: Promise<{ lang: string }>
 }) {
-  const nonce = (await headers()).get('x-nonce') || ''
+  const resolvedParams = await params;
+  const lang = resolvedParams?.lang || 'es';
+
   return (
-    // ✅ Añadimos lang="es" por defecto (aunque el otro layout lo sobreescriba) y forzamos el esquema
-    <html
-      lang='es'
-      suppressHydrationWarning
-      style={{ colorScheme: 'light dark' }}
-    >
-      <head>
-        {/* ✅ Meta tags para evitar que iOS "invente" colores o ignore iconos */}
-        <meta name='supported-color-schemes' content='light dark' />
-        <meta name='apple-mobile-web-app-capable' content='yes' />
-        <meta name='apple-mobile-web-app-status-bar-style' content='default' />
-      </head>
+    <html lang={lang} suppressHydrationWarning>
       <body className={`${inter.variable} ${outfit.variable} antialiased`}>
-        {/* ✅ Cambiamos defaultTheme a 'light' o 'dark' si quieres evitar el amarillo del sistema, 
-            o lo dejamos en 'system' pero con los metas anteriores ya debería respetarte */}
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
           <AuthProvider>
-            <Tracking lang='es' nonce={nonce} />
+            {/* Quitamos el nonce porque el middleware no lo da */}
+            <Tracking lang={lang} />
             {children}
             <CookieConsent />
           </AuthProvider>

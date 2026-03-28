@@ -49,6 +49,7 @@ export default function MainNav ({ lang }: { lang: string }) {
         <div className='flex items-center'>
           <Link
             href={`/${normalizedLang}`}
+            scroll={false}
             className='group flex items-center'
             aria-label={t.home}
           >

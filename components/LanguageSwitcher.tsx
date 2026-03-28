@@ -79,6 +79,7 @@ export default function LanguageSwitcher ({ lang }: { lang: string }) {
                 <Link
                   key={l.code}
                   href={getRedirectPath(l.code)}
+                  scroll={false}
                   onClick={() => setIsOpen(false)}
                   className={`flex items-center px-3 py-2 text-[11px] font-bold uppercase tracking-tight rounded-lg transition-colors
                     ${

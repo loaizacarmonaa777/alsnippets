@@ -119,14 +119,36 @@ export default function FormAuditoria ({
 }) {
   const t = dict
 
-  const [tipoServicio, setTipoServicio] = useState('')
-  const [nombreCompleto, setNombreCompleto] = useState('')
-  const [email, setEmail] = useState('')
-  const [codigoPais, setCodigoPais] = useState('')
-  const [telefono, setTelefono] = useState('')
-  const [mensajeAuditoria, setMensajeAuditoria] = useState('')
-  const [medioContacto, setMedioContacto] = useState('')
+  // 1. Inicialización con recuperación de datos (Drafts)
+  const [tipoServicio, setTipoServicio] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('audit_service') || '' : ''))
+  const [nombreCompleto, setNombreCompleto] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('audit_name') || '' : ''))
+  const [email, setEmail] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('audit_email') || '' : ''))
+  const [codigoPais, setCodigoPais] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('audit_prefix') || '' : ''))
+  const [telefono, setTelefono] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('audit_phone') || '' : ''))
+  const [mensajeAuditoria, setMensajeAuditoria] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('audit_msg') || '' : ''))
+  const [medioContacto, setMedioContacto] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('audit_media') || '' : ''))
   const [aceptaLegales, setAceptaLegales] = useState(false)
+
+  // 2. Efecto de guardado automático y limpieza al desmontar
+  useEffect(() => {
+    sessionStorage.setItem('audit_service', tipoServicio)
+    sessionStorage.setItem('audit_name', nombreCompleto)
+    sessionStorage.setItem('audit_email', email)
+    sessionStorage.setItem('audit_prefix', codigoPais)
+    sessionStorage.setItem('audit_phone', telefono)
+    sessionStorage.setItem('audit_msg', mensajeAuditoria)
+    sessionStorage.setItem('audit_media', medioContacto)
+
+    return () => {
+      sessionStorage.removeItem('audit_service')
+      sessionStorage.removeItem('audit_name')
+      sessionStorage.removeItem('audit_email')
+      sessionStorage.removeItem('audit_prefix')
+      sessionStorage.removeItem('audit_phone')
+      sessionStorage.removeItem('audit_msg')
+      sessionStorage.removeItem('audit_media')
+    }
+  }, [tipoServicio, nombreCompleto, email, codigoPais, telefono, mensajeAuditoria, medioContacto])
 
   const [telefonoError, setTelefonoError] = useState('')
   const [nombreTocado, setNombreTocado] = useState(false)

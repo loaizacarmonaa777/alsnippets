@@ -1,54 +1,32 @@
-// app/[lang]/layout.tsx (o como se llame tu archivo de layout de idioma)
 import { Metadata } from 'next'
 import MainNav from '@/components/navigation/MainNav'
 import TopBar from '@/components/navigation/TopBar'
 import Footer from '@/components/layout/Footer'
 import { getDictionary } from '@/i18n/get-dictionary'
 
+/* =====================================================
+    METADATA DINÁMICA (SEO) - LIMPIA
+   ===================================================== */
 export async function generateMetadata ({
   params
 }: {
   params: Promise<{ lang: string }>
 }): Promise<Metadata> {
-  const { lang: rawLang } = await params
-  const lang = rawLang.replace(/^\//, '') as 'es' | 'en'
-  const dict = await getDictionary(lang)
+  const { lang } = await params
+  const dict = await getDictionary(lang as 'es' | 'en')
 
   return {
     title: {
       template: `%s | ${dict.common.meta.brand}`,
       default: dict.common.meta.title
     },
-    description: dict.common.meta.description,
-    openGraph: {
-      images: [
-        {
-          url: '/images/og/openGraph-home.png', // Imagen destacada
-          width: 1200,
-          height: 630,
-          alt: dict.common.meta.brand,
-        },
-      ],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      images: ['/images/og/openGraph-home.png'],
-    },
-    // Codigo de verificacion google Search Console
-    verification: {
-      google: 'zhENHm7vTL3yHcfRs1bxdhVb5FrgPB0ucb87zqdeyGU', 
-    },
+    description: dict.common.meta.description
   }
 }
 
-export const viewport = {
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' }
-  ],
-  colorScheme: 'light dark'
-}
-
+/* =====================================================
+    LAYOUT DE INTERFAZ - LIMPIO
+   ===================================================== */
 export default async function LangLayout ({
   children,
   params
@@ -56,22 +34,41 @@ export default async function LangLayout ({
   children: React.ReactNode
   params: Promise<{ lang: string }>
 }) {
-  // 1. OBTENEMOS EL LANG CRUDO Y NORMALIZAMOS
-  const { lang: rawLang } = await params
-  const lang = rawLang.replace(/^\//, '') as 'es' | 'en'
+  const { lang } = await params
 
-  // 👇 2. CARGAMOS EL DICCIONARIO AQUÍ (Esto es lo que faltaba)
-  const dict = await getDictionary(lang)
+  // ✅ 1. Cargamos el diccionario aquí también para el Footer
+  const dict = await getDictionary(lang as 'es' | 'en')
 
   return (
     <>
+      {/* Ancla para el scroll superior sin JS */}
+      <div id='top' className='absolute top-0' />
+
       <header className='fixed top-0 w-full z-[100]'>
         <TopBar lang={lang} />
         <MainNav lang={lang} />
       </header>
+
+      {/* Hero sube al tope */}
       <main className='relative w-full'>{children}</main>
 
-      {/* 👇 3. PASAMOS EL DICCIONARIO AL FOOTER */}
+      {/* Botón Scroll to top universal */}
+      <a href='#' className='scroll-top-btn' aria-label='Scroll to top'>
+        <svg
+          viewBox='0 0 24 24'
+          width='24'
+          height='24'
+          stroke='currentColor'
+          strokeWidth='3'
+          fill='none'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        >
+          <path d='M18 15l-6-6-6 6' />
+        </svg>
+      </a>
+
+      {/* ✅ 2. Pasamos el dict al Footer para eliminar el error de TS */}
       <Footer lang={lang} dict={dict} />
     </>
   )

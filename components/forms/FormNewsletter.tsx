@@ -7,12 +7,26 @@ import { Turnstile } from '@marsidev/react-turnstile'
 import { submitLead } from '@/app/actions/leads'
 
 export default function FormNewsletter ({ lang }: { lang: string }) {
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem('newsletter_draft') || ''
+    }
+    return ''
+  })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [isFormValid, setIsFormValid] = useState(false)
   const [turnstileToken, setTurnstileToken] = useState<string>('')
+
+  // Efecto para persistir el email ante cambios de idioma y limpiar al desmontar
+  useEffect(() => {
+    sessionStorage.setItem('newsletter_draft', email)
+    
+    return () => {
+      sessionStorage.removeItem('newsletter_draft')
+    }
+  }, [email])
 
   // PROTOCOLO ALSNIPPETS: Objeto de traducción local (Lógica Sensible)
   const t =
