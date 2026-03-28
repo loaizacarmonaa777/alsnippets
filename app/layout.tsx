@@ -6,6 +6,7 @@ import CookieConsent from '@/components/ui/CookieConsent'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { AuthProvider } from '@/components/providers/AuthProvider'
 import Tracking from '@/components/Tracking'
+import { Suspense } from 'react'
 
 const inter = Inter({
   variable: '--font-inter',
@@ -35,7 +36,9 @@ export default async function RootLayout({
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
           <AuthProvider>
             {/* Quitamos el nonce porque el middleware no lo da */}
-            <Tracking lang={lang} />
+            <Suspense fallback={null}>
+              <Tracking lang={lang} />
+            </Suspense>
             {children}
             <CookieConsent />
           </AuthProvider>
