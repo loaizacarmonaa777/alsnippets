@@ -2,7 +2,9 @@ import { Metadata } from 'next'
 import MainNav from '@/components/navigation/MainNav'
 import TopBar from '@/components/navigation/TopBar'
 import Footer from '@/components/layout/Footer'
+import Tracking from '@/components/Tracking' // Asegúrate de que la ruta sea correcta
 import { getDictionary } from '@/i18n/get-dictionary'
+import { Suspense } from 'react'
 
 /* =====================================================
     METADATA DINÁMICA (SEO) - LIMPIA
@@ -25,7 +27,7 @@ export async function generateMetadata ({
 }
 
 /* =====================================================
-    LAYOUT DE INTERFAZ - LIMPIO
+    LAYOUT DE INTERFAZ - LIMPIO Y CORREGIDO
    ===================================================== */
 export default async function LangLayout ({
   children,
@@ -35,12 +37,15 @@ export default async function LangLayout ({
   params: Promise<{ lang: string }>
 }) {
   const { lang } = await params
-
-  // ✅ 1. Cargamos el diccionario aquí también para el Footer
   const dict = await getDictionary(lang as 'es' | 'en')
 
   return (
     <>
+      {/* ✅ SOLUCIÓN VERCEL: Tracking envuelto en Suspense */}
+      <Suspense fallback={null}>
+        <Tracking lang={lang} />
+      </Suspense>
+
       {/* Ancla para el scroll superior sin JS */}
       <div id='top' className='absolute top-0' />
 
