@@ -1,65 +1,7 @@
-import { Metadata } from 'next'
 import { getDictionary } from '@/i18n/get-dictionary'
 
 /* =====================================================
-   METADATA SEO DINÁMICA
-   ===================================================== */
-export async function generateMetadata({ 
-  params 
-}: { 
-  params: Promise<{ lang: string }> 
-}): Promise<Metadata> {
-  const { lang: rawLang } = await params;
-  const lang = rawLang.replace(/^\//, '') as 'es' | 'en';
-  const dict = await getDictionary(lang);
-  const t = dict.blog.meta;
-  const baseUrl = 'https://www.alsnippets.com';
-
-  return {
-    // ✅ Regla de Títulos: Solo el nombre de la página
-    title: "Blog", 
-    description: t.description,
-    keywords: t.keywords,
-    openGraph: {
-      title: t.og_title,
-      description: t.og_description,
-      // ✅ Regla de Enlaces: Inyección de /${lang}/
-      url: `${baseUrl}/${lang}/blog`,
-      siteName: 'Alsnippets',
-      locale: lang === 'es' ? 'es_CO' : 'en_US',
-      type: 'website',
-      images: [{
-        // ✅ Actualizado a tu nueva ruta de imágenes OG
-        url: '/images/og/openGraph-blog.png',
-        width: 1200,
-        height: 630,
-        alt: t.og_alt,
-      }],
-    },
-    alternates: {
-      // ✅ Regla de Enlaces: Inyección de /${lang}/
-      canonical: `${baseUrl}/${lang}/blog`,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: t.og_title,
-      description: t.og_description,
-      images: ['/images/og/openGraph-blog.png'],
-    },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        'max-image-preview': 'large',
-      },
-    }
-  }
-}
-
-/* =====================================================
-   COMPONENTE LAYOUT
+    COMPONENTE LAYOUT - OPTIMIZADO
    ===================================================== */
 export default async function BlogLayout({
   children,
@@ -75,14 +17,13 @@ export default async function BlogLayout({
   const baseUrl = 'https://www.alsnippets.com';
 
   /* =====================================================
-     SCHEMA JSON-LD DINÁMICO
+      SCHEMA JSON-LD DINÁMICO (URLs Absolutas)
      ===================================================== */
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Blog',
     name: s.name,
     description: s.description,
-    // ✅ Regla de Enlaces: Inyección de /${lang}/
     url: `${baseUrl}/${lang}/blog`,
     publisher: {
       '@type': 'Organization',
@@ -95,7 +36,6 @@ export default async function BlogLayout({
     author: {
       '@type': 'Person',
       name: 'Adrián Loaiza',
-      // ✅ Regla de Enlaces: Inyección de /${lang}/
       url: `${baseUrl}/${lang}/sobre-mi`
     }
   }
@@ -108,7 +48,7 @@ export default async function BlogLayout({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      {/* Estructura visual del layout */}
+      {/* Estructura visual del layout (Se mantiene intacta) */}
       <section className="relative w-full">
         {children}
       </section>

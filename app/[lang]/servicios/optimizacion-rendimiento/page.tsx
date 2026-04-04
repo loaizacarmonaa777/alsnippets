@@ -1,26 +1,83 @@
-// app/[lang]/servicios/optimizacion-rendimiento/page.tsx
-// ELIMINAMOS 'use client' - Ahora es Server Component
-import React from 'react'
+import React, { Suspense } from 'react' // ✅ IMPORT OBLIGATORIO
 import PageHero from '@/components/hero/PageHero'
 import VerticalCard from '@/components/ui/VerticalCard'
 import HorizontalCard from '@/components/ui/HorizontalCard'
 import FakeWordPressLogin from '@/components/forms/FakeWordPressLogin'
 import GlassCTA from '@/components/ui/GlassCTA'
 import { getDictionary } from '@/i18n/get-dictionary'
+import { Metadata } from 'next' // ✅ IMPORT OBLIGATORIO
+
+/* =====================================================
+    METADATA DINÁMICA (SEO & SOCIAL) - OPTIMIZADA
+   ===================================================== */
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ lang: string }>
+}): Promise<Metadata> {
+  const { lang: rawLang } = await params
+  const lang = rawLang.replace(/^\//, '') as 'es' | 'en'
+  const dict = await getDictionary(lang)
+
+  // Sincronización estricta con el JSON
+  const t = (dict as any).servicios_optimizacion.meta
+  const baseUrl = 'https://www.alsnippets.com'
+  const ogImage = `${baseUrl}/images/og/openGraph-optimizacion-rendimiento.png`
+
+  return {
+    // ✅ CORREGIDO: Título extraído directamente del JSON (Cambia a inglés automáticamente)
+    title: t.title,
+    description: t.description,
+    keywords: t.keywords,
+    alternates: {
+      canonical: `${baseUrl}/${lang}/servicios/optimizacion-rendimiento`,
+      languages: {
+        'es': `${baseUrl}/es/servicios/optimizacion-rendimiento`,
+        'en': `${baseUrl}/en/servicios/optimizacion-rendimiento`
+      }
+    },
+    openGraph: {
+      title: t.og_title,
+      description: t.og_description,
+      url: `${baseUrl}/${lang}/servicios/optimizacion-rendimiento`,
+      siteName: 'Alsnippets',
+      locale: lang === 'es' ? 'es_CO' : 'en_US',
+      type: 'website',
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: t.og_alt
+        }
+      ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t.twitter_title,
+      description: t.twitter_description,
+      images: [ogImage]
+    }
+  }
+}
 
 /* =====================================================
    Página — Optimización y Rendimiento WordPress
    Ahora es Server Component
 ===================================================== */
 
-export default async function OptimizacionPage({ params }: { params: Promise<{ lang: string }> }) {
+export default async function OptimizacionPage ({
+  params
+}: {
+  params: Promise<{ lang: string }>
+}) {
   // ✅ CORREGIDO: await params directamente
-  const { lang } = await params;
-  
+  const { lang } = await params
+
   // ✅ Cargamos el diccionario directamente
-  const dict = await getDictionary(lang as 'es' | 'en');
-  const t = (dict as any).servicios_optimizacion.page;
-  const normalizedLang = lang.replace(/^\//, '');
+  const dict = await getDictionary(lang as 'es' | 'en')
+  const t = (dict as any).servicios_optimizacion.page
+  const normalizedLang = lang.replace(/^\//, '')
 
   return (
     <>
@@ -32,7 +89,6 @@ export default async function OptimizacionPage({ params }: { params: Promise<{ l
       />
 
       <main className='w-full'>
-        
         {/* BLOQUE DE CARDS 1 — Problemas frecuentes */}
         <section className='w-full max-w-[1200px] mx-auto px-5 py-16 md:py-24 space-y-12'>
           <h2>{t.problems.title}</h2>
@@ -67,7 +123,7 @@ export default async function OptimizacionPage({ params }: { params: Promise<{ l
                 description={item.description}
                 image={item.image}
                 href={`/blog/${item.slug}`}
-                target="_blank"
+                target='_blank'
                 lang={lang}
               />
             ))}
@@ -88,7 +144,7 @@ export default async function OptimizacionPage({ params }: { params: Promise<{ l
                 description={item.description}
                 image={item.image}
                 href={`/blog/${item.slug}`}
-                target="_blank"
+                target='_blank'
                 lang={lang}
               />
             ))}
@@ -105,13 +161,17 @@ export default async function OptimizacionPage({ params }: { params: Promise<{ l
               <h2 className='lg:text-left'>{t.access.title}</h2>
               <div className='text-center lg:text-left space-y-4 text-lg text-[var(--text-2)]'>
                 <p>{t.access.p1}</p>
-                <p className='font-medium italic text-[var(--text-brand)]'>{t.access.confidential}</p>
+                <p className='font-medium italic text-[var(--text-brand)]'>
+                  {t.access.confidential}
+                </p>
               </div>
             </div>
             <div className='w-full max-w-md mx-auto rounded-2xl'>
               <div className='bg-[var(--bg-1)] border border-[var(--border-1)] rounded-2xl p-6 md:p-8 shadow-[var(--shadow-2)]'>
                 {/* ✅ PASAMOS lang a FakeWordPressLogin */}
-                <FakeWordPressLogin lang={lang} />
+                <Suspense fallback={null}>
+                  <FakeWordPressLogin lang={lang} />
+                </Suspense>
               </div>
             </div>
           </div>

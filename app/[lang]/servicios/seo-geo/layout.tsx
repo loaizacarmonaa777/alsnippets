@@ -1,74 +1,7 @@
-import { Metadata } from "next";
 import { getDictionary } from "@/i18n/get-dictionary";
 
 /* =========================================================================
-   SEGURIDAD DE URL BASE
-   ========================================================================= */
-const baseUrl = "https://www.alsnippets.com";
-
-export async function generateMetadata({ 
-  params 
-}: { 
-  params: Promise<{ lang: string }> 
-}): Promise<Metadata> {
-  const { lang: rawLang } = await params;
-  const lang = rawLang.replace(/^\//, '') as 'es' | 'en';
-  const dict = await getDictionary(lang);
-  const t = dict.servicios_seo.meta;
-
-  return {
-    // ✅ Regla de Títulos (SEO): Solo el nombre de la página
-    title: "SEO y GEO", 
-    description: t.description,
-    keywords: t.keywords,
-    
-    alternates: {
-      // ✅ Regla de Enlaces (I18n): Inyección automática de /${lang}/ y www
-      canonical: `${baseUrl}/${lang}/servicios/seo-geo`,
-    },
-
-    openGraph: {
-      title: t.og_title,
-      description: t.og_description,
-      // ✅ Regla de Enlaces (I18n): Inyección de /${lang}/
-      url: `${baseUrl}/${lang}/servicios/seo-geo`,
-      siteName: "Alsnippets",
-      locale: lang === 'es' ? 'es_CO' : 'en_US',
-      type: "website",
-      images: [
-        {
-          // ✅ Imagen actualizada: openGraph-seo-geo.png
-          url: "/images/og/openGraph-seo-geo.png",
-          width: 1200,
-          height: 630,
-          alt: t.og_alt,
-        },
-      ],
-    },
-
-    twitter: {
-      card: "summary_large_image",
-      title: t.twitter_title,
-      description: t.twitter_description,
-      creator: "@alsnippets",
-      images: ["/images/og/openGraph-seo-geo.png"],
-    },
-
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
-    },
-  };
-}
-
-/* =========================================================================
-    COMPONENTE LAYOUT
+    COMPONENTE LAYOUT - OPTIMIZADO (Sin Metadata)
    ========================================================================= */
 export default async function SeoGeoLayout({
   children,
@@ -80,7 +13,10 @@ export default async function SeoGeoLayout({
   const { lang: rawLang } = await params;
   const lang = rawLang.replace(/^\//, '') as 'es' | 'en';
   const dict = await getDictionary(lang);
-  const s = dict.servicios_seo.schema;
+  
+  const s = (dict as any).servicios_seo.schema;
+  const tPage = (dict as any).servicios_seo.page;
+  const baseUrl = "https://www.alsnippets.com";
 
   /* =====================================================
       SCHEMA JSON-LD DINÁMICO (SEO y IA)
@@ -88,29 +24,27 @@ export default async function SeoGeoLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
-    "name": s.name,
+    // ✅ DINÁMICO: Extraído del JSON (Cambia a inglés automáticamente)
+    "name": s.name || tPage.hero.title,
     "description": s.description,
     "provider": {
       "@type": "ProfessionalService",
-      "name": "Alsnippets", // ✅ Singularidad de Marca
+      "name": "Alsnippets",
       "image": `${baseUrl}/images/og/openGraph-seo-geo.png`,
       "url": `${baseUrl}/${lang}`
     },
     "serviceType": "SEO and IA Optimization (GEO)",
     "areaServed": "Worldwide",
-    // ✅ Regla de Enlaces (I18n): Inyección de /${lang}/
     "url": `${baseUrl}/${lang}/servicios/seo-geo`
   };
 
   return (
     <>
-      {/* Inyección de Schema JSON-LD */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      {/* Renderizado de hijos preservando la estructura */}
       <section className="relative w-full">
         {children}
       </section>

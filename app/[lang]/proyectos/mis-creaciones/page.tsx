@@ -1,37 +1,60 @@
-'use client'
-
-import React, { useEffect, useState } from 'react'
+import React, { Suspense } from 'react'
 import PageHero from '@/components/hero/PageHero'
 import HorizontalCard from '@/components/ui/HorizontalCard'
 import GlassCTA from '@/components/ui/GlassCTA'
 import { Rocket } from 'lucide-react'
-import { TypeAnimation } from 'react-type-animation'
 import { getDictionary } from '@/i18n/get-dictionary'
+import { Metadata } from 'next'
+// ✅ IMPORTANTE: Importar el componente que acabas de crear
+import LabTypewriter from './LabTypewriter'
 
-export default function MisCreacionesPage ({
+export async function generateMetadata ({
   params
 }: {
-  params: { lang: string }
-}) {
-  const { lang } = params
-  const [dict, setDict] = useState<any>(null)
+  params: Promise<{ lang: string }>
+}): Promise<Metadata> {
+  const { lang: rawLang } = await params
+  const lang = rawLang.replace(/^\//, '') as 'es' | 'en'
+  const dictData = await getDictionary(lang)
+  const t = (dictData as any).proyecto_creaciones.meta
+  const baseUrl = 'https://www.alsnippets.com'
+  const ogImage = `${baseUrl}/images/og/openGraph-creaciones.png`
 
-  // Carga del diccionario
-  useEffect(() => {
-    const fetchDict = async () => {
-      const d = await getDictionary(lang as 'es' | 'en')
-      setDict(d.proyecto_creaciones)
+  return {
+    title: t.title,
+    description: t.description,
+    keywords: t.keywords,
+    alternates: {
+      canonical: `${baseUrl}/${lang}/proyectos/mis-creaciones`,
+      languages: {
+        es: `${baseUrl}/es/proyectos/mis-creaciones`,
+        en: `${baseUrl}/en/proyectos/mis-creaciones`
+      }
+    },
+    openGraph: {
+      title: t.og_title,
+      description: t.og_description,
+      url: `${baseUrl}/${lang}/proyectos/mis-creaciones`,
+      siteName: 'Alsnippets',
+      locale: lang === 'es' ? 'es_CO' : 'en_US',
+      type: 'website',
+      images: [{ url: ogImage, width: 1200, height: 630, alt: t.og_alt }]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      images: [ogImage]
     }
-    fetchDict()
-  }, [lang])
+  }
+}
 
-  if (!dict) return null // O un loader simple
-
-  // Preparar secuencia para typewriter con tiempos
-  const typewriterSequence = dict.lab.typewriter.flatMap((text: string) => [
-    text,
-    2000
-  ])
+export default async function MisCreacionesPage ({
+  params
+}: {
+  params: Promise<{ lang: string }>
+}) {
+  const { lang } = await params
+  const dictData = await getDictionary(lang as 'es' | 'en')
+  const dict = (dictData as any).proyecto_creaciones
 
   return (
     <>
@@ -188,13 +211,10 @@ export default function MisCreacionesPage ({
                     <span className='relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--bg-brand)]'></span>
                   </span>
 
-                  <TypeAnimation
-                    sequence={typewriterSequence}
-                    wrapper='span'
-                    cursor={true}
-                    repeat={Infinity}
-                    className='inline-block'
-                  />
+                  <Suspense fallback={null}>
+                    {/* ✅ El componente ahora solo renderiza el texto animado */}
+                    <LabTypewriter sequence={dict.lab.typewriter} />
+                  </Suspense>
                 </div>
 
                 <p className='max-w-2xl mx-auto opacity-80 mt-4 text-[var(--text-2)]'>

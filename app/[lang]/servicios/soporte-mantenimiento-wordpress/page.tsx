@@ -1,16 +1,70 @@
-// app/[lang]/servicios/soporte-mantenimiento-wordpress/page.tsx
-import React from 'react'
+import React, { Suspense } from 'react' // ✅ IMPORT OBLIGATORIO
 import PageHero from '@/components/hero/PageHero'
 import VerticalCard from '@/components/ui/VerticalCard'
 import IconCard from '@/components/ui/IconCard'
 import GlassCTA from '@/components/ui/GlassCTA'
 import { getDictionary } from '@/i18n/get-dictionary'
+import { Metadata } from 'next' // ✅ IMPORT OBLIGATORIO
 
 // Iconos
 import IconCopiaSeguridad from '@/components/icons/IconCopiaSeguridad'
 import IconRevisionCompatibilidad from '@/components/icons/IconRevisionCompatibilidad'
 import IconMonitoreoSeguridad from '@/components/icons/IconMonitoreoSeguridad'
 import IconSoporteTecnico from '@/components/icons/IconSoporteTecnico'
+
+/* =====================================================
+    METADATA DINÁMICA (SEO & SOCIAL) - OPTIMIZADA
+   ===================================================== */
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ lang: string }>
+}): Promise<Metadata> {
+  const { lang: rawLang } = await params
+  const lang = rawLang.replace(/^\//, '') as 'es' | 'en'
+  const dict = await getDictionary(lang)
+
+  // Sincronización estricta con i18n/dictionaries/[lang]/servicios_soporte.json
+  const t = (dict as any).servicios_soporte.meta
+  const baseUrl = 'https://www.alsnippets.com'
+  const ogImage = `${baseUrl}/images/og/openGraph-soporte-mantenimiento.png`
+
+  return {
+    // ✅ CORREGIDO: Título dinámico desde JSON (Sin texto plano)
+    title: t.title, 
+    description: t.description,
+    keywords: t.keywords,
+    alternates: {
+      canonical: `${baseUrl}/${lang}/servicios/soporte-mantenimiento-wordpress`,
+      languages: {
+        'es': `${baseUrl}/es/servicios/soporte-mantenimiento-wordpress`,
+        'en': `${baseUrl}/en/servicios/soporte-mantenimiento-wordpress`
+      }
+    },
+    openGraph: {
+      title: t.og_title,
+      description: t.og_description,
+      url: `${baseUrl}/${lang}/servicios/soporte-mantenimiento-wordpress`,
+      siteName: 'Alsnippets',
+      locale: lang === 'es' ? 'es_CO' : 'en_US',
+      type: 'website',
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: t.og_alt
+        }
+      ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t.twitter_title,
+      description: t.twitter_description,
+      images: [ogImage]
+    }
+  }
+}
 
 /* =====================================================
    Página — Soporte y Mantenimiento WordPress

@@ -2,12 +2,12 @@ import { Metadata } from 'next'
 import MainNav from '@/components/navigation/MainNav'
 import TopBar from '@/components/navigation/TopBar'
 import Footer from '@/components/layout/Footer'
-import Tracking from '@/components/Tracking' // Asegúrate de que la ruta sea correcta
+import Tracking from '@/components/Tracking'
 import { getDictionary } from '@/i18n/get-dictionary'
 import { Suspense } from 'react'
 
 /* =====================================================
-    METADATA DINÁMICA (SEO) - LIMPIA
+    METADATA DINÁMICA (SEO & SOCIAL) - OPTIMIZADA
    ===================================================== */
 export async function generateMetadata ({
   params
@@ -16,18 +16,57 @@ export async function generateMetadata ({
 }): Promise<Metadata> {
   const { lang } = await params
   const dict = await getDictionary(lang as 'es' | 'en')
+  const baseUrl = 'https://www.alsnippets.com'
+  
+  // 📍 RUTA CORREGIDA: public/images/og/openGraph-home.png
+  const ogImage = `${baseUrl}/images/og/openGraph-home.png` 
 
   return {
     title: {
       template: `%s | ${dict.common.meta.brand}`,
       default: dict.common.meta.title
     },
-    description: dict.common.meta.description
+    description: dict.common.meta.description,
+    metadataBase: new URL(baseUrl),
+    
+    // 1. Tarea: Limpieza de URLs (Search Console)
+    alternates: {
+      canonical: `${baseUrl}/${lang}`,
+      languages: {
+        'es-ES': `${baseUrl}/es`,
+        'en-US': `${baseUrl}/en`,
+        'x-default': `${baseUrl}/es`,
+      },
+    },
+
+    // 2. Tarea: Tarjeta de Compartido (WhatsApp Fix)
+    openGraph: {
+      title: dict.common.meta.title,
+      description: dict.common.meta.description,
+      url: `${baseUrl}/${lang}`,
+      siteName: dict.common.meta.brand,
+      locale: lang === 'es' ? 'es_ES' : 'en_US',
+      type: 'website',
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: dict.common.meta.brand,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: dict.common.meta.title,
+      description: dict.common.meta.description,
+      images: [ogImage],
+    },
   }
 }
 
 /* =====================================================
-    LAYOUT DE INTERFAZ - LIMPIO Y CORREGIDO
+    LAYOUT DE INTERFAZ - LIMPIO Y OPTIMIZADO
    ===================================================== */
 export default async function LangLayout ({
   children,
@@ -41,7 +80,7 @@ export default async function LangLayout ({
 
   return (
     <>
-      {/* ✅ SOLUCIÓN VERCEL: Tracking envuelto en Suspense */}
+      {/* 3. Tarea: Turbo-Boost Rendimiento & Vercel Fix */}
       <Suspense fallback={null}>
         <Tracking lang={lang} />
       </Suspense>
@@ -54,7 +93,7 @@ export default async function LangLayout ({
         <MainNav lang={lang} />
       </header>
 
-      {/* Hero sube al tope */}
+      {/* El contenido principal */}
       <main className='relative w-full'>{children}</main>
 
       {/* Botón Scroll to top universal */}
@@ -73,7 +112,7 @@ export default async function LangLayout ({
         </svg>
       </a>
 
-      {/* ✅ 2. Pasamos el dict al Footer para eliminar el error de TS */}
+      {/* ✅ Footer con diccionario inyectado */}
       <Footer lang={lang} dict={dict} />
     </>
   )

@@ -2,6 +2,9 @@ import { MetadataRoute } from 'next'
 import fs from 'fs'
 import path from 'path'
 
+/* =====================================================
+    CONFIGURACIÓN DE SITEMAP.TS - TAREA 4 (FINAL)
+   ===================================================== */
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.alsnippets.com'
   const locales = ['es', 'en']
@@ -13,20 +16,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/proyectos/casos-de-exito', '/proyectos/mis-creaciones'
   ]
 
+  // Mapeo de entradas estáticas con soporte de idiomas cruzados (Hreflang en Sitemap)
   const staticEntries = locales.flatMap((lang) =>
     mainPages.map((page) => ({
       url: `${baseUrl}/${lang}${page}`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: page === '' ? 1 : 0.8,
+      // 💡 Optimización SEO: Indica a Google las versiones alternativas directamente
+      languages: {
+        es: `${baseUrl}/es${page}`,
+        en: `${baseUrl}/en${page}`,
+      },
     }))
   )
 
-  // 2. Páginas Dinámicas del Blog (Escaneando tus archivos .mdx)
+  // 2. Páginas Dinámicas del Blog (Escaneando archivos .mdx)
   const blogEntries = locales.flatMap((lang) => {
     const blogDir = path.join(process.cwd(), `content/blog/${lang}`)
     
-    // Verificamos si la carpeta existe para evitar errores en el build
     if (!fs.existsSync(blogDir)) return []
 
     const files = fs.readdirSync(blogDir)
@@ -37,9 +45,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
         const slug = file.replace('.mdx', '')
         return {
           url: `${baseUrl}/${lang}/blog/${slug}`,
-          lastModified: new Date(), // Lo ideal sería leer la fecha del archivo, pero esto funciona
+          lastModified: new Date(),
           changeFrequency: 'monthly' as const,
           priority: 0.6,
+          // 💡 Versiones alternativas para el blog
+          languages: {
+            es: `${baseUrl}/es/blog/${slug}`,
+            en: `${baseUrl}/en/blog/${slug}`,
+          },
         }
       })
   })

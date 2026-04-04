@@ -11,6 +11,60 @@ import {
 } from 'lucide-react'
 import { getDictionary } from '@/i18n/get-dictionary'
 import AccordionSection from '@/components/contacto/AccordionItem'
+import { Metadata } from 'next' // ✅ IMPORT OBLIGATORIO
+import { Suspense } from 'react' // ✅ IMPORT OBLIGATORIO
+
+/* =====================================================
+    METADATA DINÁMICA (SEO & SOCIAL) - OPTIMIZADA
+   ===================================================== */
+export async function generateMetadata ({
+  params
+}: {
+  params: Promise<{ lang: string }>
+}): Promise<Metadata> {
+  const { lang: rawLang } = await params
+  const lang = rawLang.replace(/^\//, '') as 'es' | 'en'
+  const dict = await getDictionary(lang)
+  const t = dict.contacto.meta
+  const baseUrl = 'https://www.alsnippets.com'
+  const ogImage = `${baseUrl}/images/og/openGraph-contacto.png` // ✅ URL ABSOLUTA
+
+  return {
+    title: 'Contacto',
+    description: t.description,
+    keywords: t.keywords,
+    alternates: {
+      canonical: `${baseUrl}/${lang}/contacto`,
+      languages: {
+        'es-CO': `${baseUrl}/es/contacto`,
+        'en-US': `${baseUrl}/en/contacto`
+      }
+    },
+    openGraph: {
+      title: t.og_title,
+      description: t.og_description,
+      url: `${baseUrl}/${lang}/contacto`,
+      siteName: 'Alsnippets',
+      locale: lang === 'es' ? 'es_CO' : 'en_US',
+      type: 'website',
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: t.og_title || 'Contacto Alsnippets'
+        }
+      ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t.twitter_title,
+      description: t.twitter_description,
+      creator: '@alsnippets',
+      images: [ogImage]
+    }
+  }
+}
 
 /* =====================================================
    Página de Contacto - SERVER COMPONENT
@@ -134,16 +188,17 @@ export default async function ContactoPage ({
               className='p-8 md:p-10 flex flex-col justify-center'
               style={{ background: 'var(--gradient-hero)' }}
             >
-              <ContactForm lang={lang} dict={dict.form_contact} />
+              {/* Solo envolvemos el componente interno, sin añadir divs extra que rompan el flex */}
+              <Suspense fallback={null}>
+                <ContactForm lang={lang} dict={dict.form_contact} />
+              </Suspense>
             </div>
           </div>
         </div>
       </section>
 
       {/* SECCIÓN REDES SOCIALES */}
-      <section
-        className='relative w-screen left-[50%] right-[50%] -ml-[50vw] -mr-[50vw] py-24 px-5 overflow-hidden'
-      >
+      <section className='relative w-screen left-[50%] right-[50%] -ml-[50vw] -mr-[50vw] py-24 px-5 overflow-hidden'>
         <div className='relative z-10 max-w-[1200px] mx-auto text-center space-y-10'>
           <h2>{t.social_section.title}</h2>
 

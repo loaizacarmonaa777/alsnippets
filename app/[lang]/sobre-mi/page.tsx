@@ -1,11 +1,66 @@
-// app/[lang]/sobre-mi/page.tsx
-import React from 'react' // ← Agrega este import si falta
+import React from 'react'
 import Image from 'next/image'
 import PageHero from '@/components/hero/PageHero'
 import VerticalCard from '@/components/ui/VerticalCard'
 import HorizontalCard from '@/components/ui/HorizontalCard'
 import GlassCTA from '@/components/ui/GlassCTA'
 import { getDictionary } from '@/i18n/get-dictionary'
+import { Metadata } from 'next' // ✅ IMPORT OBLIGATORIO
+
+/* =====================================================
+    METADATA DINÁMICA (SEO & SOCIAL) - OPTIMIZADA
+   ===================================================== */
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: Promise<{ lang: string }> 
+}): Promise<Metadata> {
+  const { lang: rawLang } = await params;
+  const lang = rawLang.replace(/^\//, '') as 'es' | 'en';
+  const dict = await getDictionary(lang);
+  
+  // Sincronizado con sobre-mi.json
+  const t = (dict as any)['sobre-mi']?.meta;
+  const baseUrl = 'https://www.alsnippets.com';
+  const ogImage = `${baseUrl}/images/og/openGraph-sobre-mi.png`; // ✅ URL ABSOLUTA
+
+  return {
+    title: "Sobre mí", 
+    description: t?.description,
+    alternates: {
+      canonical: `${baseUrl}/${lang}/sobre-mi`,
+      languages: {
+        'es-CO': `${baseUrl}/es/sobre-mi`,
+        'en-US': `${baseUrl}/en/sobre-mi`,
+      },
+    },
+    openGraph: {
+      title: t?.og_title,
+      description: t?.og_description,
+      url: `${baseUrl}/${lang}/sobre-mi`,
+      siteName: 'Alsnippets',
+      locale: lang === 'es' ? 'es_CO' : 'en_US',
+      type: 'profile', // ✅ Tipo perfil para páginas "Sobre mí"
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: t?.og_alt || 'Adrián Loaiza - Alsnippets',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t?.og_title,
+      description: t?.twitter_description,
+      creator: '@alsnippets',
+      images: [ogImage],
+    },
+  }
+}
+
+/* El resto de SobreMiPage se mantiene IGUAL */
 
 export default async function SobreMiPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;

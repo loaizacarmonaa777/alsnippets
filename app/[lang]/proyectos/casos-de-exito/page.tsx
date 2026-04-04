@@ -1,9 +1,64 @@
-import React from 'react'
+import React, { Suspense } from 'react' // ✅ IMPORT OBLIGATORIO
 import Image from 'next/image'
 import PageHero from '@/components/hero/PageHero'
 import GlassCTA from '@/components/ui/GlassCTA'
 import { ExternalLink, Zap, Code } from 'lucide-react'
 import { getDictionary } from '@/i18n/get-dictionary'
+import { Metadata } from 'next' // ✅ IMPORT OBLIGATORIO
+
+/* =====================================================
+    METADATA DINÁMICA (SEO & SOCIAL) - OPTIMIZADA
+   ===================================================== */
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: Promise<{ lang: string }> 
+}): Promise<Metadata> {
+  const { lang: rawLang } = await params;
+  const lang = rawLang.replace(/^\//, '') as 'es' | 'en';
+  const dict = await getDictionary(lang);
+  
+  // Sincronizado con i18n/dictionaries/[lang]/proyecto_casos.json
+  const t = (dict as any).proyecto_casos.meta;
+  const baseUrl = 'https://www.alsnippets.com';
+  const ogImage = `${baseUrl}/images/og/openGraph-casos-exito.png`; // ✅ URL ABSOLUTA
+
+  return {
+    // ✅ CORREGIDO: Título dinámico desde JSON (Sin texto plano)
+    title: t.title, 
+    description: t.description,
+    keywords: t.keywords,
+    alternates: {
+      canonical: `${baseUrl}/${lang}/proyectos/casos-exito`,
+      languages: {
+        'es': `${baseUrl}/es/proyectos/casos-exito`,
+        'en': `${baseUrl}/en/proyectos/casos-exito`,
+      },
+    },
+    openGraph: {
+      title: t.og_title,
+      description: t.og_description,
+      url: `${baseUrl}/${lang}/proyectos/casos-exito`,
+      siteName: 'Alsnippets',
+      locale: lang === 'es' ? 'es_CO' : 'en_US',
+      type: 'website',
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: t.og_alt || 'Casos de Éxito',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t.twitter_title,
+      description: t.twitter_description,
+      images: [ogImage],
+    },
+  }
+}
 
 /* =====================================================
    COMPONENTE AUXILIAR: Tarjeta de Proyecto (BLINDADO)

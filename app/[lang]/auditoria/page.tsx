@@ -1,7 +1,60 @@
+import { Metadata } from 'next'
 import PageHero from '@/components/hero/PageHero'
 import FormAuditoria from '@/components/forms/FormAuditoria'
 import { ShieldCheck, Search, CheckCircle, Clock } from 'lucide-react'
 import { getDictionary } from '@/i18n/get-dictionary'
+
+/* =====================================================
+    METADATA DINÁMICA (SEO & SOCIAL) - OPTIMIZADA
+   ===================================================== */
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ lang: string }>
+}): Promise<Metadata> {
+  const { lang } = await params
+  const dict = await getDictionary(lang as 'es' | 'en')
+  const t = dict.auditoria.meta
+  const baseUrl = 'https://www.alsnippets.com'
+  
+  // Ruta absoluta corregida para WhatsApp
+  const ogImage = `${baseUrl}/images/og/openGraph-auditoria.png`
+
+  return {
+    title: t.title || "Auditoría", 
+    description: t.description,
+    keywords: t.keywords,
+    alternates: {
+      canonical: `${baseUrl}/${lang}/auditoria`,
+      languages: {
+        'es-CO': `${baseUrl}/es/auditoria`,
+        'en-US': `${baseUrl}/en/auditoria`,
+      },
+    },
+    openGraph: {
+      title: t.og_title,
+      description: t.og_description,
+      url: `${baseUrl}/${lang}/auditoria`,
+      siteName: dict.common.meta.brand,
+      locale: lang === 'en' ? 'en_US' : 'es_CO',
+      type: 'website',
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: t.og_alt || dict.common.meta.brand,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t.twitter_title,
+      description: t.twitter_description,
+      images: [ogImage],
+    },
+  }
+}
 
 export default async function AuditoriaPage ({
   params

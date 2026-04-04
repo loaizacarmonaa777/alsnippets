@@ -1,32 +1,89 @@
-// app/[lang]/servicios/seguridad-limpieza/page.tsx
-// ELIMINAMOS 'use client' - Ahora es Server Component
-import React from 'react'
+import React, { Suspense } from 'react' // ✅ IMPORT OBLIGATORIO
 import PageHero from '@/components/hero/PageHero'
 import VerticalCard from '@/components/ui/VerticalCard'
 import HorizontalCard from '@/components/ui/HorizontalCard'
 import FakeWordPressLogin from '@/components/forms/FakeWordPressLogin'
 import GlassCTA from '@/components/ui/GlassCTA'
 import { getDictionary } from '@/i18n/get-dictionary'
+import { Metadata } from 'next' // ✅ IMPORT OBLIGATORIO
 
 /* =====================================================
-   Página — Seguridad y Limpieza
+    METADATA DINÁMICA (SEO & SOCIAL) - OPTIMIZADA
+   ===================================================== */
+export async function generateMetadata ({
+  params
+}: {
+  params: Promise<{ lang: string }>
+}): Promise<Metadata> {
+  const { lang: rawLang } = await params
+  const lang = rawLang.replace(/^\//, '') as 'es' | 'en'
+  const dict = await getDictionary(lang)
+
+  // Sincronización estricta con servicios_seguridad.json
+  const t = (dict as any).servicios_seguridad.meta
+  const baseUrl = 'https://www.alsnippets.com'
+  const ogImage = `${baseUrl}/images/og/openGraph-seguridad-limpieza.png`
+
+  return {
+    // ✅ CORREGIDO: Título dinámico desde JSON (Sin texto plano)
+    title: t.title.split('|')[0].trim(),
+    description: t.description,
+    keywords: t.keywords,
+    alternates: {
+      canonical: `${baseUrl}/${lang}/servicios/seguridad-limpieza`,
+      languages: {
+        es: `${baseUrl}/es/servicios/seguridad-limpieza`,
+        en: `${baseUrl}/en/servicios/servicios/seguridad-limpieza`
+      }
+    },
+    openGraph: {
+      title: t.og_title,
+      description: t.og_description,
+      url: `${baseUrl}/${lang}/servicios/seguridad-limpieza`,
+      siteName: 'Alsnippets',
+      locale: lang === 'es' ? 'es_CO' : 'en_US',
+      type: 'website',
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: t.og_alt
+        }
+      ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t.twitter_title,
+      description: t.twitter_description,
+      images: [ogImage]
+    }
+  }
+}
+
+/* =====================================================
+   Página — Seguridad y Limpieza 
    Ahora es un Server Component
 ===================================================== */
 
-export default async function SeguridadLimpiezaPage({ params }: { params: Promise<{ lang: string }> }) {
-  const { lang } = await params;
-  
-  const dict = await getDictionary(lang as 'es' | 'en');
-  const t = (dict as any).servicios_seguridad.page; // ✅ Ahora sí existe
-  const normalizedLang = lang.replace(/^\//, '');
+export default async function SeguridadLimpiezaPage ({
+  params
+}: {
+  params: Promise<{ lang: string }>
+}) {
+  const { lang } = await params
+
+  const dict = await getDictionary(lang as 'es' | 'en')
+  const t = (dict as any).servicios_seguridad.page // ✅ Ahora sí existe
+  const normalizedLang = lang.replace(/^\//, '')
 
   return (
     <>
       {/* HERO */}
       <PageHero
         // Usamos los campos directamente del objeto
-        title={t.hero?.title || "Seguridad y Limpieza WordPress"}
-        subtitle={t.hero?.subtitle || "Protección profesional para tu sitio"}
+        title={t.hero?.title || 'Seguridad y Limpieza WordPress'}
+        subtitle={t.hero?.subtitle || 'Protección profesional para tu sitio'}
         image='/images/hero/hero-seguridad-limpieza.webp'
       />
 
@@ -113,7 +170,9 @@ export default async function SeguridadLimpiezaPage({ params }: { params: Promis
             <div className='w-full max-w-md mx-auto rounded-2xl bg-amber-50'>
               <div className='bg-[var(--bg-3)] border border-[var(--border-1)] rounded-2xl p-6 md:p-8 shadow-[var(--shadow-2)]'>
                 {/* ✅ CORREGIDO: Pasamos lang */}
-                <FakeWordPressLogin lang={lang} />
+                <Suspense fallback={null}>
+                  <FakeWordPressLogin lang={lang} />
+                </Suspense>
               </div>
             </div>
           </div>
@@ -125,7 +184,7 @@ export default async function SeguridadLimpiezaPage({ params }: { params: Promis
             title={t.cta.title}
             description={t.cta.description}
             buttonText={t.cta.button}
-            buttonHref={`/${normalizedLang}/auditoria#form`} 
+            buttonHref={`/${normalizedLang}/auditoria#form`}
             disclaimer={t.cta.disclaimer}
             // ✅ PASAMOS lang a GlassCTA (lo requiere)
             lang={lang}

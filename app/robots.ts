@@ -1,17 +1,22 @@
 import { MetadataRoute } from 'next'
 
+/* =====================================================
+    CONFIGURACIÓN DE ROBOTS.TS
+   ===================================================== */
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
       allow: '/',
       disallow: [
-        '/api/',              // 🚨 Rutas de backend (corrector, auditoria, etc)
-        '/*/login',           // 🚨 Acceso administrativo en cualquier idioma
-        '/*/dashboard/',      // 🚨 El panel de control de auditorías
-        '/*/tarjetas/',       // 🚨 Generalmente son privadas/personales
-        '/*/gracias',         // 🚨 Páginas de éxito (no queremos tráfico orgánico aquí)
-        '/*?*',               // 🚨 Evita indexar parámetros de búsqueda o filtros
+        '/api/',               // 🚨 Rutas de backend
+        '/*/login',            // 🚨 Acceso administrativo
+        '/*/dashboard/',       // 🚨 Panel de control
+        '/*/tarjetas/',        // 🚨 Páginas privadas/personales
+        '/*/gracias',          // 🚨 Páginas de éxito
+        '/*?*',                // 🚨 Evita indexar parámetros (Search Console Fix)
+        '/cdn-cgi/',           // 💡 Bloqueo de Cloudflare (Email Protection Fix)
+        '/_next/',             // 💡 Bloqueo de archivos internos de Next.js
       ],
     },
     sitemap: 'https://www.alsnippets.com/sitemap.xml',

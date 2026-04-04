@@ -3156,40 +3156,49 @@ function SuiteTextModule ({ lang }: { lang: string }) {
   }, [input, output])
 
   const handleAIAction = async () => {
-    if (!comando) return
+    if (!comando || !input) return
     setIsLoading(true)
-    setInfoIA('SuiteText AI está pensando...') // Feedback inmediato
+    setInfoIA('SuiteText AI está procesando...')
 
     try {
       const res = await fetch('/api/corrector', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          texto: input || ' ', // Evita enviar texto vacío
-          comando,
+          // ✅ MEJORA: Enviamos un contexto más claro a la IA
+          texto: input,
+          comando: `Actúa como un editor de texto experto. Instrucción: ${comando}`,
           lang
         })
       })
 
+      // Validación de respuesta de red
       if (!res.ok) throw new Error('Error en el servidor')
 
       const data = await res.json()
-      if (data.success) {
+
+      if (data.success && data.resultado) {
         setOutput(data.resultado)
-        setInfoIA(data.info)
+        setInfoIA(data.info || 'Acción completada con éxito')
       } else {
-        setInfoIA(data.error || 'La IA tuvo un inconveniente')
+        setInfoIA(
+          data.error || 'La IA no pudo procesar este comando específico'
+        )
       }
     } catch (err) {
-      setInfoIA('Error de conexión con SuiteText AI')
-      console.error(err)
+      setInfoIA('Error: SuiteText AI tuvo un problema de conexión')
+      console.error('Error en SuiteText:', err)
     } finally {
       setIsLoading(false)
     }
   }
 
+  // ✅ Mantenemos solo UNA versión (la más robusta)
   const handleCopy = () => {
-    navigator.clipboard.writeText(output || input)
+    const textToCopy = output || input
+    if (!textToCopy) return
+
+    navigator.clipboard.writeText(textToCopy)
     setIsCopied(true)
     setTimeout(() => setIsCopied(false), 2000)
   }
@@ -3239,7 +3248,7 @@ function SuiteTextModule ({ lang }: { lang: string }) {
             />
           </div>
 
-          {/* 2. RESULTADO (I18N + TOKENS + SCROLL) */}
+          {/* 2. RESULTADO (MODIFICADO PARA SELECCIÓN LIBRE) */}
           <div className='rounded-[2rem] border bg-[var(--bg-inverse)] border-[var(--border-inverse)] overflow-hidden shadow-2xl relative flex flex-col'>
             <div className='p-4 flex justify-between items-center border-b border-[var(--border-inverse)] bg-[var(--bg-2)]/20 shrink-0'>
               <span className='text-[10px] uppercase tracking-widest text-[var(--text-inverse)] opacity-50 font-black'>
@@ -3258,14 +3267,13 @@ function SuiteTextModule ({ lang }: { lang: string }) {
               </button>
             </div>
 
-            {/* Contenedor con altura fija, scroll y tipografía mono */}
-            <div className='p-8 h-[450px] overflow-y-auto custom-scrollbar text-[var(--text-inverse)] font-mono text-sm leading-relaxed whitespace-pre-wrap select-all'>
-              {output || (
-                <span className='opacity-20 italic font-normal text-[var(--text-inverse)]'>
-                  {t.placeholder_fix}
-                </span>
-              )}
-            </div>
+            {/* ✅ Cambio de div por textarea para permitir copiar fragmentos específicos */}
+            <textarea
+              readOnly
+              value={output || ''}
+              placeholder={t.placeholder_fix}
+              className='p-8 h-[450px] w-full bg-transparent outline-none text-[var(--text-inverse)] font-mono text-sm leading-relaxed resize-none custom-scrollbar placeholder:italic placeholder:opacity-20'
+            />
 
             <AnimatePresence>
               {infoIA && (
@@ -3396,6 +3404,7 @@ function SuiteTextModule ({ lang }: { lang: string }) {
     }
   }
 }
+
 /* =====================================================
    CASCARÓN DEL ERP (REFACTORIZADO & PREMIUM)
 ===================================================== */

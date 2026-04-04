@@ -1,5 +1,3 @@
-// app/[lang]/servicios/seo-geo/page.tsx
-// ELIMINAMOS 'use client' - Ahora es Server Component
 import React from 'react'
 import PageHero from '@/components/hero/PageHero'
 import Image from 'next/image'
@@ -7,6 +5,66 @@ import VerticalCard from '@/components/ui/VerticalCard'
 import HorizontalCard from '@/components/ui/HorizontalCard'
 import GlassCTA from '@/components/ui/GlassCTA'
 import { getDictionary } from '@/i18n/get-dictionary'
+import { Metadata } from 'next' // ✅ IMPORT OBLIGATORIO
+import { Suspense } from 'react' // ✅ IMPORT OBLIGATORIO
+
+/* =====================================================
+    METADATA DINÁMICA (SEO & SOCIAL) - OPTIMIZADA
+   ===================================================== */
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: Promise<{ lang: string }> 
+}): Promise<Metadata> {
+  const { lang: rawLang } = await params;
+  const lang = rawLang.replace(/^\//, '') as 'es' | 'en';
+  const dict = await getDictionary(lang);
+  
+  // Sincronización estricta con i18n/dictionaries/[lang]/servicios_seo.json
+  const t = (dict as any).servicios_seo.meta;
+  const baseUrl = "https://www.alsnippets.com";
+  const ogImage = `${baseUrl}/images/og/openGraph-seo-geo.png`;
+
+  return {
+    // ✅ CORREGIDO: Título dinámico desde JSON (Cambia según idioma)
+    title: t.title.split(':')[0].trim(), 
+    description: t.description,
+    keywords: t.keywords,
+    alternates: {
+      canonical: `${baseUrl}/${lang}/servicios/seo-geo`,
+      languages: {
+        'es': `${baseUrl}/es/servicios/seo-geo`,
+        'en': `${baseUrl}/en/servicios/seo-geo`,
+      },
+    },
+    openGraph: {
+      title: t.og_title,
+      description: t.og_description,
+      url: `${baseUrl}/${lang}/servicios/seo-geo`,
+      siteName: "Alsnippets",
+      locale: lang === 'es' ? 'es_CO' : 'en_US',
+      type: "website",
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: t.og_alt,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t.twitter_title,
+      description: t.twitter_description,
+      images: [ogImage],
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
 
 /* =====================================================
    Página — SEO - GEO Optimización para buscadores y LLMs
@@ -16,8 +74,10 @@ export default async function SeoPage({ params }: { params: Promise<{ lang: stri
   const { lang } = await params;
   
   const dict = await getDictionary(lang as 'es' | 'en');
-  const t = (dict as any).servicios_seo?.page || (dict as any)['servicios-seo']?.page;
-  const normalizedLang = lang.replace(/^\//, '');
+  const t = (dict as any).servicios_seo?.page;
+
+  // Validación simple y limpia. Si no hay datos, no renderiza.
+  if (!t) return null;
 
   return (
     <>
