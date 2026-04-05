@@ -68,7 +68,7 @@ export default function GlassCTA ({
           rounded-3xl overflow-hidden shadow-[var(--shadow-2)]
           bg-[var(--bg-1)]/20 dark:bg-[var(--bg-1)]/50
           backdrop-blur-xl
-          border border-[var(--border-1)]/30 dark:border-[var(--border-brand)]
+          border border-[var(--border-brand)]
           transition-all duration-300
         '
       >

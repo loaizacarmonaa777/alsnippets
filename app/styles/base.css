@@ -2,48 +2,53 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth !important;
+    /* Eliminamos smooth scroll global para evitar bloqueo de hilo principal */
     -webkit-overflow-scrolling: touch;
   }
+  
   body {
     min-height: 100vh;
     font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
     font-size: var(--text-base);
-    color: var(--text-2); /* Color dinámico */
-    background: var(--bg-body); /* Color dinámico */
+    color: var(--text-2);
+    background: var(--bg-body);
     line-height: var(--leading-normal);
     overflow-x: hidden;
-    scroll-behavior: smooth !important;
     -webkit-overflow-scrolling: touch;
   }
 
+  /* Optimizamos main para evitar layouts pesados en mobile */
   main {
     width: 100%;
-    max-width: 100%;
-    margin: 0;
-    padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
     letter-spacing: -0.02em;
-    color: var(--text-1); /* Color dinámico */
+    color: var(--text-1);
     line-height: var(--leading-tight);
   }
 
-  h1 { @apply text-5xl md:text-6xl lg:text-7xl my-4 font-bold tracking-tighter; }
-  h2 { @apply text-4xl md:text-5xl lg:text-6xl my-4 text-center tracking-tight; }
-  h3 { @apply text-lg md:text-xl lg:text-2xl my-4 font-semibold tracking-tight; }
-  h4 { font-size: var(--h4); }
-  h5 { font-size: var(--h5); }
-  h6 { font-size: var(--h6); }
+  /* Reducimos el uso de @apply global para aligerar el CSS inicial */
+  h1 { font-weight: 700; @apply text-5xl md:text-7xl tracking-tighter; }
+  h2 { @apply text-4xl md:text-6xl text-center tracking-tight; }
+  h3 { font-weight: 600; @apply text-lg md:text-2xl tracking-tight; }
+  
+  p { @apply text-base md:text-lg; }
 
-  p { @apply text-base md:text-lg leading-relaxed; }
+  section { 
+    margin-bottom: 2rem; /* Reducido para mobile */
+    scroll-margin-top: 6rem; 
+  }
 
-  section { margin-bottom: 4rem; scroll-margin-top: 6rem; }
+  button { cursor: pointer; }
+}
 
-  button { background: none; border: none; padding: 0; font: inherit; color: inherit; cursor: pointer; }
+/* Aplicamos smooth scroll solo si el usuario no tiene preferencias de reducción de movimiento */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }

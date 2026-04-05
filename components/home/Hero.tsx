@@ -130,6 +130,7 @@ export default function Hero ({ lang }: { lang: string }) {
               alt={slide.title}
               fill
               priority={index === 0}
+              loading={index === 0 ? undefined : "lazy"}
               className='object-cover'
               sizes='100vw'
             />
@@ -141,6 +142,7 @@ export default function Hero ({ lang }: { lang: string }) {
               alt={slide.title}
               fill
               priority={index === 0}
+              loading={index === 0 ? undefined : "lazy"}
               className='object-cover'
               sizes='100vw'
             />
@@ -165,12 +167,12 @@ export default function Hero ({ lang }: { lang: string }) {
                 {slide.subtitle}
               </p>
 
-              <div className='pt-6'>
+              <div className='pt-6 '>
                 <Link
                   href={slide.ctaHref}
                   target='_blank' // Abre en pestaña nueva
                   rel='noopener noreferrer' // Seguridad
-                  className={`inline-block px-8 py-3 rounded-full text-lg font-bold transition-transform duration-300 hover:scale-105 shadow-lg ${
+                  className={`inline-block px-8 py-3 border border-[var(--border-brand)] rounded-full text-lg font-bold transition-transform duration-300 hover:scale-105 shadow-lg ${
                     slide.ctaVariant === 'primary'
                       ? 'bg-[var(--bg-brand)] text-[var(--text-inverse)] hover:brightness-110'
                       : 'bg-[var(--bg-1)] text-[var(--text-1)] hover:bg-[var(--bg-2)]'

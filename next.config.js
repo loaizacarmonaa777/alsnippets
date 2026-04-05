@@ -15,6 +15,12 @@ const nextConfig = {
       {
         source: '/(.*)', // Aplica a todas las rutas
         headers: [
+          // 🚀 RENDIMIENTO: Preconnect a dominios críticos (Mejora árbol de dependencias)
+          // Esto establece una conexión con Facebook y Google antes de que los scripts se carguen.
+          {
+            key: 'Link',
+            value: '<https://connect.facebook.net>; rel=preconnect, <https://www.googletagmanager.com>; rel=preconnect'
+          },
           // HSTS - Forzar HTTPS
           {
             key: 'Strict-Transport-Security',
@@ -51,10 +57,14 @@ const nextConfig = {
   compress: true,
 
   // =====================================================
-  // 4. SEGURIDAD: Experimental (opcional pero recomendado)
+  // 4. SEGURIDAD Y RENDIMIENTO: Experimental
   // =====================================================
   experimental: {
     taint: true, // Evita que datos sensibles lleguen al cliente
+    
+    // 🚀 RENDIMIENTO: Optimiza la importación de iconos y animaciones
+    // Ayuda a reducir el JavaScript innecesario en el bundle final.
+    optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
 };
 

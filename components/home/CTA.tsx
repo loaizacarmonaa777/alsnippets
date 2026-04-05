@@ -39,7 +39,7 @@ export default function CTA ({ lang }: { lang: string }) {
           rounded-3xl overflow-hidden shadow-[var(--shadow-2)]
           bg-[var(--bg-1)]/20 dark:bg-[var(--bg-1)]/50
           backdrop-blur-xl
-          border border-[var(--border-1)]/30 dark:border-[var(--border-brand)]
+          border border-[var(--border-brand)]
           transition-all duration-300
         '
       >
@@ -70,7 +70,7 @@ export default function CTA ({ lang }: { lang: string }) {
                 text-lg font-bold rounded-full overflow-hidden shadow-[var(--shadow-1)]
                 transition-all duration-300 ease-in-out
                 bg-[var(--bg-2)] text-[var(--text-brand)]
-                border border-transparent
+                border border-[var(--border-brand)]
                 hover:bg-[var(--bg-inverse)] 
                 hover:border-[var(--border-brand)]
                 hover:-translate-y-1 hover:shadow-[var(--shadow-2)]

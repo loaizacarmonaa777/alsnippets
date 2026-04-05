@@ -1,5 +1,6 @@
 /* app/styles/animations.css */
 
+/* 1. Keyframes Optimizados (Uso de transform/opacity siempre que sea posible) */
 @keyframes spin-gradient { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } }
 @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
@@ -7,53 +8,63 @@
 @keyframes spectrum-move-left { 0% { transform: translateX(33.333%); } 100% { transform: translateX(0); } }
 @keyframes eye-blink { 0%, 45%, 55%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.1); } }
 @keyframes button-send-fly { from { transform: translateY(0.3em); } to { transform: translateY(-0.1em); } }
+
+/* Estas animaciones de background-position son pesadas en mobile; se mantienen pero con optimización de capa */
 @keyframes gradient-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 @keyframes gradient-x-move { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
 @keyframes gradient-x-move-reverse { 0% { background-position: 200% 50%; } 100% { background-position: 0% 50%; } }
 
-/* Animación de parpadeo para los ojos de formularios */
-.eye-blink { animation: eye-blink 0.35s ease-in-out; }
-
-/* Animación de transición para los elementos de espectrum */
-@media (prefers-reduced-motion: reduce) {
-  .spectrum-frame::before, .spectrum-frame::after, .animate-marquee, .animate-scroll { animation: none; }
+/* 2. Clases de Animación con Hardware Acceleration */
+.eye-blink { 
+  animation: eye-blink 0.35s ease-in-out; 
+  will-change: transform; 
 }
 
-/* Animación de transición para los elementos */
-.alert-transition {
-  transition: opacity 0.25s ease-out, transform 0.25s ease-out, max-height 0.25s ease-out, margin-bottom 0.25s ease-out;
-  overflow: hidden;
-}
-
-/* Animación de brillo para los elementos */
-.alert-hidden { opacity: 0; transform: translateY(-6px); max-height: 0; margin-bottom: 0; pointer-events: none; }
-.alert-visible { opacity: 1; transform: translateY(0); max-height: 200px; margin-bottom: 0.5rem; }
-
-/* Animación de gradiente para el fondo */
-.animate-gradient-bg {
-  background: var(--gradient-animated);
-  background-size: 500% 500%;
-  animation: gradient-shift 10s ease infinite;
-}
-
-/* Animación de gradiente para el CTA */
-.animate-gradient-cta {
-  background: var(--gradient-cta);
-  background-size: 500% 500%;
-  animation: gradient-shift 10s ease infinite;
-}
-
-/* Animación de brillo */
-.animate-glow-ltr { background-size: 200% 100%; animation: gradient-x-move 3s linear infinite; }
-.animate-glow-rtl { background-size: 200% 100%; animation: gradient-x-move-reverse 3s linear infinite; }
-
-/* Animación para texto infinito en top menu */
 .animate-marquee {
-  animation: marquee 20s linear infinite; /* Ajusta los segundos para más o menos velocidad */
+  animation: marquee 25s linear infinite;
+  will-change: transform;
 }
 
-
-/* Animación scroll para el carrusel de logos */
 .animate-scroll {
   animation: scroll 60s linear infinite;
+  will-change: transform;
+}
+
+/* 3. Optimizaciones de Gradientes (GPU) */
+.animate-gradient-bg, .animate-gradient-cta {
+  background-size: 400% 400%; /* Reducido de 500% para aligerar cálculo */
+  animation: gradient-shift 12s ease infinite;
+  will-change: background-position;
+}
+
+.animate-glow-ltr { 
+  background-size: 200% 100%; 
+  animation: gradient-x-move 4s linear infinite; 
+  will-change: background-position;
+}
+
+.animate-glow-rtl { 
+  background-size: 200% 100%; 
+  animation: gradient-x-move-reverse 4s linear infinite; 
+  will-change: background-position;
+}
+
+/* 4. Transiciones de Alertas */
+.alert-transition {
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out, max-height 0.2s ease-out;
+  will-change: opacity, transform;
+}
+
+.alert-hidden { opacity: 0; transform: translateY(-4px); max-height: 0; pointer-events: none; }
+.alert-visible { opacity: 1; transform: translateY(0); max-height: 200px; }
+
+/* 5. Accesibilidad y Ahorro de Energía */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
 }

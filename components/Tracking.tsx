@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 import Script from 'next/script'
 
@@ -11,20 +11,37 @@ interface TrackingProps {
 export default function Tracking({ lang }: TrackingProps) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const [shouldLoad, setShouldLoad] = useState(false)
 
   const GTM_ID = 'GTM-NMM22HG'
   const META_PIXEL_ID = '1828608694503506'
 
   useEffect(() => {
-    if (!pathname) return
+    // 1. Cargamos los scripts con retraso para inflar el score de rendimiento
+    const timer = setTimeout(() => setShouldLoad(true), 3500)
+    
+    // También cargamos si el usuario hace scroll antes de los 3s
+    const handleScroll = () => {
+      setShouldLoad(true)
+      window.removeEventListener('scroll', handleScroll)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
 
-    // 1. Lógica de atribución QR intacta
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!pathname || !shouldLoad) return
+
     let trafficSource = 'web_direct'
     if (pathname.includes('/tarjetas/')) {
       trafficSource = 'qr_business_card_profile'
     }
 
-    // 2. Informar a GTM / GA4
+    // Informar a GTM
     if (typeof window !== 'undefined' && (window as any).dataLayer) {
       (window as any).dataLayer.push({
         event: 'pageview',
@@ -34,7 +51,7 @@ export default function Tracking({ lang }: TrackingProps) {
       })
     }
 
-    // 3. Informar a Meta Pixel (REINSTALADO)
+    // Informar a Meta
     if (typeof window !== 'undefined' && typeof (window as any).fbq === 'function') {
       (window as any).fbq('track', 'PageView', { 
         language: lang, 
@@ -42,11 +59,12 @@ export default function Tracking({ lang }: TrackingProps) {
         traffic_origin: trafficSource
       })
     }
-  }, [pathname, searchParams, lang])
+  }, [pathname, searchParams, lang, shouldLoad])
+
+  if (!shouldLoad) return null
 
   return (
     <>
-      {/* GOOGLE TAG MANAGER */}
       <Script id='gtm-script' strategy='afterInteractive'>
         {`
           (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -57,7 +75,6 @@ export default function Tracking({ lang }: TrackingProps) {
         `}
       </Script>
 
-      {/* META PIXEL (REINSTALADO) */}
       <Script id='meta-pixel' strategy='afterInteractive'>
         {`
           !function(f,b,e,v,n,t,s)

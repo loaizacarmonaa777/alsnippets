@@ -57,21 +57,37 @@ export default function TopBar ({ lang }: TopBarProps) {
             rel='noopener noreferrer'
             className='group relative flex items-center justify-center w-full md:px-6 h-full overflow-hidden transition-all duration-300'
           >
-            {/* Fondo animado */}
-            <div className='absolute inset-0 animate-gradient-cta opacity-90 group-hover:opacity-100 transition-opacity' />
+            {/* 🎨 FONDO ANIMADO: Usa tu variable de degradado promocional */}
+            <div
+              className='absolute inset-0 opacity-90 group-hover:opacity-100 transition-opacity'
+              style={{
+                background: 'var(--gradient-cta)',
+                backgroundSize: '400% 400%',
+                animation: 'gradient-cta 15s ease infinite'
+              }}
+            />
 
-            {/* Punto de notificación parpadeante sutil */}
+            {/* 💡 PUNTO DE NOTIFICACIÓN: Color adaptativo usando variables del root */}
             <span className='relative z-10 flex h-2 w-2 mr-1.5'>
-              <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75'></span>
-              <span className='relative inline-flex rounded-full h-2 w-2 bg-white'></span>
+              <span
+                className='animate-ping absolute inline-flex h-full w-full rounded-full opacity-75'
+                style={{ backgroundColor: 'var(--bg-img-pago)' }}
+              ></span>
+              <span
+                className='relative inline-flex rounded-full h-2 w-2'
+                style={{ backgroundColor: 'var(--bg-brand)' }}
+              ></span>
             </span>
 
-            {/* Texto del botón localizado */}
-            <span className='relative z-10 text-[10px] md:text-[12px] font-medium uppercase tracking-widest text-white whitespace-nowrap'>
+            {/* 📝 TEXTO DEL BOTÓN: Optimizado para contraste con el degradado */}
+            <span
+              className='relative z-10 text-[10px] md:text-[12px] font-bold uppercase tracking-widest whitespace-nowrap'
+              style={{ color: 'var(--text-4)' }}
+            >
               {t.buttonText}
             </span>
 
-            {/* Brillo animado */}
+            {/* ✨ BRILLO ANIMADO (Overlay) */}
             <div className='absolute inset-0 animate-glow-ltr opacity-30 mix-blend-overlay' />
           </Link>
         </div>

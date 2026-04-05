@@ -1,10 +1,18 @@
 import { Metadata } from 'next'
+import dynamic from 'next/dynamic'
 import MainNav from '@/components/navigation/MainNav'
 import TopBar from '@/components/navigation/TopBar'
 import Footer from '@/components/layout/Footer'
-import Tracking from '@/components/Tracking'
 import { getDictionary } from '@/i18n/get-dictionary'
 import { Suspense } from 'react'
+
+// DEFINICIÓN DE CONSTANTES DINÁMICAS (OPTIMIZACIÓN DE RENDIMIENTO)
+const Tracking = dynamic(() => import('@/components/Tracking'), { 
+  ssr: false 
+})
+const CookieConsent = dynamic(() => import('@/components/ui/CookieConsent'), { 
+  ssr: false 
+})
 
 /* =====================================================
     METADATA DINÁMICA (SEO & SOCIAL) - OPTIMIZADA
@@ -114,6 +122,9 @@ export default async function LangLayout ({
 
       {/* ✅ Footer con diccionario inyectado */}
       <Footer lang={lang} dict={dict} />
+
+      {/* ✅ CookieConsent movido al final para no bloquear el renderizado inicial */}
+      <CookieConsent />
     </>
   )
 }

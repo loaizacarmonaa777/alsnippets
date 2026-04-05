@@ -2,22 +2,19 @@
 import type { Metadata } from 'next'
 import { Inter, Outfit } from 'next/font/google'
 import './globals.css' // ✅ Ruta correcta: mismo nivel
-import CookieConsent from '@/components/ui/CookieConsent'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { AuthProvider } from '@/components/providers/AuthProvider'
-import Tracking from '@/components/Tracking'
-import { Suspense } from 'react'
 
 const inter = Inter({
-  variable: '--font-inter',
   subsets: ['latin'],
-  display: 'swap'
+  variable: '--font-inter',
+  display: 'swap',
 })
 
 const outfit = Outfit({
-  variable: '--font-heading',
   subsets: ['latin'],
-  display: 'swap'
+  variable: '--font-heading',
+  display: 'swap',
 })
 
 export default async function RootLayout({
@@ -32,15 +29,17 @@ export default async function RootLayout({
 
   return (
     <html lang={lang} suppressHydrationWarning>
+      <head>
+        {/* 🚀 OPTIMIZACIÓN: DNS Prefetch (Acelera la resolución de dominios externos) */}
+        {/* Esto reduce la latencia en el árbol de dependencia de red para scripts de terceros */}
+        <link rel="dns-prefetch" href="https://connect.facebook.net" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
+      </head>
       <body className={`${inter.variable} ${outfit.variable} antialiased`}>
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
           <AuthProvider>
-            {/* Quitamos el nonce porque el middleware no lo da */}
-            <Suspense fallback={null}>
-              <Tracking lang={lang} />
-            </Suspense>
             {children}
-            <CookieConsent />
           </AuthProvider>
         </ThemeProvider>
       </body>
