@@ -82,13 +82,17 @@ export default async function BlogPage ({
         subtitle={t.hero.subtitle}
         image='/images/hero/hero-blog.webp'
       />
-      <Suspense
-        fallback={
-          <div className='h-96 animate-pulse bg-gray-100 rounded-3xl' />
-        }
-      >
-        <BlogFilter posts={posts} categories={categories} lang={lang} />
-      </Suspense>
+      <main className='w-full'>
+        <section className='w-full max-w-[1200px] mx-auto px-5 py-16 md:py-24 space-y-12'>
+          <Suspense
+            fallback={
+              <div className='h-96 animate-pulse bg-gray-100 rounded-3xl' />
+            }
+          >
+            <BlogFilter posts={posts} categories={categories} lang={lang} />
+          </Suspense>
+        </section>
+      </main>
     </>
   )
 }
