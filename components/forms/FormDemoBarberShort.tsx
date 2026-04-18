@@ -97,18 +97,19 @@ export default function FormDemoBarberShort ({
     setIsSubmitting(true)
 
     try {
-      // ✅ SUSTITUCIÓN ALSNIPPETS: Enviamos datos a Supabase
+      // ✅ SUSTITUCIÓN ALSNIPPETS: Enviamos datos a Turso
       const result = await submitLead({
-        email: 'demo_user@barbershort.com', // Como es una demo sin input de mail, usamos un placeholder o podrías pedirlo
+        email: 'demo_user@barbershort.com', // Mantenemos el placeholder para la DB
         nombre: name,
         telefono: `${codigoPais}${phone}`,
         source: 'barber_short',
         lang: lang,
         metadata: {
           turnstile: turnstileToken,
-          password_usada: password, // Para saber si probaron la demo con éxito
+          password_usada: password, // Útil para saber si entraron con la pass correcta
           prefijo: codigoPais,
-          url_demo: window.location.href
+          url_demo: typeof window !== 'undefined' ? window.location.href : '',
+          db_provider: 'turso_edge' // Etiqueta de control
         }
       })
 
