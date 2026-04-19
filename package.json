@@ -15,8 +15,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@libsql/client": "^0.17.2",
     "@marsidev/react-turnstile": "^1.4.2",
-    "@supabase/supabase-js": "^2.100.1",
     "canvas-confetti": "^1.9.4",
     "cheerio": "^1.2.0",
     "clsx": "^2.1.1",

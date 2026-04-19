@@ -123,7 +123,7 @@ export default function CotizadorApp ({ lang, dict }: CotizadorAppProps) {
       .join('\n');
 
     try {
-      // 1. ✅ PERSISTENCIA EN SUPABASE: Antes que nada, aseguramos el Lead
+      // 1. ✅ PERSISTENCIA EN TURSO: Antes que nada, aseguramos el Lead
       const result = await submitLead({
         email: formData.email,
         nombre: formData.nombre,
@@ -131,11 +131,12 @@ export default function CotizadorApp ({ lang, dict }: CotizadorAppProps) {
         source: 'cotizacion',
         lang: lang,
         metadata: {
-          ...formData, // Guardamos TODO el estado del cotizador
+          ...formData, // Guardamos TODO el estado del cotizador (servicios, horas, etc)
           precioTotal: calculation.total,
           totalFormateado: formattedTotal,
           desglose_detallado: calculation.breakdown,
-          turnstile: turnstileToken
+          turnstile: turnstileToken,
+          tipo_cliente: 'cotizador_interactivo' 
         }
       })
 
@@ -154,12 +155,12 @@ export default function CotizadorApp ({ lang, dict }: CotizadorAppProps) {
 
       const data = await response.json();
 
-      // 3. Verificamos que ambos procesos (Base de datos y Email) terminaran bien
+      // 3. Verificamos que ambos procesos (Base de datos Turso y Email) terminaran bien
       if (result.success && response.ok && data.success) {
         setFormData(prev => ({ ...prev, precioTotal: calculation.total }));
         setStep(4);
       } else {
-        // Mostramos el error de la API o el de Supabase si la API no dio uno
+        // Mostramos el error de la API o el de Turso si la API no dio uno
         setApiError(data.error || result.error || s.errorGen);
         if (typeof window.turnstile !== 'undefined') window.turnstile.reset();
       }

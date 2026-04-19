@@ -249,7 +249,7 @@ export default function ContactForm ({
     setSuccessMessage('')
 
     try {
-      // 1. ✅ PERSISTENCIA EN SUPABASE: Aseguramos el mensaje antes que nada
+      // 1. ✅ PERSISTENCIA EN TURSO:
       const result = await submitLead({
         email: email,
         nombre: nombreCompleto,
@@ -260,7 +260,7 @@ export default function ContactForm ({
           mensaje_original: mensaje,
           turnstile: turnstileToken,
           pais_iso: codigoPais,
-          enviado_desde: window.location.pathname
+          enviado_desde: typeof window !== 'undefined' ? window.location.pathname : ''
         }
       })
 
@@ -280,7 +280,7 @@ export default function ContactForm ({
 
       const data = await response.json()
 
-      // 3. Verificamos éxito (Si falla la API pero Supabase guardó, igual lo tratamos como éxito para el usuario)
+      // 3. Verificamos éxito (Si falla la API pero Turso guardó, igual lo tratamos como éxito para el usuario)
       if (response.ok || result.success) {
         // ✅ PROTOCOLO ALSNIPPETS: Notificar a GTM (Mantenemos tu lógica)
         if (typeof window !== 'undefined' && (window as any).dataLayer) {

@@ -104,14 +104,15 @@ export default function FormNewsletter ({ lang }: { lang: string }) {
     setIsSubmitting(true)
 
     try {
-      // ✅ SUSTITUCIÓN: Llamada directa al motor de Supabase
+      // ✅ SUSTITUCIÓN ALSNIPPETS: Enviamos datos a Turso
       const result = await submitLead({
         email,
         source: 'newsletter',
         lang: lang,
         metadata: { 
           turnstileToken, 
-          url_actual: window.location.href 
+          url_actual: typeof window !== 'undefined' ? window.location.href : '',
+          categoria: 'footer_subscription'
         }
       })
 
@@ -132,7 +133,7 @@ export default function FormNewsletter ({ lang }: { lang: string }) {
         if (typeof window.turnstile !== 'undefined') window.turnstile.reset()
         setTimeout(() => setSuccessMessage(''), 5000)
       } else {
-        // ✅ Manejo del error desde la respuesta de Supabase
+        // ✅ Manejo del error desde la respuesta de Turso (ej: email duplicado)
         setErrorMessage(result.error || t.errSub)
       }
     } catch (error) {

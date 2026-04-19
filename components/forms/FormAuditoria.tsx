@@ -187,7 +187,7 @@ export default function FormAuditoria ({
     setApiError('')
 
     try {
-      // 1. ✅ PERSISTENCIA EN SUPABASE
+      // 1. ✅ PERSISTENCIA EN TURSO
       const result = await submitLead({
         email: email,
         nombre: nombreCompleto,
@@ -198,7 +198,8 @@ export default function FormAuditoria ({
           tipo_servicio: tipoServicio,
           medio_contacto: medioContacto,
           mensaje_auditoria: mensajeAuditoria,
-          turnstile: turnstileToken
+          turnstile: turnstileToken,
+          form_version: 'v2_turso' // Etiqueta interna para seguimiento
         }
       })
 

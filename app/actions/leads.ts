@@ -1,41 +1,47 @@
 'use server'
 
-// ✅ CAMBIO 1: Importamos el cliente con superpoderes (Admin)
-import { supabaseAdmin } from '@/lib/supabase' 
+// ✅ CORRECCIÓN: Asegúrate de que coincida con cómo exportaste en lib/turso.ts
+import { turso } from '@/lib/turso' 
 import { LeadData } from '@/types/leads'
 
-/**
- * Server Action Universal para registrar leads desde cualquier formulario
- */
 export async function submitLead(data: LeadData) {
   try {
+    // 1. Validación básica
     if (!data.email) {
       return { success: false, error: 'Email requerido' };
     }
 
-    // ✅ CAMBIO 2: Usamos supabaseAdmin para saltarnos cualquier restricción de RLS
-    const { error } = await supabaseAdmin
-      .from('leads')
-      .insert([ // Cambiamos upsert por insert para la primera prueba limpia
-        { 
-          email: data.email,
-          nombre: data.nombre,
-          telefono: data.telefono,
-          source: data.source,
-          lang: data.lang,
-          metadata: data.metadata || {},
-          is_active: true
-        }
-      ])
-
-    if (error) {
-      console.error('Error de Supabase:', error.message);
-      return { success: false, error: error.message };
-    }
+    // 2. Ejecución en Turso
+    await turso.execute({
+      sql: `INSERT INTO leads (
+        email, 
+        nombre, 
+        telefono, 
+        source, 
+        lang, 
+        metadata, 
+        is_active
+      ) VALUES (?, ?, ?, ?, ?, ?, 1)`, // Eliminamos created_at de aquí porque el DEFAULT del SQL ya lo pone solo
+      args: [
+        data.email,
+        data.nombre || null,
+        data.telefono || null,
+        data.source || 'direct',
+        data.lang || 'es',
+        JSON.stringify(data.metadata || {}), 
+      ],
+    });
 
     return { success: true };
-  } catch (error) {
-    console.error('Error crítico al guardar lead:', error);
-    return { success: false, error: 'Error de conexión' };
+
+  } catch (error: any) {
+    console.error('Error detectado en Action:', error.message);
+    
+    // Si el email ya existe (Turso tira este error específico)
+    if (error.message?.includes('UNIQUE')) {
+      return { success: false, error: 'Email ya registrado' };
+    }
+
+    return { success: false, error: 'Error técnico en la base de datos' };
   }
 }
