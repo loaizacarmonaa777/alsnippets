@@ -19,13 +19,29 @@ export default function FormDemoBarberShort ({
   dict
 }: any) {
   const t = dict
-  
+
   // 1. Inicialización con persistencia para evitar borrado al cambiar idioma
-  const [name, setName] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('demo_name') || '' : ''))
-  const [phone, setPhone] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('demo_phone') || '' : ''))
-  const [codigoPais, setCodigoPais] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('demo_prefix') || '+57' : '+57'))
-  const [password, setPassword] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('demo_pass') || '' : ''))
-  
+  const [name, setName] = useState(() =>
+    typeof window !== 'undefined'
+      ? sessionStorage.getItem('demo_name') || ''
+      : ''
+  )
+  const [phone, setPhone] = useState(() =>
+    typeof window !== 'undefined'
+      ? sessionStorage.getItem('demo_phone') || ''
+      : ''
+  )
+  const [codigoPais, setCodigoPais] = useState(() =>
+    typeof window !== 'undefined'
+      ? sessionStorage.getItem('demo_prefix') || '+57'
+      : '+57'
+  )
+  const [password, setPassword] = useState(() =>
+    typeof window !== 'undefined'
+      ? sessionStorage.getItem('demo_pass') || ''
+      : ''
+  )
+
   const [acceptTerms, setAcceptTerms] = useState(false)
   const [nameTocado, setNameTocado] = useState(false)
   const [phoneError, setPhoneError] = useState('')
@@ -80,10 +96,10 @@ export default function FormDemoBarberShort ({
   const handleWhatsAppHelp = () => {
     // ✅ Tracking de intención de ayuda
     if (typeof window !== 'undefined' && (window as any).dataLayer) {
-      (window as any).dataLayer.push({
+      ;(window as any).dataLayer.push({
         event: 'click_help_whatsapp',
         location: 'barbershort_form'
-      });
+      })
     }
 
     const msg = encodeURIComponent(t.whatsapp.help_msg)
@@ -97,24 +113,36 @@ export default function FormDemoBarberShort ({
     setIsSubmitting(true)
 
     try {
-      // ✅ SUSTITUCIÓN ALSNIPPETS: Enviamos datos a Turso
+      // 1. ✅ PERSISTENCIA EN TURSO
       const result = await submitLead({
-        email: 'demo_user@barbershort.com', // Mantenemos el placeholder para la DB
+        email: 'demo_user@barbershort.com',
         nombre: name,
         telefono: `${codigoPais}${phone}`,
         source: 'barber_short',
         lang: lang,
         metadata: {
           turnstile: turnstileToken,
-          password_usada: password, // Útil para saber si entraron con la pass correcta
+          password_usada: password,
           prefijo: codigoPais,
           url_demo: typeof window !== 'undefined' ? window.location.href : '',
-          db_provider: 'turso_edge' // Etiqueta de control
+          db_provider: 'turso_edge'
         }
       })
 
       if (result.success) {
-        // ✅ PROTOCOLO ALSNIPPETS: Éxito en Demo Barbershort (Mantenemos tu GTM)
+        // 2. ✅ ENVÍO A API (Sincronizado con nombres del route.ts)
+        // Solo se ejecuta si Turso guardó el lead correctamente
+        await fetch('/api/barber-demo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: name,
+            phone: `${codigoPais}${phone}`,
+            turnstileToken: turnstileToken
+          })
+        })
+
+        // ✅ PROTOCOLO ALSNIPPETS: GTM
         if (typeof window !== 'undefined' && (window as any).dataLayer) {
           ;(window as any).dataLayer.push({
             event: 'form_success',
@@ -124,7 +152,7 @@ export default function FormDemoBarberShort ({
           })
         }
 
-        // Llamamos a tu función original de éxito
+        // Llamamos a tu función original de éxito para entrar a la demo
         onLoginSuccess(name, phone)
       } else {
         setError(result.error || t.validation.err_conn)

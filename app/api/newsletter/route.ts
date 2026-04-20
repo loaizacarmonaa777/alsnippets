@@ -40,11 +40,11 @@ export async function POST(request: Request) {
     const data = await resend.emails.send({
       from: 'Alsnippets Web <notificaciones@alsnippets.com>', 
       to: ['contact@alsnippets.com'],
-      subject: `🎉 Nuevo Suscriptor: ${email}`,
+      subject: `📰 Nuevo Suscriptor: ${email}`,
       html: `
         <div style="font-family: sans-serif; padding: 20px;">
             <h2 style="color: #c9a34e;">¡Tienes un nuevo suscriptor a la Newsletter!</h2>
-            <p>Añade este correo a tu base de datos:</p>
+            <p>Adrián, Hola! este correo se añadió correctamente a tu base de datos de Turso:</p>
             <h3>${email}</h3>
         </div>
       `,
