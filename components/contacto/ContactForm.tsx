@@ -115,12 +115,32 @@ export default function ContactForm ({
   const t = dict
 
   // 1. Inicialización con recuperación de datos (Drafts)
-  const [nombreCompleto, setNombreCompleto] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('contact_name') || '' : ''))
-  const [email, setEmail] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('contact_email') || '' : ''))
-  const [codigoPais, setCodigoPais] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('contact_prefix') || '' : ''))
-  const [telefono, setTelefono] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('contact_phone') || '' : ''))
-  const [mensaje, setMensaje] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('contact_msg') || '' : ''))
-  
+  const [nombreCompleto, setNombreCompleto] = useState(() =>
+    typeof window !== 'undefined'
+      ? sessionStorage.getItem('contact_name') || ''
+      : ''
+  )
+  const [email, setEmail] = useState(() =>
+    typeof window !== 'undefined'
+      ? sessionStorage.getItem('contact_email') || ''
+      : ''
+  )
+  const [codigoPais, setCodigoPais] = useState(() =>
+    typeof window !== 'undefined'
+      ? sessionStorage.getItem('contact_prefix') || ''
+      : ''
+  )
+  const [telefono, setTelefono] = useState(() =>
+    typeof window !== 'undefined'
+      ? sessionStorage.getItem('contact_phone') || ''
+      : ''
+  )
+  const [mensaje, setMensaje] = useState(() =>
+    typeof window !== 'undefined'
+      ? sessionStorage.getItem('contact_msg') || ''
+      : ''
+  )
+
   const [aceptaLegales, setAceptaLegales] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
@@ -260,21 +280,22 @@ export default function ContactForm ({
           mensaje_original: mensaje,
           turnstile: turnstileToken,
           pais_iso: codigoPais,
-          enviado_desde: typeof window !== 'undefined' ? window.location.pathname : ''
+          enviado_desde:
+            typeof window !== 'undefined' ? window.location.pathname : ''
         }
       })
 
-      // 2. Envío a tu API actual para recibir el email
+      // 2. ✅ Envío a API sincronizado con route.ts
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: nombreCompleto,
-          email,
-          phone: `${codigoPais} ${telefono}`,
-          message: mensaje,
-          lang,
-          turnstileToken
+          name: nombreCompleto, // Sincronizado con 'name' en route
+          email: email, // Sincronizado con 'email'
+          phone: `${codigoPais} ${telefono}`, // Sincronizado con 'phone'
+          message: mensaje, // Sincronizado con 'message'
+          lang: lang, // Sincronizado con 'lang'
+          turnstileToken: turnstileToken // Sincronizado con 'turnstileToken'
         })
       })
 

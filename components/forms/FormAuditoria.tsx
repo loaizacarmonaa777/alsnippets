@@ -120,13 +120,41 @@ export default function FormAuditoria ({
   const t = dict
 
   // 1. Inicialización con recuperación de datos (Drafts)
-  const [tipoServicio, setTipoServicio] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('audit_service') || '' : ''))
-  const [nombreCompleto, setNombreCompleto] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('audit_name') || '' : ''))
-  const [email, setEmail] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('audit_email') || '' : ''))
-  const [codigoPais, setCodigoPais] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('audit_prefix') || '' : ''))
-  const [telefono, setTelefono] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('audit_phone') || '' : ''))
-  const [mensajeAuditoria, setMensajeAuditoria] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('audit_msg') || '' : ''))
-  const [medioContacto, setMedioContacto] = useState(() => (typeof window !== 'undefined' ? sessionStorage.getItem('audit_media') || '' : ''))
+  const [tipoServicio, setTipoServicio] = useState(() =>
+    typeof window !== 'undefined'
+      ? sessionStorage.getItem('audit_service') || ''
+      : ''
+  )
+  const [nombreCompleto, setNombreCompleto] = useState(() =>
+    typeof window !== 'undefined'
+      ? sessionStorage.getItem('audit_name') || ''
+      : ''
+  )
+  const [email, setEmail] = useState(() =>
+    typeof window !== 'undefined'
+      ? sessionStorage.getItem('audit_email') || ''
+      : ''
+  )
+  const [codigoPais, setCodigoPais] = useState(() =>
+    typeof window !== 'undefined'
+      ? sessionStorage.getItem('audit_prefix') || ''
+      : ''
+  )
+  const [telefono, setTelefono] = useState(() =>
+    typeof window !== 'undefined'
+      ? sessionStorage.getItem('audit_phone') || ''
+      : ''
+  )
+  const [mensajeAuditoria, setMensajeAuditoria] = useState(() =>
+    typeof window !== 'undefined'
+      ? sessionStorage.getItem('audit_msg') || ''
+      : ''
+  )
+  const [medioContacto, setMedioContacto] = useState(() =>
+    typeof window !== 'undefined'
+      ? sessionStorage.getItem('audit_media') || ''
+      : ''
+  )
   const [aceptaLegales, setAceptaLegales] = useState(false)
 
   // 2. Efecto de guardado automático y limpieza al desmontar
@@ -148,7 +176,15 @@ export default function FormAuditoria ({
       sessionStorage.removeItem('audit_msg')
       sessionStorage.removeItem('audit_media')
     }
-  }, [tipoServicio, nombreCompleto, email, codigoPais, telefono, mensajeAuditoria, medioContacto])
+  }, [
+    tipoServicio,
+    nombreCompleto,
+    email,
+    codigoPais,
+    telefono,
+    mensajeAuditoria,
+    medioContacto
+  ])
 
   const [telefonoError, setTelefonoError] = useState('')
   const [nombreTocado, setNombreTocado] = useState(false)
@@ -203,7 +239,7 @@ export default function FormAuditoria ({
         }
       })
 
-      // 2. Envío a tu API actual
+      // 2. ✅ ENVÍO A API (Sincronizado con los nombres de tu route.ts de auditoría)
       const response = await fetch('/api/auditoria', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

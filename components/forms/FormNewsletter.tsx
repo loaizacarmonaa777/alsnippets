@@ -22,7 +22,7 @@ export default function FormNewsletter ({ lang }: { lang: string }) {
   // Efecto para persistir el email ante cambios de idioma y limpiar al desmontar
   useEffect(() => {
     sessionStorage.setItem('newsletter_draft', email)
-    
+
     return () => {
       sessionStorage.removeItem('newsletter_draft')
     }
@@ -104,13 +104,13 @@ export default function FormNewsletter ({ lang }: { lang: string }) {
     setIsSubmitting(true)
 
     try {
-      // ✅ SUSTITUCIÓN ALSNIPPETS: Enviamos datos a Turso
+      // 1. ✅ PERSISTENCIA EN TURSO: Enviamos datos a Turso
       const result = await submitLead({
         email,
         source: 'newsletter',
         lang: lang,
-        metadata: { 
-          turnstileToken, 
+        metadata: {
+          turnstileToken,
           url_actual: typeof window !== 'undefined' ? window.location.href : '',
           categoria: 'footer_subscription'
         }
@@ -118,6 +118,17 @@ export default function FormNewsletter ({ lang }: { lang: string }) {
 
       // Cambiamos la validación: ahora usamos result.success
       if (result.success) {
+        // 2. ✅ ENVÍO A API (Sincronizado con route.ts de newsletter)
+        // El backend espera: { email, turnstileToken }
+        await fetch('/api/newsletter', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: email, // Coincide con backend
+            turnstileToken: turnstileToken // Coincide con backend
+          })
+        })
+
         // ✅ PROTOCOLO ALSNIPPETS: Notificar a GTM del éxito (INTACTO)
         if (typeof window !== 'undefined' && (window as any).dataLayer) {
           ;(window as any).dataLayer.push({
